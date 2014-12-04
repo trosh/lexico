@@ -1,4 +1,4 @@
-lexico
-======
+Analyse de champs lexicaux pour notre projet de M1 en MIHPS
+===========================================================
 
-Projet M1 IHPS
+Rolih Meynard, Yann Kergutuil, John Gliksberg
