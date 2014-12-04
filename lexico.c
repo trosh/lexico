@@ -1,18 +1,22 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include "lexico.h"
 
-typedef struct {
-	char *c;        // CONTENU
-	int occurences; // NOMBRE D'OCCURENCES DE CE MOT
-} mot;
+void freelistemots(listemots *mots) {
+	int i;
+	for (i=0; i<mots->taille; i++)
+		free(mots->c[i].c); // FREE CHAQUE MOT
+	free(mots->c);          // FREE TABLEAU DE MOTS
+}
 
-typedef struct {
-	mot *c;     // CONTENU
-	int taille; // NOMBRE DE MOTS
-} listemots;
+// TOUT BE FREE
+void freelistesmots(listemots *listes_de_mots, int taille) {
+	int i;
+	for (i=0; i<taille; i++) {
+		freelistemots(listes_de_mots+i); // FREE CONTENU DE LA LISTE
+	}
+	free(listes_de_mots); // FREE LISTE DE LISTES
+}
 
-int est_une_lettre_valable(char c) {
+inline int est_une_lettre_valable(char c) {
 	if ((c >= 'A' && c <= 'Z') // EST UNE LETTRE MAJUSCULE
 	 || (c >= 'a' && c <= 'z') // EST UNE LETTRE MINUSCULE
 	 ||  c == '-')             // EST UN HYPHEN
@@ -20,7 +24,7 @@ int est_une_lettre_valable(char c) {
 	return 0;     // FAUX (N'EST PAS UNE LETTRE VALABLE)
 }
 
-char convert_minuscule(char c) {
+inline char convert_minuscule(char c) {
 	if (c>='A' && c<= 'Z')
 		return c - ('A'-'a'); 
 	return c;
@@ -31,7 +35,7 @@ listemots decoupe_fichier(FILE *fichier) {
 	int i, taille_du_mot, nb_mots_total = 1000;
 	listemots mots;
 	mot *last_mot;
-	mots.c = malloc(mots.taille*sizeof(mot));
+	mots.c = malloc(mots.taille*sizeof(mot)); // DANGER
 	mots.taille = 0;
 	taille_du_mot = 0;
 	while ((c=fgetc(fichier))!=EOF) {
@@ -56,6 +60,7 @@ listemots decoupe_fichier(FILE *fichier) {
 				mots.c = realloc(mots.c, nb_mots_total*=2);
 			last_mot = mots.c + mots.taille;
 			last_mot->occurences = 1;
+			// DANGER :
 			last_mot->c = malloc((taille_du_mot+1)*sizeof(char));
 			strncat(last_mot->c, zone_de_travail, taille_du_mot+1);
 			// PAS BESOIN DE VIDER ZONE_DE_TRAVAIL !
@@ -72,33 +77,4 @@ void print_mots(listemots mots) {
 	for (i=0; i<mots.taille; i++)
 		printf("%s %d\t", mots.c[i].c, mots.c[i].occurences);
 	puts("");
-}
-
-int main(int argc, char *argv[]) {
-	FILE *f;
-	listemots *listes_de_mots;
-	int i, j;
-	if (argc < 2) {
-		puts("usage: decoupage_en_mots FICHIER [ FICHIER ... ]");
-		return 1;
-	}
-	listes_de_mots = malloc((argc-1)*sizeof(mot*));
-	// PARCOURIR LA LISTE DES FICHIERS
-	for (i=0; i<argc-1; i++) {
-		if ((f = fopen(argv[i+1], "r")) == NULL) {
-			printf("mauvais argument #%d : \"%s\"\n", i, argv[i+1]);
-			return 1;
-		}
-		listes_de_mots[i] = decoupe_fichier(f);
-		print_mots(listes_de_mots[i]);
-		fclose(f);
-	}
-	// TOUT BE FREE
-	for (i=0; i<argc-1; i++) {
-		for (j=0; j<listes_de_mots[i].taille; j++)
-			free(listes_de_mots[i].c[j].c);
-		free(listes_de_mots[i].c);
-	}
-	free(listes_de_mots);
-	return 0;
 }
