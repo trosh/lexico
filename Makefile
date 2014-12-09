@@ -1,8 +1,11 @@
 CC := gcc
 RM := rm -f
+TARGETS := decoupe splitwiki
+OBJECTS := lexico.o
 
-.PHONY: all
-all: lexico.o decoupe
+.PHONY: all clean purge
+
+all: lexico.o decoupe splitwiki
 
 lexico.o: lexico.c lexico.h
 	$(CC) -c $<
@@ -10,6 +13,11 @@ lexico.o: lexico.c lexico.h
 decoupe: decoupe.c lexico.h lexico.o
 	$(CC) -o $@ lexico.o $<
 
-.PHONY: clean
+splitwiki: splitwiki.c
+	$(CC) -o $@ $<
+
 clean:
-	$(RM) lexico.o decoupe
+	$(RM) $(OBJECTS)
+
+purge:
+	$(RM) $(OBJECTS) $(TARGETS) files/*.txt
