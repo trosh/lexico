@@ -18,8 +18,8 @@ typedef struct {
 void freelistemots(listemots*);
 // OU S'IL Y EN A UNE LISTE :
 void freelistesmots(listemots*, int taille);
-int est_une_lettre_valable(char);
-char convert_minuscule(char);
+inline int est_une_lettre_valable(char);
+inline char convert_minuscule(char);
 // CREE UNE LISTE DE MOTS ET LEURS OCCURENCES A PARTIR D'UN FICHIER
 listemots decoupe_fichier(FILE*);
 // AFFICHE UNE SUSDITE LISTE
