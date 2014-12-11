@@ -10,16 +10,15 @@ void freelistemots(listemots *mots) {
 // TOUT BE FREE
 void freelistesmots(listemots *listes_de_mots, int taille) {
 	int i;
-	for (i=0; i<taille; i++) {
+	for (i=0; i<taille; i++)
 		freelistemots(listes_de_mots+i); // FREE CONTENU DE LA LISTE
-	}
 	free(listes_de_mots); // FREE LISTE DE LISTES
 }
 
 inline int est_une_lettre_valable(char c) {
-	if ((c >= 'A' && c <= 'Z') // EST UNE LETTRE MAJUSCULE
-	 || (c >= 'a' && c <= 'z') // EST UNE LETTRE MINUSCULE
-	 ||  c == '-')             // EST UN HYPHEN
+	if ((c >= 'A' && c <= 'Z')  // EST UNE LETTRE MAJUSCULE
+	 || (c >= 'a' && c <= 'z')  // EST UNE LETTRE MINUSCULE
+	 ||  c == '-' || c == '\'') // EST UN HYPHEN / QUOTE
 		return 1; // VRAI (EST UNE LETTRE VALABLE)
 	return 0;     // FAUX (N'EST PAS UNE LETTRE VALABLE)
 }
@@ -32,10 +31,10 @@ inline char convert_minuscule(char c) {
 
 listemots decoupe_fichier(FILE *fichier) {
 	char zone_de_travail[100], c, flag;
-	int i, taille_du_mot, nb_mots_total = 1000;
+	int i, taille_du_mot, capacite = 1024;
 	listemots mots;
 	mot *last_mot;
-	mots.c = malloc(mots.taille*sizeof(mot)); // DANGER
+	mots.c = malloc(capacite*sizeof(mot)); // DANGER
 	mots.taille = 0;
 	taille_du_mot = 0;
 	while ((c=fgetc(fichier))!=EOF) {
@@ -56,25 +55,26 @@ listemots decoupe_fichier(FILE *fichier) {
 				}
 			if (flag) continue;
 			// VERIF TAILLE DE MOTS, DOUBLE TAILLE SI NECESSAIRE
-			if (mots.taille==nb_mots_total)
-				mots.c = realloc(mots.c, nb_mots_total*=2);
+			if (mots.taille==capacite-1)
+				mots.c = realloc(mots.c, (capacite*=2)*sizeof(mot));
 			last_mot = mots.c + mots.taille;
 			last_mot->occurences = 1;
-			// DANGER :
-			last_mot->c = malloc((taille_du_mot+1)*sizeof(char));
+			last_mot->c = malloc((taille_du_mot+1)*sizeof(char)); // DANGER
 			strncat(last_mot->c, zone_de_travail, taille_du_mot+1);
 			// PAS BESOIN DE VIDER ZONE_DE_TRAVAIL !
 			mots.taille++;
 			taille_du_mot = 0;
 		}
 	}
-	printf("NOMBRE DE MOTS : %d\n", mots.taille);
 	return mots;
 }
 
 void print_mots(listemots mots) {
 	int i;
-	for (i=0; i<mots.taille; i++)
-		printf("%s %d\t", mots.c[i].c, mots.c[i].occurences);
+	for (i=0; i<mots.taille; i++) {
+		printf("% 20s % 3d", mots.c[i].c, mots.c[i].occurences);
+		if (i%4 == 0) puts("");
+		else printf("\t");
+	}
 	puts("");
 }

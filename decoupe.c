@@ -17,6 +17,8 @@ int main(int argc, char *argv[]) {
 		}
 		listes_de_mots[i] = decoupe_fichier(f);
 		print_mots(listes_de_mots[i]);
+		fprintf(stderr, "NOMBRE DE MOTS : %d\n",
+			listes_de_mots[i].taille);
 		fclose(f);
 	}
 	// TOUT BE FREE

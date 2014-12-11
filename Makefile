@@ -8,10 +8,10 @@ OBJECTS := lexico.o
 all: lexico.o decoupe splitwiki
 
 lexico.o: lexico.c lexico.h
-	$(CC) -c $<
+	$(CC) -c $< -g
 
 decoupe: decoupe.c lexico.h lexico.o
-	$(CC) -o $@ lexico.o $<
+	$(CC) -o $@ lexico.o $< -g
 
 splitwiki: splitwiki.c
 	$(CC) -o $@ $<
