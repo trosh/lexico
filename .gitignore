@@ -1,6 +1,7 @@
 /files/*
 /wiki/*
 !/wiki/ex.txt
+noacfiles/*
 splitwiki
 decoupe
 *.o
