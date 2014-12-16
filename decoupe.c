@@ -19,7 +19,9 @@ int main(int argc, char *argv[]) {
 		print_mots(listes_de_mots[i]);
 		fprintf(stderr, "NOMBRE DE MOTS : %d\n",
 			listes_de_mots[i].taille);
+		puts("CLOSING FILE ...");
 		fclose(f);
+		puts("CLOSED FILE !");
 	}
 	// TOUT BE FREE
 	freelistesmots(listes_de_mots, argc-1);

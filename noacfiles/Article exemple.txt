@@ -1,0 +1,5 @@
+[[Article exemple]]
+
+Voici un article exemple a analyser - il contient des accents
+et des cedilles mais noac devrait se charger de ca.
+

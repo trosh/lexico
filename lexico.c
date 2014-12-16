@@ -2,8 +2,10 @@
 
 void freelistemots(listemots *mots) {
 	int i;
-	for (i=0; i<mots->taille; i++)
+	for (i=0; i<mots->taille; i++) {
+		puts(mots->c[i].c);
 		free(mots->c[i].c); // FREE CHAQUE MOT
+	}
 	free(mots->c);          // FREE TABLEAU DE MOTS
 }
 
