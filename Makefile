@@ -1,3 +1,4 @@
+SHELL=/bin/bash -O extglob -c # need extglob pour purge
 CC := gcc
 RM := rm -f
 TARGETS := decoupe splitwiki noac
@@ -23,7 +24,8 @@ clean:
 	$(RM) $(OBJECTS)
 
 purge:
-	$(RM) $(OBJECTS) $(TARGETS) files/*.txt noacfiles/*.txt
+	$(RM) $(OBJECTS) $(TARGETS)
+	$(RM) files/!(.*) noacfiles/!(.*) # rm tout sauf dotfiles
 
 test: $(TARGETS)
 	rm -f {noac,}files/*
