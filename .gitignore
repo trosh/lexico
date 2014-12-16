@@ -5,6 +5,7 @@
 !/noacfiles/.empty
 splitwiki
 decoupe
+noac
 *.o
 *.exe
 *.stackdump
