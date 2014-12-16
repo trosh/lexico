@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
 				fclose(fout);
 			title[i-2] = '\0';
 			puts(title);
-			sprintf(foutname, "files/%s.txt", title);
+			sprintf(foutname, "files/%s", title);
 			fout = fopen(foutname, "w"); // OUTPUT FILE
 		}
 		if (fout!=NULL) // S'IL Y A UN TITRE SUR LA PREMIERE

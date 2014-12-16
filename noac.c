@@ -10,9 +10,9 @@ int main(int argc, char* argv[]) {
 	int i;
 	if (argc < 2) {
 		fprintf(stderr,
-		        "usage: noac file/[...].txt [...]\n"
+		        "usage: noac files/[...] [...]\n"
 		        "\tcopie le(s) fichier(s) sans accents dans\n"
-		        "\tnoacfiles/[...].txt\n");
+		        "\tnoacfiles/[...]\n");
 		return 1;
 	}
 	for (i=1; i<argc; i++) {
