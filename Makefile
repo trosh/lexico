@@ -25,10 +25,10 @@ clean:
 
 purge:
 	$(RM) $(OBJECTS) $(TARGETS)
-	$(RM) files/!(.*) noacfiles/!(.*) # rm tout sauf dotfiles
+	$(RM) {,noac}files/!(.*) # rm tout sauf dotfiles
 
 test: $(TARGETS)
-	rm -f {noac,}files/*
+	$(RM) {noac,}files/!(.*)
 	./splitwiki wiki/ex.txt
-	./noac files/*.txt
-	./decoupe noacfiles/*.txt
+	./noac files/* # glob evite les dotfiles
+	./decoupe noacfiles/*

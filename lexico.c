@@ -74,7 +74,7 @@ listemots decoupe_fichier(FILE *fichier) {
 void print_mots(listemots mots) {
 	int i;
 	for (i=0; i<mots.taille; i++) {
-		printf("% 20s % 3d", mots.c[i].c, mots.c[i].occurences);
+		printf("% 15s % 3d", mots.c[i].c, mots.c[i].occurences);
 		if (i%4 == 0) puts("");
 		else printf("\t");
 	}
