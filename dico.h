@@ -23,13 +23,16 @@ listemots decoupe_fichier(FILE*);
 // AFFICHE UNE SUSDITE LISTE
 void print_mots(listemots);*/
 
+
 /*
- * UN DICTIONNAIRE EST UN ENSEMBLE DE MOT 
+ * UNE APPARITION D'UN MOT DU DICTIONNAIRE EST DEFINIE PAR:
+ * 				-LE NOM D'UN DOCUMENT DANS LEQUEL IL APPARAIT
+ * 				-LE NOMBRE DOCCURENCE DANS CE DOC
  */
 typedef struct {
-	definition *def; //MOT ET SA LISTE DE SYNONYME
-	int taille;		//NBR DE MOT DANS LE DICO
-}dictionaire;
+	char *doc;	//NOM DU DOC
+	int occurences;	//OCCUREoc[NCE DU MOT DANS LE DOC
+} appariton;
 /*
  * UNE DEFINITION EST UN MOT DU DICTIONNAIRE ET EST DEFINIE PAR:
  * 				-UN STRING
@@ -37,20 +40,21 @@ typedef struct {
  * 				-UNE LISTE D'APPARITIONS
  */
 typedef struct {
-	char *c; //CONTENU
+	char *mot; //CONTENU
 	int id;	//IDENTIFIANT
-	apparition *synonyme;	//LISTE DE SYNONYME ASSOCIE A CE MOT
+	apparition *app;	//LISTE DES DOCS OU CE MOT APPARAIT
 } definition;
-
 /*
- * UNE APPARITION REPRESENTE UN SYNONYME D'UN MOT DU DICTIONNAIRE ET EST DEFINIE PAR:
- * 				-LE NOM D'UN DOCUMENT
- * 				-LE NOMBRE DOCCURENCE DANS CE DOC
+ * UN DICTIONNAIRE EST UN ENSEMBLE DE MOT 
  */
 typedef struct {
-	char *doc;	//NOM DU DOC
-	int occurences;	//OCCURENCE DU MOT DANS LE DOC
-} appariton;
+	definition *def; //MOT ET SA LISTE DE SYNONYME
+	int taille;		//NBR DE MOT DANS LE DICO
+	int capacite;	//CAPACITE ALLOUEE POUR NOTRE TABLEAU DE DEFINITION
+}dictionnaire;
+
+void init_dico(dictionnaire *dico);
+void ajoute_dico(dictionnaire *dico, listemots *liste_mots);
 
 
 
