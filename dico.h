@@ -30,9 +30,9 @@ void print_mots(listemots);*/
  * 				-LE NOMBRE DOCCURENCE DANS CE DOC
  */
 typedef struct {
-	char *doc;	//NOM DU DOC
+	int num_doc;	//NUMERO DU DOC
 	int occurences;	//OCCUREoc[NCE DU MOT DANS LE DOC
-} appariton;
+} apparition;
 /*
  * UNE DEFINITION EST UN MOT DU DICTIONNAIRE ET EST DEFINIE PAR:
  * 				-UN STRING
@@ -54,7 +54,7 @@ typedef struct {
 }dictionnaire;
 
 void init_dico(dictionnaire *dico);
-void ajoute_dico(dictionnaire *dico, listemots *liste_mots);
+void ajoute_dico(dictionnaire *dico, listemots *liste_mots,int dico_courant);
 
 
 
