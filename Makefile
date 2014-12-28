@@ -9,19 +9,19 @@ OBJECTS := lexico.o
 
 all: $(OBJECTS) $(TARGETS)
 
-lexico.o: lexico.c include/lexico.h
+lexico.o: src/lexico.c include/lexico.h
 	$(CC) $(CFLAGS) -c $<
 
-decoupe: decoupe.c include/lexico.h lexico.o
+decoupe: src/decoupe.c include/lexico.h lexico.o
 	$(CC) $(CFLAGS) -o $@ lexico.o $<
 
-splitwiki: splitwiki.c
+splitwiki: src/splitwiki.c
 	$(CC) -o $@ $<
 
-noac: noac.c
+noac: src/noac.c
 	$(CC) -o $@ $< -lunac
 
-char: char.c
+char: src/char.c
 	$(CC) -o $@ $<
 
 clean:
