@@ -2,10 +2,8 @@
 
 void freelistemots(listemots *mots) {
 	int i;
-	for (i=0; i<mots->taille; i++) {
-		puts(mots->c[i].c);
+	for (i=0; i<mots->taille; i++)
 		free(mots->c[i].c); // FREE CHAQUE MOT
-	}
 	free(mots->c);          // FREE TABLEAU DE MOTS
 }
 
@@ -71,12 +69,12 @@ listemots decoupe_fichier(FILE *fichier) {
 	return mots;
 }
 
-void print_mots(listemots mots) {
+void print_mots(FILE* flux, listemots mots) {
 	int i;
 	for (i=0; i<mots.taille; i++) {
-		printf("% 15s % 3d", mots.c[i].c, mots.c[i].occurences);
-		if (i%4 == 0) puts("");
-		else printf("\t");
+		fprintf(flux, "% 15s% 4d", mots.c[i].c, mots.c[i].occurences);
+		if ((i+1)%4 == 0) fputc('\n', flux);
+		else fprintf(flux, "\t");
 	}
 	puts("");
 }

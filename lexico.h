@@ -23,6 +23,6 @@ inline char convert_minuscule(char);
 // CREE UNE LISTE DE MOTS ET LEURS OCCURENCES A PARTIR D'UN FICHIER
 listemots decoupe_fichier(FILE*);
 // AFFICHE UNE SUSDITE LISTE
-void print_mots(listemots);
+void print_mots(FILE* flux, listemots mots);
 
 #endif //LEXICO_H

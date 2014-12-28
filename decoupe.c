@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "lexico.h"
 
 int main(int argc, char *argv[]) {
@@ -15,13 +16,14 @@ int main(int argc, char *argv[]) {
 			printf("mauvais argument #%d : \"%s\"\n", i, argv[i+1]);
 			return 1;
 		}
+		fprintf(stdout, "\033[7m%s\033[0m\n", argv[i+1]);
 		listes_de_mots[i] = decoupe_fichier(f);
-		print_mots(listes_de_mots[i]);
-		fprintf(stderr, "NOMBRE DE MOTS : %d\n",
-			listes_de_mots[i].taille);
-		puts("CLOSING FILE ...");
+		print_mots(stderr, listes_de_mots[i]);
+		fprintf(stdout, "NOMBRE DE MOTS : %d\n", listes_de_mots[i].taille);
+		fprintf(stdout, "\033[7mCLOSING FILE %s\033[0m\n", argv[i+1]);
 		fclose(f);
-		puts("CLOSED FILE !");
+		fprintf(stderr, "\033[7mCLOSED FILE %s\033[0m\n", argv[i+1]);
+		freelistemots(listes_de_mots+i);
 	}
 	// TOUT BE FREE
 	freelistesmots(listes_de_mots, argc-1);
