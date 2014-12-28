@@ -27,6 +27,6 @@ Les programmes qu'on génère sont :
   article dans `files/[nom article]`
 - `noac` désaccentue le contenu et le nom d'un fichier (le fichier
   de sortie est `noac[nom fichier]`;
-  par exemple `noacfiles/[nom article desaccentue]`
-- `decoupe` affiche le resultat de `decoupe_fichier` dans stderr
-  via `print_listemots(flux, ...)`
+  par exemple `noacfiles/[nom article desaccentue]`)
+- `decoupe` affiche le resultat de `decoupe_fichier` dans `stderr`
+  via `print_mots(stderr, ...)`
