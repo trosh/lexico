@@ -23,6 +23,13 @@ inline int est_une_lettre_valable(char c) {
 	return 0;     // FAUX (N'EST PAS UNE LETTRE VALABLE)
 }
 
+inline int recheck_mot_valable(char* str, int size) {
+	if (str[0] == '-'  || str[size] == '-'
+	 || str[0] == '\'' || str[size] == '\'')
+		return 0; // FAUX (LETTRE SPECIALE EN DEBUT/FIN)
+	return 1;     // VRAI (ELSE)
+}
+
 inline char convert_minuscule(char c) {
 	if (c>='A' && c<= 'Z')
 		return c - ('A'-'a'); 
@@ -44,13 +51,18 @@ listemots decoupe_fichier(FILE *fichier) {
 			taille_du_mot++;
 		}
 		else if (taille_du_mot>0) { // FIN DU MOT
+			if(!recheck_mot_valable(zone_de_travail, taille_du_mot)) {
+				taille_du_mot = 0;
+				continue;
+			}
 			zone_de_travail[taille_du_mot] = '\0';
+			printf("%s\n", zone_de_travail);
 			flag = 0; // LE MOT A-T-IL ETE TROUVE ?
 			for (i=0; i<mots.taille; i++)
 				if (!strcmp(mots.c[i].c, zone_de_travail)) {
 					mots.c[i].occurences++;
 					taille_du_mot = 0;
-					flag = 1;
+					flag = 1; // LE MOT A ETE TROUVE
 					break;
 				}
 			if (flag) continue;
@@ -74,7 +86,6 @@ void print_mots(FILE* flux, listemots mots) {
 	for (i=0; i<mots.taille; i++) {
 		fprintf(flux, "% 15s% 4d", mots.c[i].c, mots.c[i].occurences);
 		if ((i+1)%4 == 0) fputc('\n', flux);
-		else fprintf(flux, "\t");
 	}
 	puts("");
 }

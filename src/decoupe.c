@@ -12,7 +12,8 @@ int main(int argc, char *argv[]) {
 	listes_de_mots = malloc((argc-1)*sizeof(mot*));
 	// PARCOURIR LA LISTE DES FICHIERS
 	for (i=0; i<argc-1; i++) {
-		if ((f = fopen(argv[i+1], "r")) == NULL) {
+		f = fopen(argv[i+1], "r");
+		if (f == NULL) {
 			printf("mauvais argument #%d : \"%s\"\n", i, argv[i+1]);
 			return 1;
 		}
