@@ -56,7 +56,6 @@ listemots decoupe_fichier(FILE *fichier) {
 				continue;
 			}
 			zone_de_travail[taille_du_mot] = '\0';
-			printf("%s\n", zone_de_travail);
 			flag = 0; // LE MOT A-T-IL ETE TROUVE ?
 			for (i=0; i<mots.taille; i++)
 				if (!strcmp(mots.c[i].c, zone_de_travail)) {
@@ -71,8 +70,8 @@ listemots decoupe_fichier(FILE *fichier) {
 				mots.c = realloc(mots.c, (capacite*=2)*sizeof(mot));
 			last_mot = mots.c + mots.taille;
 			last_mot->occurences = 1;
-			last_mot->c = malloc((taille_du_mot+1)*sizeof(char)); // DANGER
-			strncat(last_mot->c, zone_de_travail, taille_du_mot+1);
+			last_mot->c = malloc(taille_du_mot+1);
+			strncpy(last_mot->c, zone_de_travail, taille_du_mot+1);
 			// PAS BESOIN DE VIDER ZONE_DE_TRAVAIL !
 			mots.taille++;
 			taille_du_mot = 0;
