@@ -1,4 +1,4 @@
-SHELL=/bin/bash -O extglob -c # need extglob pour purge
+SHELL=/bin/bash -O extglob -c # need extglob pour purge + {a,b} ...
 CC := gcc
 RM := rm -f
 TARGETS := decoupe splitwiki noac char
