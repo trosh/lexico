@@ -1,6 +1,7 @@
 SHELL=/bin/bash -O extglob -c # need extglob pour purge + {a,b} ...
 CC := gcc
 RM := rm -f
+CFLAGS := -Iinclude
 TARGETS := decoupe splitwiki noac char
 OBJECTS := lexico.o
 
@@ -8,11 +9,11 @@ OBJECTS := lexico.o
 
 all: $(OBJECTS) $(TARGETS)
 
-lexico.o: lexico.c lexico.h
-	$(CC) -c $< -g
+lexico.o: lexico.c include/lexico.h
+	$(CC) $(CFLAGS) -c $<
 
-decoupe: decoupe.c lexico.h lexico.o
-	$(CC) -o $@ lexico.o $< -g
+decoupe: decoupe.c include/lexico.h lexico.o
+	$(CC) $(CFLAGS) -o $@ lexico.o $<
 
 splitwiki: splitwiki.c
 	$(CC) -o $@ $<

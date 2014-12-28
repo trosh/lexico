@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "lexico.h"
+#include <lexico.h>
 
 int main(int argc, char *argv[]) {
 	FILE *f;

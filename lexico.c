@@ -1,4 +1,4 @@
-#include "lexico.h"
+#include <lexico.h>
 
 void freelistemots(listemots *mots) {
 	int i;
