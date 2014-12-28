@@ -44,7 +44,7 @@ listemots decoupe_fichier(FILE *fichier) {
 	mots.c = malloc(capacite*sizeof(mot)); // DANGER
 	mots.taille = 0;
 	taille_du_mot = 0;
-	while ((c=fgetc(fichier))!=EOF) {
+	while ((c=fgetc(fichier))!=EOF) { // DANGER!!! PAS FORCEMENT ASCII
 		if (est_une_lettre_valable(c)) {
 			c = convert_minuscule(c);
 			zone_de_travail[taille_du_mot] = c;

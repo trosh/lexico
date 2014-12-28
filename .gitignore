@@ -18,3 +18,4 @@ char
 *.o
 *.exe
 *.stackdump
+*.swp
