@@ -13,6 +13,7 @@
 splitwiki
 decoupe
 noac
+char
 
 *.o
 *.exe
