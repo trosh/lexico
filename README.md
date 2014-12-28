@@ -23,6 +23,7 @@ Utiliser `make` pour effectuer différentes opérations basiques
 
 Les programmes qu'on génère sont :
 
+- `char` qui donne des infos basiques sur les strings en `argv`
 - `splitwiki` pour splitter un fichier type wiki en un fichier par
   article dans `files/[nom article]`
 - `noac` désaccentue le contenu et le nom d'un fichier (le fichier
