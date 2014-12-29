@@ -10,10 +10,8 @@ void freelistemots(listemots *mots) {
 // TOUT BE FREE
 void freelistesmots(listemots *listes_de_mots, int taille) {
 	int i;
-	for (i=0; i<taille; i++) {
-		printf("FREE LISTE %d\n", i);
+	for (i=0; i<taille; i++)
 		freelistemots(listes_de_mots+i); // FREE CONTENU DE LA LISTE
-	}
 	free(listes_de_mots); // FREE LISTE DE LISTES
 }
 

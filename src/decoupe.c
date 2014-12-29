@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
 		print_mots(stderr, listes_de_mots[i]);
 		//fprintf(stdout, "NOMBRE DE MOTS : %d\n", listes_de_mots[i].taille);
 		fprintf(stdout, "\033[7mCLOSING FILE %s\033[0m\n", argv[i+1]);
-		//fclose(f); // ERRORS FOR LAST FILE :'( :'( :'( WHAT WHAT WHYY
+		fclose(f); // ERRORS FOR LAST FILE :'( :'( :'( WHAT WHAT WHYY
 		fprintf(stdout, "\033[7mCLOSED FILE %s\033[0m\n", argv[i+1]);
 	}
 	// TOUT BE FREE
