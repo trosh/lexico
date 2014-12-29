@@ -10,8 +10,10 @@ void freelistemots(listemots *mots) {
 // TOUT BE FREE
 void freelistesmots(listemots *listes_de_mots, int taille) {
 	int i;
-	for (i=0; i<taille; i++)
+	for (i=0; i<taille; i++) {
+		printf("FREE LISTE %d\n", i);
 		freelistemots(listes_de_mots+i); // FREE CONTENU DE LA LISTE
+	}
 	free(listes_de_mots); // FREE LISTE DE LISTES
 }
 
@@ -70,8 +72,7 @@ listemots decoupe_fichier(FILE *fichier) {
 				mots.c = realloc(mots.c, (capacite*=2)*sizeof(mot));
 			last_mot = mots.c + mots.taille;
 			last_mot->occurences = 1;
-			last_mot->c = malloc(taille_du_mot+1);
-			strncpy(last_mot->c, zone_de_travail, taille_du_mot+1);
+			last_mot->c = strndup(zone_de_travail, taille_du_mot+1);
 			// PAS BESOIN DE VIDER ZONE_DE_TRAVAIL !
 			mots.taille++;
 			taille_du_mot = 0;
@@ -86,5 +87,5 @@ void print_mots(FILE* flux, listemots mots) {
 		fprintf(flux, "% 15s% 4d", mots.c[i].c, mots.c[i].occurences);
 		if ((i+1)%4 == 0) fputc('\n', flux);
 	}
-	puts("");
+	fputc('\n', flux);
 }
