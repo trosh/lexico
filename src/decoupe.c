@@ -40,5 +40,6 @@ int main(int argc, char *argv[]) {
 	affiche_dico(&dico);
 	// TOUT BE FREE
 	freelistesmots(listes_de_mots, argc-1);
+	freedico(&dico);
 	return 0;
 }
