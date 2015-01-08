@@ -22,9 +22,10 @@ void ajoute_dico(dictionnaire *dico, listemots *mots) {
 	id_doc = dico->docs_taille++;
 	nom_doc = dico->docs[id_doc] = malloc(strlen(mots->nom_doc)+1);
 	strcpy(nom_doc, mots->nom_doc); // COPY
-	puts(nom_doc);
 	for (i=0; i<mots->taille; i++) {
 		word = mots->c[i].c;
+		// printf("% 25s", word);
+		// if (i%5==4) putchar('\n');
 		flag = 0; // WORD EXISTS ?
 		for (j=0; j<dico->taille; j++)
 			if (!strcmp(dico->def[j].c, word)) {
@@ -44,7 +45,7 @@ void ajoute_dico(dictionnaire *dico, listemots *mots) {
 			def->c = malloc(strlen(word));
 			strcpy(def->c, word);
 			def->app_taille = 1;
-			def->app_capacite = 8;
+			def->app_capacite = 1;
 			def->app = malloc(def->app_capacite*sizeof(apparition));
 			app = def->app;
 		}
@@ -52,6 +53,7 @@ void ajoute_dico(dictionnaire *dico, listemots *mots) {
 		app->occurences = mots->c[i].occurences;
 	}
 }
+
 void affiche_docs(dictionnaire* dico) {
 	int i, nb_docs;
 	nb_docs = dico->docs_taille;
@@ -62,52 +64,52 @@ void affiche_docs(dictionnaire* dico) {
 	for (i=0; i<nb_docs; i++)
 		printf("%d - %s\n", i, dico->docs[i]);
 }
+
 void affiche_dico(dictionnaire* dico) {
 	int i, j, nb_mots, nb_docs, id_doc;
 	double occ;
 	nb_mots = dico->taille;
 	for (i=0; i<nb_mots; i++) {
-		printf("% 10s:", dico->def[i].c);
+		printf("% 15s:", dico->def[i].c);
 		nb_docs = dico->def[i].app_taille;
 		for (j=0; j<nb_docs; j++) {
 			id_doc = dico->def[i].app[j].num_doc;
 			occ    = dico->def[i].app[j].occurences;
-			printf("\t%s-%lg",dico->docs[id_doc],occ);
+			//printf("\t%s-%lg", dico->docs[id_doc], occ);
+			printf("% 4d %lg", id_doc, occ);
 		}
 		putchar('\n');
 	}
 }
 
 void freedico(dictionnaire *dico) {
-	int i, nb_docs,nb_mots;
+	int i, nb_docs, nb_mots;
 	nb_docs = dico->docs_taille;
 	nb_docs = dico->taille;
 //FREE index Docs
 	for (i=0; i<nb_docs; i++)
 		free(dico->docs[i]);
+	free(dico->docs);
 //FREE des Def
 	for (i=0; i<nb_mots; i++) {
 		free(dico->def[i].c);
 		free(dico->def[i].app);
 	}
+	//free(dico->def);
 }
 
 void frequence_dico(dictionnaire *dico) {
 	int i, j, nb_mots, nb_docs;
-	double nb_mots_total=0.;
+	double nb_occs_total;
 	nb_mots = dico->taille;
 	//calcul du nombre de mots au total
 	for (i=0; i<nb_mots; i++) {
+		nb_occs_total = 0;
 		nb_docs = dico->def[i].app_taille;
-		for (j=0; j<nb_docs; j++) {
-			nb_mots_total += dico->def[i].app[j].occurences;
-		}
-	}
-	//on divise chaque occ par ce nb
-	for (i=0; i<nb_mots; i++) {
-		nb_docs = dico->def[i].app_taille;
-		for (j=0; j<nb_docs; j++) {
-			dico->def[i].app[j].occurences /= nb_mots_total;
-		}
+		for (j=0; j<nb_docs; j++)
+			nb_occs_total += dico->def[i].app[j].occurences;
+		//on divise chaque occ par ce nb
+		for (j=nb_docs-1; j>=0; j--) // (mini optimisation)
+			dico->def[i].app[j].occurences /= nb_occs_total;
 	}
 }
