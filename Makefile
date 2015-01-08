@@ -36,3 +36,9 @@ test: $(TARGETS)
 	./splitwiki wiki/ex.txt
 	./noac files/* # glob evite les dotfiles
 	./decoupe noacfiles/*
+
+1: $(TARGETS)
+	$(RM) {noac,}files/!(.*)
+	./splitwiki wiki/1.txt
+	./noac files/*
+	./decoupe noacfiles/*
