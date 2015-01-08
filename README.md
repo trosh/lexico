@@ -20,6 +20,7 @@ Utiliser `make` pour effectuer différentes opérations basiques
 - `make purge` pour supprimer tout ce que `make all` crée et
   les fichiers qu'on a pu générer avec les exécutables
 - `make test` pour effectuer un cas test avec un fichier wiki test
+- `make 1` idem avec `wiki/1.txt`
 
 Les programmes qu'on génère sont :
 
