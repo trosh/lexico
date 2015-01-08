@@ -41,5 +41,5 @@ void init_dico(dictionnaire *dico);
 void ajoute_dico(dictionnaire *dico, listemots *liste_mots);
 void affiche_dico(dictionnaire* dico);
 void affiche_docs(dictionnaire* dico);
-
+void freedico(dictionnaire *dico);
 #endif //DICO_H

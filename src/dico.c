@@ -76,3 +76,17 @@ void affiche_dico(dictionnaire* dico) {
 		putchar('\n');
 	}
 }
+
+void freedico(dictionnaire *dico) {
+	int i, nb_docs,nb_mots;
+	nb_docs = dico->docs_taille;
+	nb_docs = dico->taille;
+//FREE index Docs
+	for (i=0; i<nb_docs; i++)
+		free(dico->docs[i]);
+//FREE des Def
+	for (i=0; i<nb_mots; i++) {
+		free(dico->def[i].c);
+		free(dico->def[i].app);
+	}
+}
