@@ -10,7 +10,7 @@ void init_dico(dictionnaire *dico) {
 }
 
 void ajoute_dico(dictionnaire *dico, listemots *mots) {
-	char *nom_doc, *mot;
+	char *nom_doc, *word;
 	definition *def;
 	apparition *app;
 	int i, j;
@@ -23,10 +23,10 @@ void ajoute_dico(dictionnaire *dico, listemots *mots) {
 	nom_doc = malloc(strlen(mots->nom_doc));
 	strcpy(nom_doc, mots->nom_doc); // COPY
 	for (i=0; i<mots->taille; i++) {
-		mot = mots->c[i].c;
+		word = mots->c[i].c;
 		flag = 0; // WORD EXISTS ?
 		for (j=0; j<dico->taille; j++)
-			if (!strcmp(dico->def[j].mot, mot)) {
+			if (!strcmp(dico->def[j].c, word)) {
 				flag = 1; // WORD EXISTS !!
 				def = dico->def + j;
 				if (def->app_taille == def->app_capacite)
@@ -40,8 +40,8 @@ void ajoute_dico(dictionnaire *dico, listemots *mots) {
 				dico->def = realloc(dico->def,
 					(dico->capacite *= 2)*sizeof(definition));
 			def = dico->def + dico->taille++;
-			def->mot = malloc(strlen(mot));
-			strcpy(def->mot, mot);
+			def->c = malloc(strlen(word));
+			strcpy(def->c, word);
 			def->app_taille = 1;
 			def->app_capacite = 8;
 			def->app = malloc(def->app_capacite*sizeof(apparition));
@@ -49,5 +49,20 @@ void ajoute_dico(dictionnaire *dico, listemots *mots) {
 		}
 		app->num_doc = dico->docs_taille-1;
 		app->occurences = mots->c[i].occurences;
+	}
+}
+
+void affiche_dico(dictionnaire* dico) {
+	int i, j, nb_mots, nb_docs, id_doc, occ;
+	nb_mots = dico->taille;
+	for (i=0; i<nb_mots; i++) {
+		printf("%s\t:", dico->def[i].c);
+		nb_docs = dico->def[i].app_taille;
+		for (j=0; j<nb_docs; j++) {
+			id_doc = dico->def[i].app[j].num_doc;
+			occ    = dico->def[i].app[j].occurences;
+			printf("\t%s-%d",dico->docs[id_doc],occ);
+		}
+		putchar('\n');
 	}
 }

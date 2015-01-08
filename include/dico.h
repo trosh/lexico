@@ -19,7 +19,7 @@ typedef struct {
  *   -UNE LISTE D'APPARITIONS
  */
 typedef struct {
-	char *mot;       // CONTENU
+	char *c;       // CONTENU
 	apparition *app; // LISTE DES DOCS OU CE MOT APPARAIT
 	int app_taille;
 	int app_capacite;
@@ -39,5 +39,6 @@ typedef struct {
 
 void init_dico(dictionnaire *dico);
 void ajoute_dico(dictionnaire *dico, listemots *liste_mots);
+void affiche_dico(dictionnaire* dico);
 
 #endif //DICO_H
