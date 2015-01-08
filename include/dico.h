@@ -9,7 +9,7 @@
  */
 typedef struct {
 	int num_doc;    // NUMERO DU DOC
-	int occurences; // OCCURENCE DU MOT DANS LE DOC
+	double occurences; // OCCURENCE DU MOT DANS LE DOC
 } apparition;
 
 /*
@@ -42,4 +42,5 @@ void ajoute_dico(dictionnaire *dico, listemots *liste_mots);
 void affiche_dico(dictionnaire* dico);
 void affiche_docs(dictionnaire* dico);
 void freedico(dictionnaire *dico);
+void frequence_dico(dictionnaire *dico);		//calcul le score de chaque mot
 #endif //DICO_H

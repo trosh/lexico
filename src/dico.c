@@ -63,7 +63,8 @@ void affiche_docs(dictionnaire* dico) {
 		printf("%d - %s\n", i, dico->docs[i]);
 }
 void affiche_dico(dictionnaire* dico) {
-	int i, j, nb_mots, nb_docs, id_doc, occ;
+	int i, j, nb_mots, nb_docs, id_doc;
+	double occ;
 	nb_mots = dico->taille;
 	for (i=0; i<nb_mots; i++) {
 		printf("% 10s:", dico->def[i].c);
@@ -71,7 +72,7 @@ void affiche_dico(dictionnaire* dico) {
 		for (j=0; j<nb_docs; j++) {
 			id_doc = dico->def[i].app[j].num_doc;
 			occ    = dico->def[i].app[j].occurences;
-			printf("\t%s-%d",dico->docs[id_doc],occ);
+			printf("\t%s-%lg",dico->docs[id_doc],occ);
 		}
 		putchar('\n');
 	}
@@ -88,5 +89,25 @@ void freedico(dictionnaire *dico) {
 	for (i=0; i<nb_mots; i++) {
 		free(dico->def[i].c);
 		free(dico->def[i].app);
+	}
+}
+
+void frequence_dico(dictionnaire *dico) {
+	int i, j, nb_mots, nb_docs;
+	double nb_mots_total=0.;
+	nb_mots = dico->taille;
+	//calcul du nombre de mots au total
+	for (i=0; i<nb_mots; i++) {
+		nb_docs = dico->def[i].app_taille;
+		for (j=0; j<nb_docs; j++) {
+			nb_mots_total += dico->def[i].app[j].occurences;
+		}
+	}
+	//on divise chaque occ par ce nb
+	for (i=0; i<nb_mots; i++) {
+		nb_docs = dico->def[i].app_taille;
+		for (j=0; j<nb_docs; j++) {
+			dico->def[i].app[j].occurences /= nb_mots_total;
+		}
 	}
 }
