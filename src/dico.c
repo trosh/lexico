@@ -56,7 +56,7 @@ void affiche_dico(dictionnaire* dico) {
 	int i, j, nb_mots, nb_docs, id_doc, occ;
 	nb_mots = dico->taille;
 	for (i=0; i<nb_mots; i++) {
-		printf("%s\t:", dico->def[i].c);
+		printf("% 10s:", dico->def[i].c);
 		nb_docs = dico->def[i].app_taille;
 		for (j=0; j<nb_docs; j++) {
 			id_doc = dico->def[i].app[j].num_doc;
