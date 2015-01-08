@@ -51,7 +51,14 @@ void ajoute_dico(dictionnaire *dico, listemots *mots) {
 		app->occurences = mots->c[i].occurences;
 	}
 }
-
+void affiche_docs(dictionnaire* dico) {
+	int i, nb_docs;
+	nb_docs=dico->docs_taille;
+	printf("taille=%d capacite=%d\n",dico->docs_taille,dico->docs_capacite);
+	for(i=0;i<nb_docs;i++) {
+		printf("%s\n",dico->docs[i]);
+	}
+}
 void affiche_dico(dictionnaire* dico) {
 	int i, j, nb_mots, nb_docs, id_doc, occ;
 	nb_mots = dico->taille;
