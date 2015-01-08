@@ -29,8 +29,8 @@ int main(int argc, char *argv[]) {
 				nom_doc = argv[i+1] + j;
 		nom_doc++;
 		listes_de_mots[i] = decoupe_fichier(f, nom_doc);
+		//print_mots(stderr, listes_de_mots+i);
 		ajoute_dico(&dico, listes_de_mots+i);
-		//print_mots(stderr, listes_de_mots[i]);
 		//fprintf(stdout, "NOMBRE DE MOTS : %d\n", listes_de_mots[i].taille);
 		//fprintf(stdout, "\033[7mCLOSING FILE %s\033[0m\n", argv[i+1]);
 		fclose(f);

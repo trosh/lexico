@@ -13,15 +13,16 @@ void ajoute_dico(dictionnaire *dico, listemots *mots) {
 	char *nom_doc, *word;
 	definition *def;
 	apparition *app;
-	int i, j;
+	int i, j, id_doc;
 	char flag;
 	if (dico->docs_taille == dico->docs_capacite)
 		dico->docs = realloc(dico->docs,
 			(dico->docs_capacite *= 2)*sizeof(char*));
 	// INC DOC_TAILLE + POINTEUR TO LAST NOM_DOC :
-	nom_doc = dico->docs[dico->docs_taille++];
-	nom_doc = malloc(strlen(mots->nom_doc));
+	id_doc = dico->docs_taille++;
+	nom_doc = dico->docs[id_doc] = malloc(strlen(mots->nom_doc)+1);
 	strcpy(nom_doc, mots->nom_doc); // COPY
+	puts(nom_doc);
 	for (i=0; i<mots->taille; i++) {
 		word = mots->c[i].c;
 		flag = 0; // WORD EXISTS ?
@@ -53,11 +54,13 @@ void ajoute_dico(dictionnaire *dico, listemots *mots) {
 }
 void affiche_docs(dictionnaire* dico) {
 	int i, nb_docs;
-	nb_docs=dico->docs_taille;
-	printf("taille=%d capacite=%d\n",dico->docs_taille,dico->docs_capacite);
-	for(i=0;i<nb_docs;i++) {
-		printf("%s\n",dico->docs[i]);
-	}
+	nb_docs = dico->docs_taille;
+	printf("dico->docs_taille   = %d\n"
+	       "dico->docs_capacite = %d\n",
+	       dico->docs_taille,
+	       dico->docs_capacite);
+	for (i=0; i<nb_docs; i++)
+		printf("%d - %s\n", i, dico->docs[i]);
 }
 void affiche_dico(dictionnaire* dico) {
 	int i, j, nb_mots, nb_docs, id_doc, occ;

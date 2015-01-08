@@ -25,6 +25,6 @@ void freelistesmots(listemots*, int taille);
 listemots decoupe_fichier(FILE*, char*);
 
 // AFFICHE UNE SUSDITE LISTE
-void print_mots(FILE* flux, listemots mots);
+void print_mots(FILE* flux, listemots *mots);
 
 #endif //LEXICO_H

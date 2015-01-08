@@ -43,7 +43,7 @@ listemots decoupe_fichier(FILE *fichier, char* nom_doc) {
 	listemots mots;
 	mot *last_mot;
 	mots.c = malloc(capacite*sizeof(mot)); // DANGER
-	mots.nom_doc = malloc(strlen(nom_doc));
+	mots.nom_doc = malloc(strlen(nom_doc)+1);
 	strcpy(mots.nom_doc, nom_doc);
 	mots.taille = 0;
 	taille_du_mot = 0;
@@ -82,10 +82,11 @@ listemots decoupe_fichier(FILE *fichier, char* nom_doc) {
 	return mots;
 }
 
-void print_mots(FILE* flux, listemots mots) {
+void print_mots(FILE* flux, listemots *mots) {
 	int i;
-	for (i=0; i<mots.taille; i++) {
-		fprintf(flux, "% 15s% 4d", mots.c[i].c, mots.c[i].occurences);
+	fprintf(flux, "%s\n", mots->nom_doc);
+	for (i=0; i<mots->taille; i++) {
+		fprintf(flux, "% 15s% 4d", mots->c[i].c, mots->c[i].occurences);
 		if ((i+1)%4 == 0) fputc('\n', flux);
 	}
 	fputc('\n', flux);
