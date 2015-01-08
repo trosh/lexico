@@ -10,16 +10,20 @@ typedef struct {
 } mot;
 
 typedef struct {
-	mot *c;     // CONTENU
-	int taille; // NOMBRE DE MOTS
+	char* nom_doc; // NOM DU DOC
+	mot *c;        // CONTENU
+	int taille;    // NOMBRE DE MOTS
 } listemots;
 
 // FREE LES MALLOC QUE DECOUPE_FICHIER A FAIT
 void freelistemots(listemots*);
+
 // OU S'IL Y EN A UNE LISTE :
 void freelistesmots(listemots*, int taille);
+
 // CREE UNE LISTE DE MOTS ET LEURS OCCURENCES A PARTIR D'UN FICHIER
-listemots decoupe_fichier(FILE*);
+listemots decoupe_fichier(FILE*, char*);
+
 // AFFICHE UNE SUSDITE LISTE
 void print_mots(FILE* flux, listemots mots);
 

@@ -8,8 +8,8 @@
  *   - LE NOMBRE DOCCURENCE DANS CE DOC
  */
 typedef struct {
-	int num_doc;    //NUMERO DU DOC
-	int occurences; //OCCURENCE DU MOT DANS LE DOC
+	int num_doc;    // NUMERO DU DOC
+	int occurences; // OCCURENCE DU MOT DANS LE DOC
 } apparition;
 
 /*
@@ -20,20 +20,24 @@ typedef struct {
  */
 typedef struct {
 	char *mot;       // CONTENU
-	int id;          // IDENTIFIANT
 	apparition *app; // LISTE DES DOCS OU CE MOT APPARAIT
+	int app_taille;
+	int app_capacite;
 } definition;
 
 /*
  * UN DICTIONNAIRE EST UN ENSEMBLE DE MOT 
  */
 typedef struct {
-	definition *def; // MOT ET SA LISTE DE SYNONYME
-	int taille;      // NBR DE MOT DANS LE DICO
+	definition *def; // LISTE DE (MOT ET SA LISTE D'APPARITIONS)
+	int taille;      // NOMBRE DE MOTS DANS LE DICO
 	int capacite;    // CAPACITE ALLOUEE POUR NOTRE TABLEAU DE DEFINITION
+	char **docs;     // LISTE DES DOCS (NUM_DOC -> NOM_DOC)
+	int docs_taille;
+	int docs_capacite;
 } dictionnaire;
 
 void init_dico(dictionnaire *dico);
-void ajoute_dico(dictionnaire *dico, listemots *liste_mots, int dico_courant);
+void ajoute_dico(dictionnaire *dico, listemots *liste_mots);
 
 #endif //DICO_H

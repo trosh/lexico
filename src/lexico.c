@@ -5,6 +5,7 @@ void freelistemots(listemots *mots) {
 	for (i=0; i<mots->taille; i++)
 		free(mots->c[i].c); // FREE CHAQUE MOT
 	free(mots->c);          // FREE TABLEAU DE MOTS
+	free(mots->nom_doc);    // FREE NOM DOC
 }
 
 // TOUT BE FREE
@@ -36,12 +37,14 @@ inline char convert_minuscule(char c) {
 	return c;
 }
 
-listemots decoupe_fichier(FILE *fichier) {
+listemots decoupe_fichier(FILE *fichier, char* nom_doc) {
 	char zone_de_travail[100], c, flag;
 	int i, taille_du_mot, capacite = 1024;
 	listemots mots;
 	mot *last_mot;
 	mots.c = malloc(capacite*sizeof(mot)); // DANGER
+	mots.nom_doc = malloc(strlen(nom_doc));
+	strcpy(mots.nom_doc, nom_doc);
 	mots.taille = 0;
 	taille_du_mot = 0;
 	while ((c=fgetc(fichier))!=EOF) { // DANGER!!! PAS FORCEMENT ASCII
