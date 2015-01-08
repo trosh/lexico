@@ -13,7 +13,8 @@ void freelistesmots(listemots *listes_de_mots, int taille) {
 	int i;
 	for (i=0; i<taille; i++)
 		freelistemots(listes_de_mots+i); // FREE CONTENU DE LA LISTE
-	free(listes_de_mots); // FREE LISTE DE LISTES
+	//free(listes_de_mots); // FREE LISTE DE LISTES
+	//je pense que tu essayes de free un tableau vide car dans ta boucle tu a deja free le contenu
 }
 
 inline int est_une_lettre_valable(char c) {
