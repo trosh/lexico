@@ -1,9 +1,9 @@
 SHELL=/bin/bash -O extglob -c # need extglob pour purge + {a,b} ...
 CC := gcc
 RM := rm -f
-CFLAGS := -Iinclude -g
+CFLAGS := -Iinclude
 TARGETS := decoupe splitwiki noac char
-OBJECTS := lexico.o
+OBJECTS := lexico.o dico.o
 
 .PHONY: all clean purge test
 
@@ -12,8 +12,11 @@ all: $(OBJECTS) $(TARGETS)
 lexico.o: src/lexico.c include/lexico.h
 	$(CC) $(CFLAGS) -c $<
 
-decoupe: src/decoupe.c include/lexico.h lexico.o
-	$(CC) $(CFLAGS) -o $@ lexico.o $<
+dico.o: src/dico.c include/lexico.h include/dico.h
+	$(CC) $(CFLAGS) -c $<
+
+decoupe: src/decoupe.c include/lexico.h include/dico.h lexico.o dico.o
+	$(CC) $(CFLAGS) -o $@ lexico.o dico.o $<
 
 splitwiki: src/splitwiki.c
 	$(CC) -o $@ $<
