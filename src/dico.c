@@ -21,7 +21,7 @@ void ajoute_mot_existe(dictionnaire *dico,
 	taille = dico->app_tailles   + id_def;
 	cap    = dico->app_capacites + id_def;
 	if (*taille == *cap) {
-		def->num_doc = realloc(def->num_doc, (*cap*=2)*sizeof(int));
+		def->num_doc = realloc(def->num_doc, ((*cap)*=2)*sizeof(int));
 		def->occurences = realloc(def->occurences, *cap);
 	}
 	def->num_doc   [*taille] = id_doc;

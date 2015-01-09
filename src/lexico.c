@@ -40,7 +40,8 @@ inline char convert_minuscule(char c) {
 
 listemots decoupe_fichier(FILE *fichier, char* nom_doc) {
 	char zone_de_travail[100], c, flag;
-	int i, taille_du_mot, capacite = 1024;
+	int i, taille_du_mot, capacite;
+	capacite = 1024;
 	listemots mots;
 	mot *last_mot;
 	mots.c = malloc(capacite*sizeof(mot)); // DANGER
