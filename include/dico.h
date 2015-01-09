@@ -23,7 +23,7 @@ typedef struct {
 	char *c;         // CONTENU
 	//apparition *app; // LISTE DES DOCS OU CE MOT APPARAIT
 	int *num_doc;
-	int *occurences;
+	float *occurences;
 } definition;
 
 /*

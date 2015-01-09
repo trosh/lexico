@@ -23,7 +23,7 @@ void ajoute_mot_existe(dictionnaire *dico,
 	//printf("%d-1\n",*cap);
 	if (*taille == *cap) {
 		def->num_doc = realloc(def->num_doc, ((*cap)*=2)*sizeof(int));
-		def->occurences = realloc(def->occurences, (*cap)*sizeof(int));
+		def->occurences = realloc(def->occurences, (*cap)*sizeof(float));
 	}
 	//printf("%d-2\n",*cap);
 	/**/
@@ -51,7 +51,7 @@ void ajoute_mot_nouveau(dictionnaire *dico,
 	dico->app_capacites[id_def] = 1;
 	def->num_doc    = malloc(sizeof(int)); // ASSUME CAP = 1
 	def->num_doc[0] = id_doc;
-	def->occurences    = malloc(sizeof(int)); // ASSUME CAP = 1
+	def->occurences    = malloc(sizeof(float)); // ASSUME CAP = 1
 	def->occurences[0] = word->occurences;
 }
 
@@ -94,7 +94,8 @@ void affiche_docs(dictionnaire* dico) {
 }
 
 void affiche_dico(dictionnaire* dico) {
-	int i, j, nb_mots, nb_docs, id_doc, l, occ;
+	int i, j, nb_mots, nb_docs, id_doc, l;
+	float occ;
 	nb_mots = dico->taille;
 	for (i=nb_mots-1; i>=0; i--) {
 		printf("% 25s:", dico->def[i].c);
