@@ -23,7 +23,7 @@ typedef struct {
 	char *c;         // CONTENU
 	//apparition *app; // LISTE DES DOCS OU CE MOT APPARAIT
 	int *num_doc;
-	char *occurences;
+	int *occurences;
 } definition;
 
 /*
@@ -31,8 +31,8 @@ typedef struct {
  */
 typedef struct {
 	definition *def; // LISTE DE (MOT ET SA LISTE D'APPARITIONS)
-	char *app_tailles;
-	char *app_capacites;
+	int *app_tailles;
+	int *app_capacites;
 	int taille;      // NOMBRE DE MOTS DANS LE DICO
 	int capacite;    // CAPACITE ALLOUEE POUR NOTRE TABLEAU DE DEFINITION
 	char **docs;     // LISTE DES DOCS (NUM_DOC -> NOM_DOC)

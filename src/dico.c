@@ -4,8 +4,8 @@ void init_dico(dictionnaire *dico) {
 	dico->taille = 0;
 	dico->capacite = 1024;
 	dico->def = malloc(dico->capacite*sizeof(definition));
-	dico->app_tailles = malloc(dico->capacite);
-	dico->app_capacites = malloc(dico->capacite);
+	dico->app_tailles = malloc(dico->capacite*sizeof(int));
+	dico->app_capacites = malloc(dico->capacite*sizeof(int));
 	dico->docs_taille = 0;
 	dico->docs_capacite = 128;
 	dico->docs = malloc(dico->docs_capacite*sizeof(char*));
@@ -16,14 +16,17 @@ void ajoute_mot_existe(dictionnaire *dico,
                        char occs,
                        int id_def) {
 	definition* def;
-	char *taille, *cap;
+	int *taille, *cap;
 	def = dico->def + id_def;
 	taille = dico->app_tailles   + id_def;
 	cap    = dico->app_capacites + id_def;
+	//printf("%d-1\n",*cap);
 	if (*taille == *cap) {
 		def->num_doc = realloc(def->num_doc, ((*cap)*=2)*sizeof(int));
-		def->occurences = realloc(def->occurences, *cap);
+		def->occurences = realloc(def->occurences, (*cap)*sizeof(int));
 	}
+	//printf("%d-2\n",*cap);
+	/**/
 	def->num_doc   [*taille] = id_doc;
 	def->occurences[*taille] = occs;
 	(*taille)++;
@@ -37,8 +40,8 @@ void ajoute_mot_nouveau(dictionnaire *dico,
 	if (dico->taille == dico->capacite) {
 		dico->def = realloc(dico->def,
 			(dico->capacite *= 2)*sizeof(definition));
-		dico->app_tailles = realloc(dico->app_tailles, dico->capacite);
-		dico->app_capacites = realloc(dico->app_capacites, dico->capacite);
+		dico->app_tailles = realloc(dico->app_tailles, dico->capacite*sizeof(int));
+		dico->app_capacites = realloc(dico->app_capacites, dico->capacite*sizeof(int));
 	}
 	id_def = dico->taille++;
 	def = dico->def + id_def;
@@ -48,7 +51,7 @@ void ajoute_mot_nouveau(dictionnaire *dico,
 	dico->app_capacites[id_def] = 1;
 	def->num_doc    = malloc(sizeof(int)); // ASSUME CAP = 1
 	def->num_doc[0] = id_doc;
-	def->occurences    = malloc(1); // ASSUME CAP = 1
+	def->occurences    = malloc(sizeof(int)); // ASSUME CAP = 1
 	def->occurences[0] = word->occurences;
 }
 
@@ -91,10 +94,9 @@ void affiche_docs(dictionnaire* dico) {
 }
 
 void affiche_dico(dictionnaire* dico) {
-	int i, j, nb_mots, nb_docs, id_doc, l;
-	char occ;
+	int i, j, nb_mots, nb_docs, id_doc, l, occ;
 	nb_mots = dico->taille;
-	for (i=0; i<nb_mots; i++) {
+	for (i=nb_mots-1; i>=0; i--) {
 		printf("% 25s:", dico->def[i].c);
 		nb_docs = dico->app_tailles[i];
 		for (j=0; j<nb_docs; j++) {

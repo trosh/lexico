@@ -23,6 +23,7 @@ int main(int argc, char *argv[]) {
 			return 1;
 		}
 		fprintf(stdout, "\033[7m%s\033[0m\n", argv[i+1]);
+		/* cherche si le nom de fichier contien un '/' pour avoir au final le nom réduit du fichier*/
 		nom_doc = argv[i+1] - 1;
 		for (j=0; argv[i+1][j]; j++)
 			if (argv[i+1][j] == '/')
@@ -36,6 +37,7 @@ int main(int argc, char *argv[]) {
 		//fprintf(stdout, "\033[7mCLOSING FILE %s\033[0m\n", argv[i+1]);
 		fclose(f);
 		//fprintf(stdout, "\033[7mCLOSED FILE %s\033[0m\n", argv[i+1]);
+	
 	}
 	//affiche_docs(&dico);
 	//affiche_dico(&dico);
