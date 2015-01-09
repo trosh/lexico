@@ -22,7 +22,7 @@ void ajoute_mot_existe(dictionnaire *dico,
 	cap    = dico->app_capacites + id_def;
 	//printf("%d-1\n",*cap);
 	if (*taille == *cap) {
-		def->num_doc = realloc(def->num_doc, ((*cap)*=2)*sizeof(int));
+		def->num_doc = realloc(def->num_doc, ((*cap)*=4)*sizeof(int));
 		def->occurences = realloc(def->occurences, (*cap)*sizeof(float));
 	}
 	//printf("%d-2\n",*cap);
@@ -39,7 +39,7 @@ void ajoute_mot_nouveau(dictionnaire *dico,
 	int id_def;
 	if (dico->taille == dico->capacite) {
 		dico->def = realloc(dico->def,
-			(dico->capacite *= 2)*sizeof(definition));
+			(dico->capacite *= 4)*sizeof(definition));
 		dico->app_tailles = realloc(dico->app_tailles, dico->capacite*sizeof(int));
 		dico->app_capacites = realloc(dico->app_capacites, dico->capacite*sizeof(int));
 	}
@@ -60,7 +60,7 @@ void ajoute_dico(dictionnaire *dico, listemots *mots) {
 	int i, j, id_doc, id_def;
 	if (dico->docs_taille == dico->docs_capacite)
 		dico->docs = realloc(dico->docs,
-			(dico->docs_capacite *= 2)*sizeof(char*));
+			(dico->docs_capacite *= 4)*sizeof(char*));
 	// INC DOC_TAILLE + POINTEUR TO LAST NOM_DOC :
 	id_doc = dico->docs_taille++;
 	nom_doc = dico->docs[id_doc] = malloc(strlen(mots->nom_doc)+1);
