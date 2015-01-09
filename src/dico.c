@@ -110,7 +110,7 @@ void affiche_dico(dictionnaire* dico) {
 void freedico(dictionnaire *dico) {
 	int i, nb_docs, nb_mots;
 	nb_docs = dico->docs_taille;
-	nb_docs = dico->taille;
+	nb_mots = dico->taille;
 //FREE index Docs
 	for (i=0; i<nb_docs; i++)
 		free(dico->docs[i]);
