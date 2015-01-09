@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
 	}
 	//affiche_docs(&dico);
 	//affiche_dico(&dico);
-	//frequence_dico(&dico);
+	frequence_dico(&dico);
 	affiche_dico(&dico);
 	// TOUT BE FREE
 	freelistesmots(listes_de_mots, argc-1);

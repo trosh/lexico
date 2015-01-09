@@ -129,20 +129,20 @@ void freedico(dictionnaire *dico) {
 	free(dico->def);
 }
 
-/*
+
 void frequence_dico(dictionnaire *dico) {
 	int i, j, nb_mots, nb_docs;
-	double nb_occs_total;
+	float freq_w_doc;
 	nb_mots = dico->taille;
 	//calcul du nombre de mots au total
 	for (i=0; i<nb_mots; i++) {
-		nb_occs_total = 0;
-		nb_docs = dico->def[i].app_taille;
+		printf("test\n");
+		freq_w_doc = 0;
+		nb_docs = dico->app_tailles[i];	//nombre differents de docs pour 1 mot en particulier
 		for (j=0; j<nb_docs; j++)
-			nb_occs_total += dico->def[i].app[j].occurences;
-		//on divise chaque occ par ce nb
-		for (j=nb_docs-1; j>=0; j--) // (mini optimisation)
-			dico->def[i].app[j].occurences /= nb_occs_total;
+			freq_w_doc += dico->def[i].occurences[j];
+		for (j=nb_docs-1; j>=0; j--) // (mini optimisation) freq_w dans un doc / freq_w dans le dico
+			dico->def[i].occurences[j] /= freq_w_doc;
 	}
 }
-*/
+
