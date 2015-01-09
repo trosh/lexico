@@ -1,7 +1,7 @@
 SHELL=/bin/bash -O extglob -c # need extglob pour purge + {a,b} ...
 CC := gcc
 RM := rm -f
-CFLAGS := -Iinclude
+CFLAGS := -Iinclude -g
 TARGETS := decoupe splitwiki noac char
 OBJECTS := lexico.o dico.o
 

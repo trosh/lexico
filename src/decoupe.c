@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
 		puts("usage: decoupe FICHIER [ FICHIER ... ]");
 		return 1;
 	}
-	listes_de_mots = malloc((argc-1)*sizeof(mot));
+	listes_de_mots = malloc((argc-1)*sizeof(listemots));
 	// PARCOURIR LA LISTE DES FICHIERS
 	init_dico(&dico);
 	for (i=0; i<argc-1; i++) {
@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
 	}
 	//affiche_docs(&dico);
 	//affiche_dico(&dico);
-	frequence_dico(&dico);
+	//frequence_dico(&dico);
 	affiche_dico(&dico);
 	// TOUT BE FREE
 	freelistesmots(listes_de_mots, argc-1);
