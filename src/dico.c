@@ -103,7 +103,7 @@ void affiche_dico(dictionnaire* dico) {
 		for (j=0; j<nb_docs; j++) {
 			id_doc = dico->def[i].num_doc[j];
 			occ    = dico->def[i].occurences[j];
-			printf("\t%s %d", dico->docs[id_doc], occ);
+			printf("\t%s %lg", dico->docs[id_doc], occ);
 			//printf("% 4d %d", id_doc, occ);
 		}
 		putchar('\n');
@@ -136,8 +136,8 @@ void frequence_dico(dictionnaire *dico) {
 	nb_mots = dico->taille;
 	//calcul du nombre de mots au total
 	for (i=0; i<nb_mots; i++) {
-		printf("test\n");
-		freq_w_doc = 0;
+		//printf("dico->app_tailles[i]=%d\n",dico->app_tailles[i]);
+		freq_w_doc = 0.;
 		nb_docs = dico->app_tailles[i];	//nombre differents de docs pour 1 mot en particulier
 		for (j=0; j<nb_docs; j++)
 			freq_w_doc += dico->def[i].occurences[j];
