@@ -26,7 +26,7 @@ void ajoute_mot_existe(dictionnaire *dico,
 	}
 	def->num_doc   [*taille] = id_doc;
 	def->occurences[*taille] = occs;
-	*taille++;
+	(*taille)++;
 }
 
 void ajoute_mot_nouveau(dictionnaire *dico,
