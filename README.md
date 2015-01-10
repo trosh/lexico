@@ -25,10 +25,20 @@ Utiliser `make` pour effectuer différentes opérations basiques
 Les programmes qu'on génère sont :
 
 - `char` qui donne des infos basiques sur les strings en `argv`
+
 - `splitwiki` pour splitter un fichier type wiki en un fichier par
   article dans `files/[nom article]`
-- `noac` désaccentue le contenu et le nom d'un fichier (le fichier
-  de sortie est `noac[nom fichier]`;
+
+- `noac` désaccentue le contenu et le nom des fichiers
+  (le fichier de sortie est `noac[nom fichier]`;
   par exemple `noacfiles/[nom article desaccentue]`)
-- `decoupe` affiche le resultat de `decoupe_fichier` dans `stderr`
-  via `print_mots(stderr, ...)`
+
+- `decoupe` initialise un dictionnaire avec `init_dico` puis effectue
+  pour chaque fichier en argument :
+
+  - remplit une liste de ( mots + occurences dans le fichier ) avec
+    `decoupe_fichier`
+  - l'ajoute au dictionnaire avec `ajoute_dico`
+
+  puis transforme les nombre d'occurences en score `float`
+  et affiche le dictionnaire avec `affiche_dico`
