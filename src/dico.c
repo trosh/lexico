@@ -146,3 +146,22 @@ void frequence_dico(dictionnaire *dico) {
 	}
 }
 
+float index_to_score(int w_id,int d_id) {
+	
+	int i,j,nb_mots,nb_docs,id_doc;
+	nb_mots=dico->taille;
+	
+	if(w_id >= nb_mots || w_id < 0) {
+		printf("w_ID hors bornes [0,%d]",nb_mots);
+		return 0.;
+	}
+	else {
+		for(i=0;i<nb_docs;i++) {
+			if(dico->def[w_id].num_doc[i] == d_id) {
+				return dico->def[w_id].occurences[d_id];
+			}
+		}
+		printf("le mot %d n'apparait pas dans le doc %d",w_id, d_id);
+		return 0.;
+	}
+}
