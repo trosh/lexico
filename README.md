@@ -31,7 +31,7 @@ Les programmes qu'on génère sont :
 
 - `noac` désaccentue le contenu et le nom des fichiers
   (le fichier de sortie est `noac[nom fichier]`;
-  par exemple `noacfiles/[nom article desaccentue]`)
+  par exemple `noacfiles/[nom article desaccentué]`)
 
 - `decoupe` initialise un dictionnaire avec `init_dico` puis effectue
   pour chaque fichier en argument :
