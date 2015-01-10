@@ -1,5 +1,6 @@
 #ifndef MATRIX_H
 #define MATRIX_H
+#include "dico.h"
 
 /*
  * MATRICE CARRE A VALEUR FLOAT
@@ -12,7 +13,8 @@ typedef struct {
 
 //alloue l'espace memoire necessaire et init ses elem a 0
 void malloc_matrix(matrix* mat,int taille);
-void dist_polia(vector<map<uint, float>> sets, matrix<float, uint taille> dist_mat)
+void init_matrix_word(matrix* mat,dictionnaire* dico);
+void dist_polia();
 void setDist();
 void setDistSym();
 void dist_polia();

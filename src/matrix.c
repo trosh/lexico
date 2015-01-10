@@ -6,7 +6,11 @@ void malloc_matrix(matrix* m,int taille) {
 	m->mat = malloc(taille*sizeof(float*));
 	m->contenu = malloc(taille*taille*sizeof(float));
 	for(i=0;i<taille;i++)
-		m->mat[i]=&(m->contennu[taille*i]);
+		m->mat[i]=&(m->contenu[taille*i]);
 	for(i=0;i<taille*taille;i++)
 		m->contenu[i]=0.;
+}
+
+void init_matrix_word(matrix* mat,dictionnaire* dico) {
+	
 }

@@ -39,6 +39,10 @@ int main(int argc, char *argv[]) {
 	frequence_dico(&dico);
 	affiche_dico(&dico);
 	printf("il y a %d docs et %d mots\n", dico.docs_taille, dico.taille);
+	matrix m;
+	malloc_matrix(&m,dico.taille);
+	
+	
 	// TOUT BE FREE
 	freelistesmots(listes_de_mots, argc-1);
 	freedico(&dico);
