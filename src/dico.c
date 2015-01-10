@@ -172,9 +172,13 @@ float index_to_score(dictionnaire* dico,int w_id,int d_id) {
 	
 	int i,j,nb_mots,nb_docs,id_doc;
 	nb_mots=dico->taille;
-	
+	nb_docs=dico->docs_taille;
 	if(w_id >= nb_mots || w_id < 0) {
 		printf("w_ID hors bornes [0,%d]\n",nb_mots);
+		return 0.;
+	}
+	else if(d_id >= nb_docs || d_id < 0) {
+		printf("d_ID hors bornes [0,%d]\n",nb_docs);
 		return 0.;
 	}
 	else {
@@ -183,7 +187,7 @@ float index_to_score(dictionnaire* dico,int w_id,int d_id) {
 				return dico->def[w_id].occurences[d_id];
 			}
 		}
-		printf("le mot %d n'apparait pas dans le doc %d\n",w_id, d_id);
+		//printf("le mot %d n'apparait pas dans le doc %d\n",w_id, d_id);
 		return 0.;
 	}
 }
