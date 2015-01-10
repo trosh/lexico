@@ -158,10 +158,12 @@ void frequence_dico(dictionnaire *dico) {
 	for (i=0; i<nb_mots; i++) {
 		//printf("dico->app_tailles[i]=%d\n",dico->app_tailles[i]);
 		freq_w_doc = 0.;
-		nb_docs = dico->app_tailles[i];	//nombre differents de docs pour 1 mot en particulier
+		// NB DE DOCS POUR UN MOT
+		nb_docs = dico->app_tailles[i];
 		for (j=0; j<nb_docs; j++)
 			freq_w_doc += dico->def[i].occurences[j];
-		for (j=nb_docs-1; j>=0; j--) // (mini optimisation) freq_w dans un doc / freq_w dans le dico
+		// freq_w dans un doc / freq_w dans le dico
+		for (j=nb_docs-1; j>=0; j--) // (mini optimisation)
 			dico->def[i].occurences[j] /= freq_w_doc;
 	}
 }
