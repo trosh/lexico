@@ -13,7 +13,7 @@ typedef struct {
 
 //alloue l'espace memoire necessaire et init ses elem a 0
 void malloc_matrix(matrix* mat,int taille);
-void init_matrix_word(matrix* mat,dictionnaire* dico);
+void init_matrix_word(matrix* m,dictionnaire* dico);
 void dist_polia();
 void setDist();
 void setDistSym();
