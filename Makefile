@@ -15,7 +15,7 @@ lexico.o: src/lexico.c include/lexico.h
 dico.o: src/dico.c include/lexico.h include/dico.h
 	$(CC) $(CFLAGS) -c $<
 	
-matrix.o: src/matrix.c include/matrix.h
+matrix.o: src/matrix.c include/dico.h include/matrix.h 
 	$(CC) $(CFLAGS) -c $<
 
 decoupe: src/decoupe.c include/lexico.h include/dico.h include/matrix.h lexico.o dico.o matrix.o

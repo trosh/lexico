@@ -10,3 +10,5 @@ void malloc_matrix(matrix* m,int taille) {
 	for(i=0;i<taille*taille;i++)
 		m->contenu[i]=0.;
 }
+
+void init_matrix_word(matrix* mat,dictionnaire* dico)
