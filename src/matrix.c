@@ -11,6 +11,9 @@ void malloc_matrix(matrix* m,int taille) {
 		m->contenu[i]=0.;
 }
 
+/*
+ * Rempli la matrice de mot avec 1. sauf sur la diag 0.
+ */
 void init_matrix_word(matrix* m,dictionnaire* dico) {
 	int i,j;
 	for(i=0;i<dico->taille;i++){

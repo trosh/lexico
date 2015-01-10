@@ -31,8 +31,8 @@ typedef struct {
  */
 typedef struct {
 	definition *def; // LISTE DE (MOT ET SA LISTE D'APPARITIONS)
-	int *app_tailles;
-	int *app_capacites;
+	int *app_tailles; 		//tabelau de taille Nw contient le nombre de doc ou apparait un mot, la taille de def.num_doc
+	int *app_capacites;		
 	int taille;      // NOMBRE DE MOTS DANS LE DICO
 	int capacite;    // CAPACITE ALLOUEE POUR NOTRE TABLEAU DE DEFINITION
 	char **docs;     // LISTE DES DOCS (NUM_DOC -> NOM_DOC)
