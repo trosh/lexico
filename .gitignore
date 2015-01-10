@@ -15,6 +15,7 @@ decoupe
 noac
 char
 
+*~
 *.o
 *.exe
 *.stackdump
