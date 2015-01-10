@@ -15,11 +15,11 @@ lexico.o: src/lexico.c include/lexico.h
 dico.o: src/dico.c include/lexico.h include/dico.h
 	$(CC) $(CFLAGS) -c $<
 	
-matrix.o: src/matrix.c include/matrix.c
+matrix.o: src/matrix.c include/matrix.h
 	$(CC) $(CFLAGS) -c $<
 
-decoupe: src/decoupe.c include/lexico.h include/dico.h lexico.o dico.o
-	$(CC) $(CFLAGS) -o $@ lexico.o dico.o $<
+decoupe: src/decoupe.c include/lexico.h include/dico.h include/matrix.h lexico.o dico.o matrix.o
+	$(CC) $(CFLAGS) -o $@ lexico.o dico.o matrix.o $<
 
 splitwiki: src/splitwiki.c
 	$(CC) -o $@ $<
