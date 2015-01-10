@@ -94,17 +94,37 @@ void affiche_docs(dictionnaire* dico) {
 }
 
 void affiche_dico(dictionnaire* dico) {
-	int i, j, nb_mots, nb_docs, id_doc, l;
+	int i, j, k, nb_mots, nb_docs, id_doc, l, cnt;
 	float occ;
 	nb_mots = dico->taille;
 	for (i=nb_mots-1; i>=0; i--) {
-		printf("% 25s:", dico->def[i].c);
+		l = strlen(dico->def[i].c);
+		printf("\033[31m");
+		if (l<20)
+			printf("% 20s", dico->def[i].c);
+		else
+			for (k=0; k<20; k++)
+				putchar(dico->def[i].c[k]);
+		printf("\033[0m");
 		nb_docs = dico->app_tailles[i];
+		cnt = 1;
 		for (j=0; j<nb_docs; j++) {
 			id_doc = dico->def[i].num_doc[j];
 			occ    = dico->def[i].occurences[j];
-			printf("\t%s %lg", dico->docs[id_doc], occ);
-			//printf("% 4d %d", id_doc, occ);
+			l = strlen(dico->docs[id_doc]);
+			putchar(' ');
+			if (l<20)
+				printf("%20s", dico->docs[id_doc]);
+			else
+				for (k=0; k<20; k++)
+					putchar(dico->docs[id_doc][k]);
+			printf(" \033[32m%9g\033[0m", occ);
+			if (cnt%4==0 && cnt!=nb_docs) {
+				putchar('\n');
+				for (k=0; k<20; k++)
+					putchar(' ');
+			}
+			cnt++;
 		}
 		putchar('\n');
 	}
