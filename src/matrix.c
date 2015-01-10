@@ -15,7 +15,7 @@ void init_matrix_word(matrix* m,dictionnaire* dico) {
 	int i,j;
 	for(i=0;i<dico->taille;i++){
 		for(j=0;j<dico->taille;j++){
-			m->mat[i][j]=index_to_score(i,j);
+			m->mat[i][j]=index_to_score(dico,i,j);
 		}
 	}
 }
