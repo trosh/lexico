@@ -44,9 +44,7 @@ int main(int argc, char *argv[]) {
 	frequence_dico(&dico);
 	affiche_dico(&dico);
 	
-	printf("test score %lg\n",index_to_score(&dico,10,0));
-	printf("test score %lg\n",index_to_score(&dico,10,1));
-	printf("test score %lg\n",index_to_score(&dico,10,3));
+	printf("il y a %d docs et %d mots",dico.docs_taille,dico.taille);
 	// TOUT BE FREE
 	freelistesmots(listes_de_mots, argc-1);
 	freedico(&dico);
