@@ -43,6 +43,10 @@ int main(int argc, char *argv[]) {
 	//affiche_dico(&dico);
 	frequence_dico(&dico);
 	affiche_dico(&dico);
+	
+	printf("test score %lg\n",index_to_score(&dico,10,0));
+	printf("test score %lg\n",index_to_score(&dico,10,1));
+	printf("test score %lg\n",index_to_score(&dico,10,3));
 	// TOUT BE FREE
 	freelistesmots(listes_de_mots, argc-1);
 	freedico(&dico);

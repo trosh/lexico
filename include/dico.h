@@ -46,6 +46,6 @@ void affiche_dico  (dictionnaire *dico);
 void affiche_docs  (dictionnaire *dico);
 void freedico      (dictionnaire *dico);
 void frequence_dico(dictionnaire *dico); // CALCULE LE SCORE DE CHAQUE MOT
-float index_to_score(int w_id,int d_id); // RENVOIT LE SCORE D'UN MOT EN DONNANT l'ID DU MOT ET DU DOC RENVOIT 0 SINON
+float index_to_score(dictionnaire* dico,int w_id,int d_id); // RENVOIT LE SCORE D'UN MOT EN DONNANT l'ID DU MOT ET DU DOC RENVOIT 0 SINON
 
 #endif //DICO_H
