@@ -49,7 +49,7 @@ void ajoute_mot_nouveau(dictionnaire *dico,
 	def->num_doc[0] = id_doc;
 	def->occurences    = malloc(sizeof(float)); // ASSUME CAP = 1
 	if (nb_w_doc < -1e-7
-	 && nb_w_doc >  1e-7)
+	 && nb_w_doc >  1e-7) // == 0
 		def->occurences[0] = word->occurences/nb_w_doc;
 	else
 		def->occurences[0] = word->occurences;
@@ -82,20 +82,7 @@ void ajoute_dico(dictionnaire *dico, listemots *mots) {
 	}
 }
 
-/* PROBABLEMENT INUTILE
-void affiche_docs(dictionnaire* dico) {
-	int i, nb_docs;
-	nb_docs = dico->docs_taille;
-	printf("dico->docs_taille   = %d\n"
-	       "dico->docs_capacite = %d\n",
-	       dico->docs_taille,
-	       dico->docs_capacite);
-	for (i=0; i<nb_docs; i++)
-		printf("%d - %s\n", i, dico->docs[i]);
-}
-*/
-
-/* PROBABLEMENT INUTILE POUR LES GROS CORPUS AUSSI */
+/* PROBABLEMENT INUTILE POUR LES GROS CORPUS */
 void affiche_dico(dictionnaire* dico) {
 	int i, j, k, nb_mots, nb_docs, id_doc, l, cnt;
 	float occ;
@@ -133,18 +120,6 @@ void affiche_dico(dictionnaire* dico) {
 	}
 }
 
-/* DEBUG SCORE */
-void affiche_dico_bad(dictionnaire *dico) {
-	int i, j;
-	for (i=0; i<dico->taille; i++)
-		for (j=0; j<dico->app_tailles[i]; j++)
-			if (dico->def[i].occurences[j] < 0
-			 || dico->def[i].occurences[j] > 1)
-				printf("%20s\t%g\n",
-					dico->def[i].c,
-					dico->def[i].occurences[j]);
-}
-
 /* CONVERT OCCURENCES -> SCORE DANS DICO */
 void frequence_dico(dictionnaire *dico) {
 	int i, j, nb_mots, nb_docs;
@@ -173,13 +148,13 @@ void freedico(dictionnaire *dico) {
 	int i, nb_docs, nb_mots;
 	nb_docs = dico->docs_taille;
 	nb_mots = dico->taille;
-	//FREE INDEX DOCS
+	// FREE INDEX DOCS
 	for (i=0; i<nb_docs; i++)
 		free(dico->docs[i]);
 	free(dico->docs);
 	free(dico->app_tailles);
 	free(dico->app_capacites);
-	//FREE DEFS
+	// FREE DEFS
 	for (i=0; i<nb_mots; i++) {
 		free(dico->def[i].c);
 		free(dico->def[i].num_doc);

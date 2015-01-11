@@ -12,14 +12,12 @@ void malloc_matrix(matrix* m, int taille) {
 }
 
 // FILL MAT WITH 1. ; EXCEPT DIAG = 0.
-void init_matrix_word(matrix* m, dictionnaire* dico) {
-	int i, j, cnt=0;
-	for (i=0; i<dico->taille; i++)
-		for (j=0; j<dico->taille; j++) {
-			m->mat[i][j] = 1.; // SEGFAULT POUR TROP DE CONTENU ENFIN JE CROIS
-			cnt++;
-		}
-	for (j=0; j<dico->taille; j++)
+void init_matrix(matrix* m) {
+	int i, j;
+	for (i=0; i<m->taille; i++)
+		for (j=0; j<m->taille; j++)
+			m->mat[i][j] = 1.; // SEGFAULT POUR TROP DE CONTENU
+	for (j=0; j<m->taille; j++)
 		m->mat[j][j] = 0.;
 }
 
@@ -64,3 +62,14 @@ matrix dist_polia(set s, matrix dist_mat) {
 	return Result;
 }
 
+void disp_matrix(matrix *m) {
+	int i, j;
+	char num[10];
+	for (i=0; i<m->taille; i++) {
+		for (j=0; j<m->taille; j++) {
+			sprintf(num, "%.0f", 232+m->mat[i][j]*23);
+			printf("\033[48;5;%sm ", num);
+		}
+		puts("\033[0m");
+	}
+}

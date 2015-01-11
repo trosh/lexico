@@ -30,12 +30,10 @@ typedef struct {
 	int docs_capacite;
 } dictionnaire;
 
-void init_dico      (dictionnaire *dico);
-void ajoute_dico    (dictionnaire *dico, listemots *liste_mots);
-//void affiche_docs   (dictionnaire *dico); // TODO : DECIDE S'IL FAUT GARDER
-void affiche_dico   (dictionnaire *dico);
-void affiche_dico_bad(dictionnaire *dico);
-void freedico       (dictionnaire *dico);
-void frequence_dico (dictionnaire *dico); // CALCULE LE SCORE DE CHAQUE MOT
+void init_dico     (dictionnaire *dico);
+void ajoute_dico   (dictionnaire *dico, listemots *liste_mots);
+void affiche_dico  (dictionnaire *dico);
+void freedico      (dictionnaire *dico);
+void frequence_dico(dictionnaire *dico); // CALCULE LE SCORE DE CHAQUE MOT
 
 #endif //DICO_H

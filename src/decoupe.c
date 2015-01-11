@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
 	dictionnaire dico;
 	set docs, words;
 	int i, j, disp;
-	matrix m;
+	matrix matrix_words,matrix_docs;
 	if (argc < 2) {
 		puts("usage: decoupe FICHIER [ FICHIER ... ]");
 		return 1;
@@ -50,19 +50,34 @@ int main(int argc, char *argv[]) {
 	if (disp) affiche_dico(&dico);
 	printf("il y a %d docs et %d mots\n", dico.docs_taille, dico.taille);
 //MATRIX
-	malloc_matrix(&m, dico.taille);
-	init_matrix_word(&m, &dico);
+	malloc_matrix(&matrix_words, dico.taille);
+	malloc_matrix(&matrix_docs, dico.docs_taille);
+	init_matrix(&matrix_words);
+	init_matrix(&matrix_docs);
 //SETS
 	docs = build_docs(&dico);
-	words = build_words(&dico); // TODO FIX
+	words = build_words(&dico); 
+	freedico(&dico);
 	putchar('\n');
 	puts("AFFICHAGE DE DOCS (140 MOTS MAX)");
 	disp_set(&docs);
-	//printf("\nAFFICHAGE DE WORDS\n");
+	//puts("AFFICHAGE DE WORDS (140 DOCS MAX)"); C'EST JUSTE LA TRANSPOSEE!
 	//disp_set(&words);
-	//disp_set(&docs);
+	puts("AFFICHAGE DE MATRIX_DOCS");
+	disp_matrix(&matrix_docs);
+	puts("AFFICHAGE DE MATRIX_WORDS");
+	disp_matrix(&matrix_words);
+	for (i=0; i<100; i++) {
+		//matrix_docs = dist_polia(docs, matrix_words);    				 // Matrix_docs est de taille Nd
+		//matrix_words = dist_polia(words, matrix_docs);					 // Matrix_words est de taille Nw
+	}
+	//puts("AFFICHAGE DE MATRIX_DOCS (140 MOTS MAX)");
+	disp_set(&docs);
+	//printf("\nAFFICHAGE DE MATRIX_WORDS\n");
 	//disp_set(&words);
-	freedico(&dico);
+	puts("AFFICHAGE DE MATRIX_DOCS");
+	disp_matrix(&matrix_docs);
+	puts("AFFICHAGE DE MATRIX_WORDS");
 // TOUT BE FREE
 	freeset(&docs);
 	freeset(&words);

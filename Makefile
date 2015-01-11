@@ -59,3 +59,9 @@ haiku: $(TARGETS)
 	./splitwiki wiki/haiku.txt
 	./noac files/*
 	./decoupe -d noacfiles/*
+
+ab: $(TARGETS)
+	$(RM) {noac,}files/!(.*)
+	./splitwiki wiki/1.txt
+	./noac files/Ab*
+	./decoupe noacfiles/*
