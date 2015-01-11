@@ -5,6 +5,7 @@
 
 typedef struct {
 	float **c;
+	float *contenu;
 	int s1;
 	int s2;
 } set;
