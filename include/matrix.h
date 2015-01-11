@@ -3,7 +3,7 @@
 #include "dico.h"
 #include <float.h>
 
-#define FLT_MAX 3.40282347E+38F
+//#define FLT_MAX 3.40282347E+38F
 
 /*
  * MATRICE CARRE A VALEUR FLOAT

@@ -12,40 +12,35 @@ void init_dico(dictionnaire *dico) {
 }
 
 void ajoute_mot_existe(dictionnaire *dico,
-                       int id_doc,
-                       char occs,
-                       int id_def) {
+		int id_doc, char occs, int id_def) {
 	definition* def;
 	int *taille, *cap;
 	def = dico->def + id_def;
 	taille = dico->app_tailles   + id_def;
 	cap    = dico->app_capacites + id_def;
-	//printf("%d-1\n",*cap);
 	if (*taille == *cap) {
 		def->num_doc = realloc(def->num_doc, ((*cap)*=4)*sizeof(int));
 		def->occurences = realloc(def->occurences, (*cap)*sizeof(float));
 	}
-	//printf("%d-2\n",*cap);
-	/**/
 	def->num_doc   [*taille] = id_doc;
 	def->occurences[*taille] = occs;
 	(*taille)++;
 }
 
 void ajoute_mot_nouveau(dictionnaire *dico,
-                        int id_doc,
-                        mot* word) {
+		int id_doc, mot* word) {
 	definition* def;
 	int id_def;
 	if (dico->taille == dico->capacite) {
-		dico->def = realloc(dico->def,
-			(dico->capacite *= 4)*sizeof(definition));
-		dico->app_tailles = realloc(dico->app_tailles, dico->capacite*sizeof(int));
-		dico->app_capacites = realloc(dico->app_capacites, dico->capacite*sizeof(int));
+		dico->def
+		= realloc(dico->def, (dico->capacite *= 4)*sizeof(definition));
+		dico->app_tailles
+		= realloc(dico->app_tailles, dico->capacite*sizeof(int));
+		dico->app_capacites
+		= realloc(dico->app_capacites, dico->capacite*sizeof(int));
 	}
 	id_def = dico->taille++;
 	def = dico->def + id_def;
-	//def->c = "";
 	def->c = strdup(word->c);
 	dico->app_tailles  [id_def] = 1;
 	dico->app_capacites[id_def] = 1;
@@ -67,8 +62,6 @@ void ajoute_dico(dictionnaire *dico, listemots *mots) {
 	strcpy(nom_doc, mots->nom_doc); // COPY
 	for (i=0; i<mots->taille; i++) {
 		word = mots->c[i].c;
-		//printf("%20s", word);
-		//if (i%4==3) putchar('\n');
 		flag = 0; // DOES WORD EXIST ?
 		for (j=0; j<dico->taille; j++)
 			if (!strcmp(dico->def[j].c, word)) { // WORD EXISTS
@@ -82,7 +75,7 @@ void ajoute_dico(dictionnaire *dico, listemots *mots) {
 	}
 }
 
-/*
+/* PROBABLEMENT INUTILE
 void affiche_docs(dictionnaire* dico) {
 	int i, nb_docs;
 	nb_docs = dico->docs_taille;
@@ -95,6 +88,7 @@ void affiche_docs(dictionnaire* dico) {
 }
 */
 
+/* PROBABLEMENT INUTILE POUR LES GROS CORPUS AUSSI */
 void affiche_dico(dictionnaire* dico) {
 	int i, j, k, nb_mots, nb_docs, id_doc, l, cnt;
 	float occ;
@@ -132,6 +126,7 @@ void affiche_dico(dictionnaire* dico) {
 	}
 }
 
+/* DEBUG SCORE */
 void affiche_dico_bad(dictionnaire *dico) {
 	int i, j;
 	for (i=0; i<dico->taille; i++)
@@ -147,13 +142,13 @@ void freedico(dictionnaire *dico) {
 	int i, nb_docs, nb_mots;
 	nb_docs = dico->docs_taille;
 	nb_mots = dico->taille;
-//FREE index Docs
+	//FREE INDEX DOCS
 	for (i=0; i<nb_docs; i++)
 		free(dico->docs[i]);
 	free(dico->docs);
 	free(dico->app_tailles);
 	free(dico->app_capacites);
-//FREE des Def
+	//FREE DEFS
 	for (i=0; i<nb_mots; i++) {
 		free(dico->def[i].c);
 		free(dico->def[i].num_doc);
@@ -162,21 +157,19 @@ void freedico(dictionnaire *dico) {
 	free(dico->def);
 }
 
-
+/* CONVERT OCCURENCES -> SCORE DANS DICO */
 void frequence_dico(dictionnaire *dico) {
 	int i, j, nb_mots, nb_docs;
 	float freq_w_doc;
 	nb_mots = dico->taille;
-	//calcul du nombre de mots au total
 	for (i=0; i<nb_mots; i++) {
-		//printf("dico->app_tailles[i]=%d\n",dico->app_tailles[i]);
 		freq_w_doc = 0.;
 		// NB DE DOCS POUR UN MOT
 		nb_docs = dico->app_tailles[i];
-		for (j=0; j<nb_docs; j++)
+		for (j=0; j<nb_docs; j++) // BEGIN -> END
 			freq_w_doc += dico->def[i].occurences[j];
-		// freq_w dans un doc / freq_w dans le dico
-		for (j=nb_docs-1; j>=0; j--) // (mini optimisation)
+		// FREQ_W DANS UN DOC / FREQ_W DANS LE DICO
+		for (j=nb_docs-1; j>=0; j--) // BEGIN <- END
 			dico->def[i].occurences[j] /= freq_w_doc;
 	}
 }

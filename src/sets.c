@@ -45,7 +45,7 @@ void disp_set(set *docs) {
 	}
 }
 
-void free_set(set *s) {
+void freeset(set *s) {
 	int i;
 	for (i=0; i<s->s1; i++)
 		free(s->c[i]);
