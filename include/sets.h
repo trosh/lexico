@@ -1,6 +1,5 @@
 #ifndef SETS_H
 #define SETS_H
-
 #include <dico.h>
 
 typedef struct {

@@ -18,7 +18,7 @@ dico.o: src/dico.c include/lexico.h include/dico.h
 sets.o: src/sets.c include/dico.h include/sets.h
 	$(CC) $(CFLAGS) -c $<
 
-matrix.o: src/matrix.c include/dico.h include/matrix.h
+matrix.o: src/matrix.c include/sets.h include/dico.h include/matrix.h
 	$(CC) $(CFLAGS) -c $<
 
 decoupe: src/decoupe.c \

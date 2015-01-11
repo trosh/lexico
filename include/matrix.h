@@ -1,6 +1,7 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 #include "dico.h"
+#include "sets.h"
 #include <float.h>
 
 //#define FLT_MAX 3.40282347E+38F
@@ -17,10 +18,8 @@ typedef struct {
 //alloue l'espace memoire necessaire et init ses elem a 0
 void malloc_matrix(matrix* mat, int taille);
 void init_matrix_word(matrix* m, dictionnaire* dico);
-void dist_polia();
-float setDist(int id_s1,int  id_s2, matrix dist_mat);
-float setDistSym(int s1,int  s2, matrix dist_mat);
-float setDist(int s1,int  s2, matrix dist_mat);
-void dist_polia();
+float setDistSym(float* s1, float* s2,int s_size, matrix dist_mat);
+float setDist(float* s1, float* s2, int s_size, matrix dist_mat);
+matrix dist_polia(set s, matrix dist_mat);
 
 #endif //MATRIX_H

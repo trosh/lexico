@@ -1,5 +1,6 @@
 #include "matrix.h"
 
+
 void malloc_matrix(matrix* m, int taille) {
 	int i;
 	m->mat = malloc(taille*sizeof(float*));
@@ -20,40 +21,43 @@ void init_matrix_word(matrix* m, dictionnaire* dico) {
 }
 
 
-float setDist(int s1, int s2, matrix dist_mat) {
+float setDist(float* s1, float* s2, int s_size, matrix dist_mat) {
 	int e1, e2;
 	float d_min, d_avg, score_min, d;
 	d_avg = 0.0;
 	// Calcul de l'average
 	// (pour chaque element e1 du set s1) :
-	for (e1=0; e1<dist_mat.taille; e1++) {
+	for (e1=0; e1<s_size; e1++) {
 		d_min = FLT_MAX;
 		score_min = 0.;
 		// Calcul du min
-		for (e2=0; e2<dist_mat.taille; e2++) {
+		for (e2=0; e2<s_size; e2++) {
 			d = dist_mat.mat[e1][e2]; // w_id ou d_id
 			if (d < d_min) {
 				d_min = d;
-				score_min = dist_mat.mat[s1][e1] * dist_mat.mat[s2][e2];
+				score_min = s1[e1] * s2[e2];
 			}
 		}
 		d_avg += d_min / score_min;
 	}
-	d_avg /= dist_mat.taille;
+	d_avg /= s_size;
 	return d_avg;
 }
 
-float setDistSym(int s1,int  s2, matrix dist_mat)
-{
-	return setDist(s1, s2, dist_mat) + setDist(s2, s1, dist_mat);
+float setDistSym(float* s1, float* s2,int s_size, matrix dist_mat) {
+	return setDist(s1, s2, s_size, dist_mat) + setDist(s2, s1, s_size, dist_mat);
 }
  
-void dist_polia(sets* s, matrix* dist_mat)
-{
+matrix dist_polia(set s, matrix dist_mat) {
 	matrix Result;
-	for(i = 1 à sets.size
-		for j = 1 à sets.size   // possibilité d'optimiser et ne remplir qu'une matrice triangulaire avec for j = i...
-			Result(i,j) = setDistGeneral(sets(i), sets(j), distMat)
+	int i,j;
+	for(i=0; i< s.nb_lignes; i++) {
+		for(j=0; j< s.nb_lignes; j++) {  // possibilité d'optimiser et ne remplir qu'une matrice triangulaire avec for j = i...
+			Result.mat[i][j] = setDist(s.c[i], s.c[j], s.nb_lignes, dist_mat);
+		}
+	}
+	
+	free(dist_mat.contenu);
 	return Result;
 }
 
