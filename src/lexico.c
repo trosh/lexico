@@ -26,6 +26,7 @@ inline int est_une_lettre_valable(char c) {
 }
 
 inline int recheck_mot_valable(char* str, int size) {
+	if (size < 3) return 0;
 	if (str[0] == '-'  || str[size-1] == '-'
 	 || str[0] == '\'' || str[size-1] == '\'')
 		return 0; // FAUX (LETTRE SPECIALE EN DEBUT/FIN)
