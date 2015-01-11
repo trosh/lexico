@@ -48,14 +48,13 @@ int main(int argc, char *argv[]) {
 	freelistesmots(listes_de_mots, argc-1);
 	frequence_dico(&dico);
 	if (disp) affiche_dico(&dico);
-	affiche_dico_bad(&dico);
 	printf("il y a %d docs et %d mots\n", dico.docs_taille, dico.taille);
 //MATRIX
 	malloc_matrix(&m, dico.taille);
-	init_matrix_word(&m, &dico); 
+	init_matrix_word(&m, &dico);
 //SETS
 	docs = build_docs(&dico);
-	words = build_words(&dico); //TODO FIX
+	words = build_words(&dico); // TODO FIX
 	putchar('\n');
 	puts("AFFICHAGE DE DOCS (140 MOTS MAX)");
 	disp_set(&docs);
@@ -63,7 +62,7 @@ int main(int argc, char *argv[]) {
 	//disp_set(&words);
 	//disp_set(&docs);
 	//disp_set(&words);
-		freedico(&dico);
+	freedico(&dico);
 // TOUT BE FREE
 	freeset(&docs);
 	freeset(&words);
