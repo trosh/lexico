@@ -40,12 +40,6 @@ typedef struct {
 	int docs_capacite;
 } dictionnaire;
 
-typedef struct {
-	float **c;
-	int nb_docs;
-	int nb_mots;
-} documents;
-
 void init_dico      (dictionnaire *dico);
 void ajoute_dico    (dictionnaire *dico, listemots *liste_mots);
 //void affiche_docs   (dictionnaire *dico);
@@ -53,8 +47,5 @@ void affiche_dico   (dictionnaire *dico);
 void affiche_dico_bad(dictionnaire *dico);
 void freedico       (dictionnaire *dico);
 void frequence_dico (dictionnaire *dico); // CALCULE LE SCORE DE CHAQUE MOT
-documents build_docs(dictionnaire *dico);
-void affiche_docs(documents *docs);
-float index_to_score(dictionnaire* dico, int w_id, int d_id); // RENVOIT LE SCORE D'UN MOT EN DONNANT l'ID DU MOT ET DU DOC RENVOIT 0 SINON
 
 #endif //DICO_H

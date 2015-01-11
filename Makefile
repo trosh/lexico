@@ -3,7 +3,7 @@ CC := gcc
 RM := rm -f
 CFLAGS := -Iinclude -g
 TARGETS := decoupe splitwiki noac char
-OBJECTS := lexico.o dico.o matrix.o
+OBJECTS := lexico.o dico.o sets.o matrix.o
 
 .PHONY: all clean purge test
 
@@ -14,12 +14,17 @@ lexico.o: src/lexico.c include/lexico.h
 
 dico.o: src/dico.c include/lexico.h include/dico.h
 	$(CC) $(CFLAGS) -c $<
-	
-matrix.o: src/matrix.c include/dico.h include/matrix.h 
+
+sets.o: src/sets.c include/dico.h include/sets.h
 	$(CC) $(CFLAGS) -c $<
 
-decoupe: src/decoupe.c include/lexico.h include/dico.h include/matrix.h lexico.o dico.o matrix.o
-	$(CC) $(CFLAGS) -o $@ lexico.o dico.o matrix.o $<
+matrix.o: src/matrix.c include/dico.h include/matrix.h
+	$(CC) $(CFLAGS) -c $<
+
+decoupe: src/decoupe.c \
+         include/lexico.h include/dico.h include/sets.h include/matrix.h \
+         lexico.o dico.o sets.o matrix.o
+	$(CC) $(CFLAGS) -o $@ lexico.o dico.o sets.o matrix.o $<
 
 splitwiki: src/splitwiki.c
 	$(CC) -o $@ $<

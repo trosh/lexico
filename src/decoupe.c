@@ -2,6 +2,7 @@
 #include <string.h>
 #include <lexico.h>
 #include <dico.h>
+#include <sets.h>
 #include <matrix.h>
 
 int main(int argc, char *argv[]) {
@@ -9,7 +10,7 @@ int main(int argc, char *argv[]) {
 	char* nom_doc;
 	listemots *listes_de_mots;
 	dictionnaire dico;
-	documents docs;
+	set docs, words;
 	int i, j;
 	if (argc < 2) {
 		puts("usage: decoupe FICHIER [ FICHIER ... ]");
@@ -38,10 +39,12 @@ int main(int argc, char *argv[]) {
 		fclose(f);
 	}
 	frequence_dico(&dico);
-	affiche_dico(&dico);
+	//affiche_dico(&dico);
 	affiche_dico_bad(&dico);
 	docs = build_docs(&dico);
-	affiche_docs(&docs);
+	words = build_words(&dico);
+	//disp_set(&docs);
+	//disp_set(&words);
 	printf("il y a %d docs et %d mots\n", dico.docs_taille, dico.taille);
 	matrix m;
 	malloc_matrix(&m, dico.taille);
@@ -49,5 +52,7 @@ int main(int argc, char *argv[]) {
 	// TOUT BE FREE
 	freelistesmots(listes_de_mots, argc-1);
 	freedico(&dico);
+	freeset(&docs);
+	freeset(&words);
 	return 0;
 }
