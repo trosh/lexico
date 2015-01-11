@@ -19,6 +19,7 @@ void init_matrix_word(matrix* m, dictionnaire* dico) {
 		m->mat[j][j] = 0.;
 }
 
+
 float setDist(int s1, int s2, matrix dist_mat) {
 	int e1, e2;
 	float d_min, d_avg, score_min, d;
