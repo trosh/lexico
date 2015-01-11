@@ -2,6 +2,7 @@
 
 void malloc_matrix(matrix* m, int taille) {
 	int i;
+	m->taille = taille;
 	m->mat = malloc(taille*sizeof(float*));
 	// WOWOW PAS DE CALLOC INUTILE
 	//m->contenu = calloc(taille*taille, sizeof(float));
@@ -53,11 +54,13 @@ float setDistSym(float *s1, float *s2,
 matrix dist_polia(set s, matrix dist_mat) {
 	matrix Result;
 	int i, j;
-	for (i=0; i< s.nb_lignes; i++)
+	for (i=0; i<s.nb_lignes; i++) {
 		// possibilité d'optimiser et ne remplir qu'une matrice triangulaire
 		// avec for j = i...
-		for (j=0; j< s.nb_lignes; j++)
+		for (j=0; j<s.nb_lignes; j++) {
 			Result.mat[i][j] = setDist(s.c[i], s.c[j], s.nb_lignes, dist_mat);
+		}
+	}
 	free(dist_mat.contenu);
 	return Result;
 }

@@ -5,15 +5,15 @@
 typedef struct {
 	float **c;
 	float *contenu;
-	int nb_lignes;	//nb lignes
+	int nb_lignes;   //nb lignes
 	int nb_colonnes; //nb colonnes
 } set;
 
-set build_docs(dictionnaire *dico);
-set build_words(dictionnaire *dico);
-void disp_set(set *docs);
-void freeset(set *s);
-void affiche_set(set* s);
-void disp_set(set *docs);
+set build_docs (dictionnaire*);
+set build_words(dictionnaire*);
+void disp_set   (set*);
+void freeset    (set*);
+void affiche_set(set*);
+void disp_set   (set*);
 
 #endif // SETS_H
