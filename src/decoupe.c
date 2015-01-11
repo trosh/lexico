@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
 	malloc_matrix(&matrix_docs, dico.docs_taille);
 	init_matrix(&matrix_words);
 	disp_matrix(&matrix_words);
-	init_matrix(&matrix_docs);
+	//init_matrix(&matrix_docs);
 //SETS
 	docs = build_docs(&dico);
 	words = build_words(&dico);
@@ -62,9 +62,11 @@ int main(int argc, char *argv[]) {
 	putchar('\n');
 	disp_set(&docs);
 	for (i=0; i<2; i++) {
+		puts("polia words -> docs");
+		matrix_docs  = dist_polia(&docs, &matrix_words); // Nd*Nd
 		disp_matrix(&matrix_docs);
-		matrix_docs = dist_polia(docs, matrix_words);  // Nd*Nd
-		matrix_words = dist_polia(words, matrix_docs); // Nw*Nw
+		puts("polia docs -> words");
+		matrix_words = dist_polia(&words, &matrix_docs); // Nw*Nw
 	}
 	disp_matrix(&matrix_docs);
 	disp_matrix(&matrix_words);

@@ -1,6 +1,6 @@
 #include "matrix.h"
 
-void malloc_matrix(matrix* m, int taille) {
+void malloc_matrix(matrix *m, int taille) {
 	int i;
 	m->taille = taille;
 	m->mat = malloc(taille*sizeof(float*));
@@ -13,7 +13,7 @@ void malloc_matrix(matrix* m, int taille) {
 }
 
 // FILL MAT WITH 1. ; EXCEPT DIAG = 0.
-void init_matrix(matrix* m) {
+void init_matrix(matrix *m) {
 	int i, j;
 	for (i=0; i<m->taille; i++)
 		for (j=0; j<m->taille; j++)
@@ -22,7 +22,7 @@ void init_matrix(matrix* m) {
 		m->mat[j][j] = 0.;
 }
 
-float setDist(float* s1, float* s2, int s_size, matrix dist_mat) {
+float setDist(float *s1, float *s2, int s_size, matrix *dist_mat) {
 	int e1, e2;
 	float d_min, d_avg, score_min, d;
 	d_avg = 0.0;
@@ -33,7 +33,7 @@ float setDist(float* s1, float* s2, int s_size, matrix dist_mat) {
 		score_min = 0.;
 		// Calcul du min
 		for (e2=0; e2<s_size; e2++) {
-			d = dist_mat.mat[e1][e2]; // w_id ou d_id
+			d = dist_mat->mat[e1][e2]; // w_id ou d_id <-------------------------- SEGFAULT ICI !!!!
 			if (d < d_min) {
 				d_min = d;
 				score_min = s1[e1] * s2[e2];
@@ -46,22 +46,26 @@ float setDist(float* s1, float* s2, int s_size, matrix dist_mat) {
 }
 
 float setDistSym(float *s1, float *s2,
-		int s_size, matrix dist_mat) {
+		int s_size, matrix *dist_mat) {
 	return setDist(s1, s2, s_size, dist_mat)
 	     + setDist(s2, s1, s_size, dist_mat);
 }
 
-matrix dist_polia(set s, matrix dist_mat) {
+matrix dist_polia(set *s, matrix *dist_mat) {
 	matrix Result;
-	int i, j;
-	for (i=0; i<s.nb_lignes; i++) {
+	int i, j, t;
+	t = s->nb_lignes;
+	malloc_matrix(&Result, t);
+	for (i=0; i<t; i++) {
 		// possibilité d'optimiser et ne remplir qu'une matrice triangulaire
 		// avec for j = i...
-		for (j=0; j<s.nb_lignes; j++) {
-			Result.mat[i][j] = setDist(s.c[i], s.c[j], s.nb_lignes, dist_mat);
+		for (j=0; j<t; j++) {
+			puts("prout");
+			Result.mat[i][j] = setDist(s->c[i], s->c[j], t, dist_mat);
 		}
 	}
-	free(dist_mat.contenu);
+	free(dist_mat->contenu);
+	free(dist_mat->mat);
 	return Result;
 }
 
@@ -75,4 +79,9 @@ void disp_matrix(matrix *m) {
 		}
 		puts("\033[0m");
 	}
+}
+
+void free_matrix(matrix *m) {
+	free(m->contenu);
+	free(m->mat);
 }

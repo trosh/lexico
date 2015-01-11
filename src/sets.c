@@ -8,7 +8,7 @@ set build_docs(dictionnaire *dico) {
 	docs.c = malloc(nb_docs*sizeof(float*));
 	docs.contenu = calloc(nb_docs*nb_mots,sizeof(float));
 	for (i=0; i<nb_docs; i++) {
-		docs.c[i] = &docs.contenu[i*nb_mots];
+		docs.c[i] = docs.contenu + i*nb_mots;
 		for (j=0; j<nb_mots; j++)
 			for (k=0; k<dico->app_tailles[j]; k++)
 				if (dico->def[j].num_doc[k] == i) {
@@ -27,7 +27,7 @@ set build_words(dictionnaire *dico) {
 	words.c = malloc(nb_mots*sizeof(float*));
 	words.contenu = calloc(nb_docs*nb_mots,sizeof(float));
 	for (i=0; i<nb_mots; i++) {
-		words.c[i] = &words.contenu[i*nb_docs];
+		words.c[i] = words.contenu + i*nb_docs;
 		for (j=0; j<dico->app_tailles[i]; j++){
 			words.c[i][dico->def[i].num_doc[j]] = dico->def[i].occurences[j];
 		}
