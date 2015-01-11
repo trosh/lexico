@@ -26,11 +26,11 @@ void init_matrix_word(matrix* m,dictionnaire* dico) {
 	}
 }
 
-float setDist(int id_s1,int  id_s2, matrix dist_mat)
+float setDist(int s1,int  s2, matrix dist_mat)
 {
 	int e1,e2;
 	float d_min,d_avg,score_min,d;
-	d_avg = 0.0
+	d_avg = 0.0;
 	// Calcul de l'average
 	for(e1=0; e1<dist_mat.taille; e1++){  // (pour chaque element e1 du set s1)
 		d_min = FLT_MAX;
@@ -45,7 +45,7 @@ float setDist(int id_s1,int  id_s2, matrix dist_mat)
 		}
 		d_avg += d_min / score_min;
 	}
-	d_avg /= mat_dist.taille;
+	d_avg /= dist_mat.taille;
 
-	return d_avg 
+	return d_avg ;
 }
