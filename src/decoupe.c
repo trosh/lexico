@@ -11,10 +11,16 @@ int main(int argc, char *argv[]) {
 	listemots *listes_de_mots;
 	dictionnaire dico;
 	set docs, words;
-	int i, j;
+	int i, j, disp;
 	if (argc < 2) {
 		puts("usage: decoupe FICHIER [ FICHIER ... ]");
 		return 1;
+	}
+	disp = 0;
+	if (!strcmp(argv[1], "-d")) {
+		disp = 1;
+		argv++;
+		argc--;
 	}
 	listes_de_mots = malloc((argc-1)*sizeof(listemots));
 	// PARCOURIR LA LISTE DES FICHIERS
@@ -38,20 +44,20 @@ int main(int argc, char *argv[]) {
 		ajoute_dico(&dico, listes_de_mots+i);
 		fclose(f);
 	}
+	freelistesmots(listes_de_mots, argc-1);
 	frequence_dico(&dico);
-	//affiche_dico(&dico);
+	if (disp) affiche_dico(&dico);
 	affiche_dico_bad(&dico);
 	docs = build_docs(&dico);
 	words = build_words(&dico);
+	freedico(&dico);
 	//disp_set(&docs);
 	//disp_set(&words);
 	printf("il y a %d docs et %d mots\n", dico.docs_taille, dico.taille);
 	matrix m;
 	malloc_matrix(&m, dico.taille);
-	init_matrix_word(&m, &dico);
+	init_matrix_word(&m, &dico); // TODO FIX SEGFAULT
 	// TOUT BE FREE
-	freelistesmots(listes_de_mots, argc-1);
-	freedico(&dico);
 	freeset(&docs);
 	freeset(&words);
 	return 0;

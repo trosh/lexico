@@ -41,4 +41,5 @@ Les programmes qu'on génère sont :
   - l'ajoute au dictionnaire avec `ajoute_dico`
 
   puis transforme les nombre d'occurences en score `float`
-  et affiche le dictionnaire avec `affiche_dico`
+  et affiche le dictionnaire avec `affiche_dico` si `-d` est le
+  premier argument.
