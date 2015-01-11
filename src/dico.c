@@ -82,6 +82,7 @@ void ajoute_dico(dictionnaire *dico, listemots *mots) {
 	}
 }
 
+/*
 void affiche_docs(dictionnaire* dico) {
 	int i, nb_docs;
 	nb_docs = dico->docs_taille;
@@ -92,6 +93,7 @@ void affiche_docs(dictionnaire* dico) {
 	for (i=0; i<nb_docs; i++)
 		printf("%d - %s\n", i, dico->docs[i]);
 }
+*/
 
 void affiche_dico(dictionnaire* dico) {
 	int i, j, k, nb_mots, nb_docs, id_doc, l, cnt;
@@ -130,6 +132,17 @@ void affiche_dico(dictionnaire* dico) {
 	}
 }
 
+void affiche_dico_bad(dictionnaire *dico) {
+	int i, j;
+	for (i=0; i<dico->taille; i++)
+		for (j=0; j<dico->app_tailles[i]; j++)
+			if (dico->def[i].occurences[j] < 0
+			 || dico->def[i].occurences[j] > 1)
+				printf("%20s\t%g\n",
+					dico->def[i].c,
+					dico->def[i].occurences[j]);
+}
+
 void freedico(dictionnaire *dico) {
 	int i, nb_docs, nb_mots;
 	nb_docs = dico->docs_taille;
@@ -165,6 +178,36 @@ void frequence_dico(dictionnaire *dico) {
 		// freq_w dans un doc / freq_w dans le dico
 		for (j=nb_docs-1; j>=0; j--) // (mini optimisation)
 			dico->def[i].occurences[j] /= freq_w_doc;
+	}
+}
+
+documents build_docs(dictionnaire *dico) {
+	int i, j, k, nb_docs, nb_mots;
+	documents docs;
+	docs.nb_docs = nb_docs = dico->docs_taille;
+	docs.nb_mots = nb_mots = dico->taille;
+	docs.c = malloc(nb_docs*sizeof(float*));
+	for (i=0; i<nb_docs; i++) {
+		docs.c[i] = calloc(nb_mots, sizeof(float));
+		for (j=0; j<nb_mots; j++)
+			for (k=0; k<nb_docs; k++)
+				if (dico->def[j].num_doc[k] == i) {
+					docs.c[i][j] = dico->def[j].occurences[k];
+					break;
+				}
+	}
+	return docs;
+}
+
+void affiche_docs(documents *docs) {
+	int i, j;
+	for (i=0; i<docs->nb_docs; i++) {
+		for (j=0; j<docs->nb_mots; j++)
+			if (docs->c[i][j] == 0.)
+				putchar(' ');
+			else
+				putchar('#');
+		putchar('\n');
 	}
 }
 

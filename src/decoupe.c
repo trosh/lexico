@@ -9,6 +9,7 @@ int main(int argc, char *argv[]) {
 	char* nom_doc;
 	listemots *listes_de_mots;
 	dictionnaire dico;
+	documents docs;
 	int i, j;
 	if (argc < 2) {
 		puts("usage: decoupe FICHIER [ FICHIER ... ]");
@@ -38,12 +39,13 @@ int main(int argc, char *argv[]) {
 	}
 	frequence_dico(&dico);
 	affiche_dico(&dico);
+	affiche_dico_bad(&dico);
+	docs = build_docs(&dico);
+	affiche_docs(&docs);
 	printf("il y a %d docs et %d mots\n", dico.docs_taille, dico.taille);
 	matrix m;
-	malloc_matrix(&m,dico.taille);
-	init_matrix_word(&m,&dico);
-	
-	
+	malloc_matrix(&m, dico.taille);
+	init_matrix_word(&m, &dico);
 	// TOUT BE FREE
 	freelistesmots(listes_de_mots, argc-1);
 	freedico(&dico);
