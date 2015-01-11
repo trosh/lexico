@@ -56,12 +56,9 @@ int main(int argc, char *argv[]) {
 	printf("il y a %d docs et %d mots\n", dico.docs_taille, dico.taille);
 	matrix m;
 	malloc_matrix(&m, dico.taille);
-	init_matrix_word(&m, &dico); // TODO FIX SEGFAULT
-	puts("bloum\n");
+	init_matrix_word(&m, &dico); 
 	// TOUT BE FREE
 	freeset(&docs);
-	puts("bloum\n");
 	freeset(&words);
-	puts("bloum\n");
 	return 0;
 }
