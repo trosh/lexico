@@ -13,6 +13,7 @@ typedef struct {
 set build_docs(dictionnaire *dico);
 set build_words(dictionnaire *dico);
 void disp_set(set *docs);
-void freeset(set *set);
+void freeset(set *s);
+void affiche_set(set* s);
 
 #endif // SETS_H

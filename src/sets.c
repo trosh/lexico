@@ -6,7 +6,7 @@ set build_docs(dictionnaire *dico) {
 	docs.s1 = nb_docs = dico->docs_taille;
 	docs.s2 = nb_mots = dico->taille;
 	docs.c = malloc(nb_docs*sizeof(float*));
-	docs.contenu = malloc(nb_docs*nb_mots*sizeof(float));
+	docs.contenu = calloc(nb_docs*nb_mots,sizeof(float));
 	for (i=0; i<nb_docs; i++) {
 		docs.c[i] = &docs.contenu[i*nb_mots];
 		for (j=0; j<nb_mots; j++)
@@ -25,12 +25,12 @@ set build_words(dictionnaire *dico) {
 	words.s1 = nb_mots = dico->taille;
 	words.s2 = nb_docs = dico->docs_taille;
 	words.c = malloc(nb_mots*sizeof(float*));
-	words.contenu = malloc(nb_docs*nb_mots*sizeof(float));
+	words.contenu = calloc(nb_docs*nb_mots,sizeof(float));
 	for (i=0; i<nb_mots; i++) {
 		words.c[i] = &words.contenu[i*nb_docs];
-		for (j=0; j<dico->app_tailles[i]; j++)
-			words.c[i][dico->def[i].num_doc[j]]
-			= dico->def[i].occurences[j];
+		for (j=0; j<dico->app_tailles[i]; j++){
+			words.c[i][dico->def[i].num_doc[j]] = dico->def[i].occurences[j];
+		}
 	}
 	return words;
 }
@@ -51,6 +51,16 @@ void freeset(set *s) {
 	int i;
 	free(s->contenu);
 	free(s->c);
+}
+
+void affiche_set(set* s) {
+	int i,j;
+	
+	for (i=0; i<s->s1; i++) {
+		for (j=0; j<s->s2; j++)
+			printf("%lg|",s->c[i][j]);
+		printf("\n");
+	}
 }
 
 //wesh tu me ctrl-c ctrl-v toi MTN !!!?

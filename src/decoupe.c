@@ -12,6 +12,7 @@ int main(int argc, char *argv[]) {
 	dictionnaire dico;
 	set docs, words;
 	int i, j, disp;
+	matrix m;
 	if (argc < 2) {
 		puts("usage: decoupe FICHIER [ FICHIER ... ]");
 		return 1;
@@ -48,16 +49,22 @@ int main(int argc, char *argv[]) {
 	frequence_dico(&dico);
 	if (disp) affiche_dico(&dico);
 	affiche_dico_bad(&dico);
-	docs = build_docs(&dico);
-	words = build_words(&dico);
-	freedico(&dico);
-	//disp_set(&docs);
-	//disp_set(&words);
+
 	printf("il y a %d docs et %d mots\n", dico.docs_taille, dico.taille);
-	matrix m;
+//MATRIX
 	malloc_matrix(&m, dico.taille);
 	init_matrix_word(&m, &dico); 
-	// TOUT BE FREE
+//SETS
+	docs=build_docs(&dico);
+	words=build_words(&dico);		//TODO FIX
+	printf("\nAFFICHAGE DE DOCS\n");
+	affiche_set(&docs);
+	printf("\nAFFICHAGE DE WORDS\n");
+	affiche_set(&words);
+	//disp_set(&docs);
+	//disp_set(&words);
+		freedico(&dico);
+// TOUT BE FREE
 	freeset(&docs);
 	freeset(&words);
 	return 0;
