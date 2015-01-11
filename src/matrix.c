@@ -12,13 +12,14 @@ void malloc_matrix(matrix* m, int taille) {
 // FILL MAT WITH 1. ; EXCEPT DIAG = 0.
 void init_matrix_word(matrix* m, dictionnaire* dico) {
 	int i, j;
-	puts("bleh");
+	puts("bleh\n");
 	for (i=0; i<dico->taille; i++)
 		for (j=0; j<dico->taille; j++)
 			m->mat[i][j] = 1.; // SEGFAULT POUR TROP DE CONTENU
-	puts("bluh");
+	puts("bluh\n");
 	for (j=0; j<dico->taille; j++)
 		m->mat[j][j] = 0.;
+	puts("blah\n");
 }
 
 
