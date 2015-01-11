@@ -5,7 +5,7 @@ CFLAGS := -Iinclude -g
 TARGETS := decoupe splitwiki noac char
 OBJECTS := lexico.o dico.o sets.o matrix.o
 
-.PHONY: all clean purge test
+.PHONY: all clean purge test 1 haiku
 
 all: $(OBJECTS) $(TARGETS)
 
@@ -53,3 +53,9 @@ test: $(TARGETS)
 	./splitwiki wiki/1.txt
 	./noac files/*
 	./decoupe noacfiles/*
+
+haiku: $(TARGETS)
+	$(RM) {noac,}files/!(.*)
+	./splitwiki wiki/haiku.txt
+	./noac files/*
+	./decoupe -d noacfiles/*

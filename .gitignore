@@ -3,6 +3,7 @@
 
 /wiki/*
 !/wiki/ex.txt
+!/wiki/haiku.txt
 
 /noacfiles/*
 !/noacfiles/.empty

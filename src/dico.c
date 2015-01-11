@@ -141,6 +141,30 @@ void affiche_dico_bad(dictionnaire *dico) {
 					dico->def[i].occurences[j]);
 }
 
+/* CONVERT OCCURENCES -> SCORE DANS DICO */
+void frequence_dico(dictionnaire *dico) {
+	int i, j, nb_mots, nb_docs;
+	float freq_w_doc;
+	nb_mots = dico->taille;
+	for (i=0; i<nb_mots; i++) {
+		freq_w_doc = 0.;
+		// NB DE DOCS POUR UN MOT
+		nb_docs = dico->app_tailles[i];
+		for (j=0; j<nb_docs; j++) // BEGIN -> END
+			freq_w_doc += dico->def[i].occurences[j];
+		// FREQ_W DANS UN DOC / FREQ_W DANS LE DICO
+		for (j=nb_docs-1; j>=0; j--) {// BEGIN <- END
+			dico->def[i].occurences[j] /= freq_w_doc;
+			if (dico->def[i].occurences[j] < 0
+			 || dico->def[i].occurences[j] > 1)
+				printf("%s %g %g\n",
+					dico->def[i].c,
+					dico->def[i].occurences[j],
+					freq_w_doc);
+		}
+	}
+}
+
 void freedico(dictionnaire *dico) {
 	int i, nb_docs, nb_mots;
 	nb_docs = dico->docs_taille;
@@ -158,21 +182,4 @@ void freedico(dictionnaire *dico) {
 		free(dico->def[i].occurences);
 	}
 	free(dico->def);
-}
-
-/* CONVERT OCCURENCES -> SCORE DANS DICO */
-void frequence_dico(dictionnaire *dico) {
-	int i, j, nb_mots, nb_docs;
-	float freq_w_doc;
-	nb_mots = dico->taille;
-	for (i=0; i<nb_mots; i++) {
-		freq_w_doc = 0.;
-		// NB DE DOCS POUR UN MOT
-		nb_docs = dico->app_tailles[i];
-		for (j=0; j<nb_docs; j++) // BEGIN -> END
-			freq_w_doc += dico->def[i].occurences[j];
-		// FREQ_W DANS UN DOC / FREQ_W DANS LE DICO
-		for (j=nb_docs-1; j>=0; j--) // BEGIN <- END
-			dico->def[i].occurences[j] /= freq_w_doc;
-	}
 }
