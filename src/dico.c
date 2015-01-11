@@ -29,8 +29,8 @@ void ajoute_mot_existe(dictionnaire *dico,
 
 void ajoute_mot_nouveau(dictionnaire *dico,
 		int id_doc, mot* word) {
+	int i, id_def;
 	definition* def;
-	int id_def;
 	if (dico->taille == dico->capacite) {
 		dico->def
 		= realloc(dico->def, (dico->capacite *= 4)*sizeof(definition));
@@ -42,6 +42,7 @@ void ajoute_mot_nouveau(dictionnaire *dico,
 	id_def = dico->taille++;
 	def = dico->def + id_def;
 	def->c = strdup(word->c);
+	def->checksum = word->checksum;
 	dico->app_tailles  [id_def] = 1;
 	dico->app_capacites[id_def] = 1;
 	def->num_doc    = malloc(sizeof(int)); // ASSUME CAP = 1
@@ -52,7 +53,7 @@ void ajoute_mot_nouveau(dictionnaire *dico,
 
 void ajoute_dico(dictionnaire *dico, listemots *mots) {
 	char *nom_doc, *word, flag;
-	int i, j, id_doc, id_def;
+	int i, j, id_doc, id_def, checksum;
 	if (dico->docs_taille == dico->docs_capacite)
 		dico->docs = realloc(dico->docs,
 			(dico->docs_capacite *= 4)*sizeof(char*));
@@ -62,9 +63,11 @@ void ajoute_dico(dictionnaire *dico, listemots *mots) {
 	strcpy(nom_doc, mots->nom_doc); // COPY
 	for (i=0; i<mots->taille; i++) {
 		word = mots->c[i].c;
+		checksum = mots->c[i].checksum;
 		flag = 0; // DOES WORD EXIST ?
 		for (j=0; j<dico->taille; j++)
-			if (!strcmp(dico->def[j].c, word)) { // WORD EXISTS
+			if (dico->def[j].checksum == checksum // PRE CHECK
+			 && !strcmp(dico->def[j].c, word)) { // WORD EXISTS
 				ajoute_mot_existe(dico, id_doc,
 					mots->c[i].occurences, j);
 				flag = 1;

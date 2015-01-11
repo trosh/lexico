@@ -3,25 +3,14 @@
 #include "lexico.h"
 
 /*
- * UNE APPARITION D'UN MOT DU DICTIONNAIRE EST DEFINIE PAR:
- *   - LE NOM D'UN DOCUMENT DANS LEQUEL IL APPARAIT
- *   - LE NOMBRE DOCCURENCE DANS CE DOC
- */
-/*
-typedef struct {
-	int num_doc;     // NUMERO DU DOC
-	char occurences; // OCCURENCE DU MOT DANS LE DOC
-} apparition;
-*/
-/*
  * UNE DEFINITION EST UN MOT DU DICTIONNAIRE ET EST DEFINIE PAR:
  *   - UN STRING
  *   - UN IDENTIFIANT
  *   - UNE LISTE D'APPARITIONS
  */
 typedef struct {
-	char *c;         // CONTENU
-	//apparition *app; // LISTE DES DOCS OU CE MOT APPARAIT
+	char *c; // CONTENU
+	int checksum; // C[0]+C[1]+...
 	int *num_doc;
 	float *occurences;
 } definition;
@@ -30,9 +19,10 @@ typedef struct {
  * UN DICTIONNAIRE EST UN ENSEMBLE DE MOT 
  */
 typedef struct {
-	definition *def; // LISTE DE (MOT ET SA LISTE D'APPARITIONS)
-	int *app_tailles; 		//tabelau de taille Nw contient le nombre de doc ou apparait un mot, la taille de def.num_doc
-	int *app_capacites;		
+	definition *def;  // LISTE DE (MOT ET SA LISTE D'APPARITIONS)
+	// APP_TAILLE[I] == LEN(DEF[I].NUM_DOC) == LEN(DEF[I].OCCURENCES)
+	int *app_tailles;
+	int *app_capacites; // CAPACITES CORRESPONDANTES
 	int taille;      // NOMBRE DE MOTS DANS LE DICO
 	int capacite;    // CAPACITE ALLOUEE POUR NOTRE TABLEAU DE DEFINITION
 	char **docs;     // LISTE DES DOCS (NUM_DOC -> NOM_DOC)
@@ -42,7 +32,7 @@ typedef struct {
 
 void init_dico      (dictionnaire *dico);
 void ajoute_dico    (dictionnaire *dico, listemots *liste_mots);
-//void affiche_docs   (dictionnaire *dico);
+//void affiche_docs   (dictionnaire *dico); // TODO : DECIDE S'IL FAUT GARDER
 void affiche_dico   (dictionnaire *dico);
 void affiche_dico_bad(dictionnaire *dico);
 void freedico       (dictionnaire *dico);
