@@ -58,20 +58,27 @@ int main(int argc, char *argv[]) {
 //SETS
 	docs = build_docs(&dico);
 	words = build_words(&dico); 
+	freedico(&dico);
 	putchar('\n');
-	
+	puts("AFFICHAGE DE DOCS (140 MOTS MAX)");
+	disp_set(&docs);
 	puts("AFFICHAGE DE WORDS (140 MOTS MAX)");
 	disp_set(&words);
-	freedico(&dico);
-	for(i=0;i<10;i++){
+	puts("AFFICHAGE DE MATRIX_DOCS");
+	disp_matrix(&matrix_docs);
+	puts("AFFICHAGE DE MATRIX_WORDS");
+	disp_matrix(&matrix_words);
+	for(i=0;i<100;i++){
 		//matrix_docs = dist_polia(docs, matrix_words);    				 // Matrix_docs est de taille Nd
 		//matrix_words = dist_polia(words, matrix_docs);					 // Matrix_words est de taille Nw
 	}
-	puts("AFFICHAGE DE DOCS (140 MOTS MAX)");
+	puts("AFFICHAGE DE MATRIX_DOCS (140 MOTS MAX)");
 	disp_set(&docs);
-	printf("\nAFFICHAGE DE WORDS\n");
+	printf("\nAFFICHAGE DE MATRIX_WORDS\n");
 	disp_set(&words);
-	
+	puts("AFFICHAGE DE MATRIX_DOCS");
+	disp_matrix(&matrix_docs);
+	puts("AFFICHAGE DE MATRIX_WORDS");
 	
 		
 // TOUT BE FREE

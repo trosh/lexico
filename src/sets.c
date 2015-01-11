@@ -37,7 +37,7 @@ set build_words(dictionnaire *dico) {
 
 void disp_set(set *docs) {
 	int i, j;
-	char *num = malloc(10);
+	char num[10];
 	for (i=0; i<docs->nb_lignes; i++) {
 		for (j=0; j<docs->nb_colonnes && j<140; j++) {
 			sprintf(num, "%.0f", 232+docs->c[i][j]*23);
