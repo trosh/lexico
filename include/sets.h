@@ -6,8 +6,8 @@
 typedef struct {
 	float **c;
 	float *contenu;
-	int s1;
-	int s2;
+	int nb_lignes;	//nb lignes
+	int nb_colonnes; //nb colonnes
 } set;
 
 set build_docs(dictionnaire *dico);

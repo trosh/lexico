@@ -3,8 +3,8 @@
 set build_docs(dictionnaire *dico) {
 	int i, j, k, nb_docs, nb_mots;
 	set docs;
-	docs.s1 = nb_docs = dico->docs_taille;
-	docs.s2 = nb_mots = dico->taille;
+	docs.nb_lignes = nb_docs = dico->docs_taille;
+	docs.nb_colonnes = nb_mots = dico->taille;
 	docs.c = malloc(nb_docs*sizeof(float*));
 	docs.contenu = calloc(nb_docs*nb_mots,sizeof(float));
 	for (i=0; i<nb_docs; i++) {
@@ -22,8 +22,8 @@ set build_docs(dictionnaire *dico) {
 set build_words(dictionnaire *dico) {
 	int i, j, nb_mots, nb_docs;
 	set words;
-	words.s1 = nb_mots = dico->taille;
-	words.s2 = nb_docs = dico->docs_taille;
+	words.nb_lignes = nb_mots = dico->taille;
+	words.nb_colonnes = nb_docs = dico->docs_taille;
 	words.c = malloc(nb_mots*sizeof(float*));
 	words.contenu = calloc(nb_docs*nb_mots,sizeof(float));
 	for (i=0; i<nb_mots; i++) {
@@ -38,8 +38,8 @@ set build_words(dictionnaire *dico) {
 void disp_set(set *docs) {
 	int i, j;
 	char *num = malloc(10);
-	for (i=0; i<docs->s1; i++) {
-		for (j=0; j<docs->s2 && j<140; j++) {
+	for (i=0; i<docs->nb_lignes; i++) {
+		for (j=0; j<docs->nb_colonnes && j<140; j++) {
 			sprintf(num, "%.0f", 232+docs->c[i][j]*23);
 			printf("\033[48;5;%sm ", num);
 		}
@@ -55,8 +55,8 @@ void freeset(set *s) {
 
 void affiche_set(set* s) {
 	int i,j;
-	for (i=0; i<s->s1; i++) {
-		for (j=0; j<s->s2; j++)
+	for (i=0; i<s->nb_lignes; i++) {
+		for (j=0; j<s->nb_colonnes; j++)
 			printf("%lg|",s->c[i][j]);
 		printf("\n");
 	}
