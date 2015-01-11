@@ -53,8 +53,8 @@ int main(int argc, char *argv[]) {
 //MATRIX
 	malloc_matrix(&matrix_words, dico.taille);
 	malloc_matrix(&matrix_docs, dico.docs_taille);
-	init_matrix_word(&matrix_words, &dico);
-	init_matrix_word(&matrix_docs, &dico);
+	init_matrix(&matrix_words);
+	init_matrix(&matrix_docs);
 //SETS
 	docs = build_docs(&dico);
 	words = build_words(&dico); 
@@ -64,8 +64,9 @@ int main(int argc, char *argv[]) {
 	disp_set(&words);
 	
 	for(i=0;i<10;i++){
-		
-	}
+		//matrix_docs = dist_polia(docs, matrix_words);    				 // Matrix_docs est de taille Nd
+		//matrix_words = dist_polia(words, matrix_docs);					 // Matrix_words est de taille Nw
+	}	
 	//printf("\nAFFICHAGE DE WORDS\n");
 	//disp_set(&words);
 	//disp_set(&docs);

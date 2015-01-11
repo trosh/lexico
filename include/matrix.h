@@ -17,7 +17,7 @@ typedef struct {
 
 //alloue l'espace memoire necessaire et init ses elem a 0
 void malloc_matrix(matrix* mat, int taille);
-void init_matrix_word(matrix* m, dictionnaire* dico);
+void init_matrix(matrix* m);
 float setDistSym(float* s1, float* s2,int s_size, matrix dist_mat);
 float setDist(float* s1, float* s2, int s_size, matrix dist_mat);
 matrix dist_polia(set s, matrix dist_mat);
