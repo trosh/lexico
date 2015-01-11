@@ -1,6 +1,7 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 #include "dico.h"
+#include <float.h>
 
 #define FLT_MAX 3.40282347E+38F
 
