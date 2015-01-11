@@ -14,5 +14,6 @@ set build_words(dictionnaire *dico);
 void disp_set(set *docs);
 void freeset(set *s);
 void affiche_set(set* s);
+void disp_set(set *docs)
 
 #endif // SETS_H

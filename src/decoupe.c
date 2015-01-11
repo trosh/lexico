@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
 	dictionnaire dico;
 	set docs, words;
 	int i, j, disp;
-	matrix m;
+	matrix matrix_words,matrix_docs;
 	if (argc < 2) {
 		puts("usage: decoupe FICHIER [ FICHIER ... ]");
 		return 1;
@@ -51,14 +51,21 @@ int main(int argc, char *argv[]) {
 	affiche_dico_bad(&dico);
 	printf("il y a %d docs et %d mots\n", dico.docs_taille, dico.taille);
 //MATRIX
-	malloc_matrix(&m, dico.taille);
-	init_matrix_word(&m, &dico); 
+	malloc_matrix(&matrix_words, dico.taille);
+	malloc_matrix(&matrix_docs, dico.docs_taille);
+	init_matrix_word(&matrix_words, &dico);
+	init_matrix_word(&matrix_docs, &dico);
 //SETS
 	docs = build_docs(&dico);
-	words = build_words(&dico); //TODO FIX
+	words = build_words(&dico); 
 	putchar('\n');
 	puts("AFFICHAGE DE DOCS (140 MOTS MAX)");
 	disp_set(&docs);
+	disp_set(&words);
+	
+	for(i=0;i<10;i++){
+		
+	}
 	//printf("\nAFFICHAGE DE WORDS\n");
 	//disp_set(&words);
 	//disp_set(&docs);
