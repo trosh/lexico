@@ -76,6 +76,9 @@ listemots decoupe_fichier(FILE *fichier, char* nom_doc) {
 			last_mot = mots.c + mots.taille;
 			last_mot->occurences = 1;
 			last_mot->c = strndup(zone_de_travail, taille_du_mot+1);
+			last_mot->checksum = 0;
+			for (i=0; i<taille_du_mot; i++)
+				last_mot->checksum += zone_de_travail[i];
 			// PAS BESOIN DE VIDER ZONE_DE_TRAVAIL !
 			mots.taille++;
 			taille_du_mot = 0;

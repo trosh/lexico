@@ -6,6 +6,7 @@
 
 typedef struct {
 	char *c;        // CONTENU
+	int checksum;   // C[0] + C[1] + ... POUR PRE CHECK
 	int occurences; // NOMBRE D'OCCURENCES DE CE MOT
 } mot;
 
