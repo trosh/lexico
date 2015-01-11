@@ -47,3 +47,12 @@ float setDistSym(int s1,int  s2, matrix dist_mat)
 {
 	return setDist(s1, s2, dist_mat) + setDist(s2, s1, dist_mat);
 }
+ /*
+Fonction dist_polia(vector<map<uint, float>> sets, matrix<float, uint taille> dist_mat)
+{
+	Matrix<float, sets.size> Result;
+	for i = 1 à sets.size
+		for j = 1 à sets.size   // possibilité d'optimiser et ne remplir qu'une matrice triangulaire avec for j = i...
+			Result(i,j) = setDistGeneral(sets(i), sets(j), distMat)
+	return Result;
+}*/
