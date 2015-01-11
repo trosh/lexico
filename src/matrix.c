@@ -49,3 +49,8 @@ float setDist(int s1,int  s2, matrix dist_mat)
 
 	return d_avg ;
 }
+
+float setDistSym(int s1,int  s2, matrix dist_mat)
+{
+	return setDist(s1, s2, dist_mat) + setDist(s2, s1, dist_mat);
+}

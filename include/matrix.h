@@ -17,7 +17,7 @@ void malloc_matrix(matrix* mat,int taille);
 void init_matrix_word(matrix* m,dictionnaire* dico);
 void dist_polia();
 float setDist(int id_s1,int  id_s2, matrix dist_mat);
-void setDistSym();
+float setDistSym(int s1,int  s2, matrix dist_mat)
 void dist_polia();
 
 #endif //MATRIX_H
