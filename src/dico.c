@@ -28,7 +28,7 @@ void ajoute_mot_existe(dictionnaire *dico,
 }
 
 void ajoute_mot_nouveau(dictionnaire *dico,
-		int id_doc, mot* word) {
+		int id_doc, mot* word, int nb_w_doc) {
 	int i, id_def;
 	definition* def;
 	if (dico->taille == dico->capacite) {
@@ -48,7 +48,11 @@ void ajoute_mot_nouveau(dictionnaire *dico,
 	def->num_doc    = malloc(sizeof(int)); // ASSUME CAP = 1
 	def->num_doc[0] = id_doc;
 	def->occurences    = malloc(sizeof(float)); // ASSUME CAP = 1
-	def->occurences[0] = word->occurences;
+	if (nb_w_doc < -1e-7
+	 && nb_w_doc >  1e-7)
+		def->occurences[0] = word->occurences/nb_w_doc;
+	else
+		def->occurences[0] = word->occurences;
 }
 
 void ajoute_dico(dictionnaire *dico, listemots *mots) {
@@ -74,7 +78,7 @@ void ajoute_dico(dictionnaire *dico, listemots *mots) {
 				break;
 			}
 		if (!flag) // WORD DOESN'T EXIST
-			ajoute_mot_nouveau(dico, id_doc, mots->c+i);
+			ajoute_mot_nouveau(dico, id_doc, mots->c+i, mots->taille);
 	}
 }
 

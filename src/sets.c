@@ -37,13 +37,13 @@ set build_words(dictionnaire *dico) {
 
 void disp_set(set *docs) {
 	int i, j;
+	char *num = malloc(10);
 	for (i=0; i<docs->s1; i++) {
-		for (j=0; j<docs->s2; j++)
-			if (docs->c[i][j] == 0.)
-				putchar(' ');
-			else
-				putchar('#');
-		putchar('\n');
+		for (j=0; j<docs->s2 && j<140; j++) {
+			sprintf(num, "%.0f", 232+docs->c[i][j]*23);
+			printf("\033[48;5;%sm ", num);
+		}
+		puts("\033[0m");
 	}
 }
 
@@ -55,7 +55,6 @@ void freeset(set *s) {
 
 void affiche_set(set* s) {
 	int i,j;
-	
 	for (i=0; i<s->s1; i++) {
 		for (j=0; j<s->s2; j++)
 			printf("%lg|",s->c[i][j]);
