@@ -53,6 +53,7 @@ void freeset(set *s) {
 	free(s->c);
 }
 
+//wesh tu me ctrl-c ctrl-v toi MTN !!!?
 /* haha deso frere
 float index_to_score(dictionnaire* dico, int w_id, int d_id) {
 	int i, j, nb_mots, nb_docs, id_doc;
