@@ -24,7 +24,7 @@ void init_matrix(matrix *m) {
 
 float setDist(float *s1, float *s2, int s_size, matrix *dist_mat) {
 	int e1, e2;
-	float d_min, d_avg, score_min, d;
+	float d_min, d_avg, score_min, d, s;
 	d_avg = 0.0;
 	// CALCUL DE LA MOYENNE
 	// (POUR CHAQUE ELEMENT E1 DE S1) :
@@ -34,9 +34,10 @@ float setDist(float *s1, float *s2, int s_size, matrix *dist_mat) {
 		// Calcul du min
 		for (e2=0; e2<s_size; e2++) {
 			d = dist_mat->mat[e1][e2]; // w_id ou d_id
-			if (d < d_min && (s1[e1] * s2[e2])> 1e-8) {
+			s = s1[e1] * s2[e2];
+			if (d < d_min && s> 1e-8) {
 				d_min = d;
-				score_min = s1[e1] * s2[e2];
+				score_min = s;
 			}
 		}
 		//printf("d_min=%lg\n",d_min);
@@ -58,12 +59,14 @@ matrix dist_polia(set *s, matrix *dist_mat) {
 	int i, j, t;
 	t = s->nb_lignes;
 	malloc_matrix(&Result, t);
-	for (i=0; i<t; i++)
+	for (i=0; i<t; i++) {
+		puts("putch");
 		for (j=i; j<t; j++) {
 			Result.mat[j][i] =
 			Result.mat[i][j] =
 			setDistSym(s->c[i], s->c[j], s->nb_colonnes, dist_mat);
 		}
+	}
 	return Result;
 }
 
