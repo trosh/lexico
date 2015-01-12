@@ -17,7 +17,7 @@ void init_matrix(matrix *m) {
 	int i, j;
 	for (i=0; i<m->taille; i++)
 		for (j=0; j<m->taille; j++)
-			m->mat[i][j] = 1.; // SEGFAULT POUR TROP DE CONTENU
+			m->mat[i][j] = 1.;
 	for (j=0; j<m->taille; j++)
 		m->mat[j][j] = 0.;
 }
@@ -36,15 +36,16 @@ float setDist(float *s1, float *s2, int s_size, matrix *dist_mat) {
 		for (e2=0; e2<s_size; e2++) {
 			//printf("%d\n",e2);
 			d = dist_mat->mat[e1][e2]; // w_id ou d_id
-			if (d < d_min && d!=0) {
+			if (d < d_min) {
 				d_min = d;
 				score_min = s1[e1] * s2[e2];
 			}
 		}
-		d_avg += d_min / score_min;
+		//printf("d_min=%lg\n",d_min);
+		if(score_min > 1e-16)
+			d_avg += d_min / score_min;
 	}
 	d_avg /= s_size;
-	
 	return d_avg;
 }
 
@@ -61,12 +62,12 @@ matrix dist_polia(set *s, matrix *dist_mat) {
 	malloc_matrix(&Result, t);
 //	printf("%d\n",t);
 	for (i=0; i<t; i++) {
-		printf("%d--",i);
+		//printf("%d--",i);
 		for (j=0; j<t; j++) {
 			//printf("%d",j);
 			Result.mat[i][j] = setDistSym(s->c[i], s->c[j], s->nb_colonnes, dist_mat);
 		}
-		printf("\n");
+		//printf("\n");
 	}
 
 
@@ -78,8 +79,9 @@ void disp_matrix(matrix *m) {
 	char num[10];
 	for (i=0; i<m->taille; i++) {
 		for (j=0; j<m->taille; j++) {
-			sprintf(num, "%.0f", 232+m->mat[i][j]*23);
-			printf("\033[48;5;%sm ", num);
+			//sprintf(num, "%.0f", 232+m->mat[i][j]*23);
+			//printf("\033[48;5;%sm ", num);
+			printf("%g ", m->mat[i][j]);
 		}
 		puts("\033[0m");
 	}
