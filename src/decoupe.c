@@ -56,9 +56,10 @@ int main(int argc, char *argv[]) {
 	//init_matrix(&matrix_docs);
 //SETS
 	docs = build_docs(&dico);
+	disp_set(&docs);
 	words = build_words(&dico);
 	freedico(&dico);
-	printf("bleh0\n",matrix_docs.mat,matrix_docs.contenu,matrix_docs.taille);
+	puts("bleh0");
 	//disp_matrix(&matrix_words);
 	disp_matrix(&matrix_docs);
 	for (i=0; i<2; i++) {
