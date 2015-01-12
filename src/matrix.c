@@ -17,9 +17,9 @@ void init_matrix(matrix *m) {
 	int i, j;
 	for (i=0; i<m->taille; i++)
 		for (j=0; j<m->taille; j++)
-			m->mat[i][j] = 0.9999999;
+			m->mat[i][j] = 0.7;
 	for (j=0; j<m->taille; j++)
-		m->mat[j][j] = 0.00000001;
+		m->mat[j][j] = 0.3;
 }
 
 float setDist(float *s1, float *s2, int s_size, matrix *dist_mat) {
@@ -35,7 +35,7 @@ float setDist(float *s1, float *s2, int s_size, matrix *dist_mat) {
 		for (e2=0; e2<s_size; e2++) {
 			d = dist_mat->mat[e1][e2]; // w_id ou d_id
 			s = s1[e1] * s2[e2];
-			if (d < d_min) {// && s> 1e-8) {
+			if (d < d_min && s> 1e-8) {
 				d_min = d;
 				score_min = s;
 			}
@@ -74,7 +74,7 @@ void disp_matrix(matrix *m) {
 	char num[10];
 	for (i=0; i<m->taille; i++) {
 		for (j=0; j<m->taille; j++) {
-			sprintf(num, "%.0f", 232+m->mat[i][j]*23);
+			sprintf(num, "%.0f", 232+m->mat[i][j]/10);
 			printf("\033[48;5;%sm ", num);
 			//printf("%g ", m->mat[i][j]);
 		}

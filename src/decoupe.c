@@ -59,23 +59,20 @@ int main(int argc, char *argv[]) {
 	disp_set(&docs);
 	words = build_words(&dico);
 	freedico(&dico);
-	puts("bleh0");
-	//disp_matrix(&matrix_words);
-	//disp_matrix(&matrix_docs);
-	for (i=0; i<20; i++) {
+	for (i=0; i<4; i++) {
 		free(matrix_docs.contenu);
 		free(matrix_docs.mat);
+		puts("docs");
 		matrix_docs  = dist_polia(&docs,&matrix_words); // Nd*Nd
 		disp_matrix(&matrix_docs);
-		printf("bleh1\n");
 		free(matrix_words.contenu);
 		free(matrix_words.mat);
+		puts("words");
 		matrix_words = dist_polia(&words,&matrix_docs); // Nw*Nw
-		printf("bleh2\n");
+		//disp_matrix(&matrix_words);
 	}
-	printf("bleh\n");
 	printf("SCORE final %lg\n",matrix_docs.mat[0][0]);
-	disp_matrix(&matrix_words);
+	//disp_matrix(&matrix_words);
 // TOUT BE FREE
 	freeset(&docs);
 	freeset(&words);
