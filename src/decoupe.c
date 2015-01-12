@@ -61,8 +61,8 @@ int main(int argc, char *argv[]) {
 	freedico(&dico);
 	puts("bleh0");
 	//disp_matrix(&matrix_words);
-	disp_matrix(&matrix_docs);
-	for (i=0; i<20; i++) {
+	//disp_matrix(&matrix_docs);
+	for (i=0; i<3; i++) {
 		free(matrix_docs.contenu);
 		free(matrix_docs.mat);
 		matrix_docs  = dist_polia(&docs,&matrix_words); // Nd*Nd
@@ -75,7 +75,6 @@ int main(int argc, char *argv[]) {
 	}
 	printf("bleh\n");
 	printf("SCORE final %lg\n",matrix_docs.mat[0][0]);
-	disp_matrix(&matrix_docs);
 	disp_matrix(&matrix_words);
 // TOUT BE FREE
 	freeset(&docs);
