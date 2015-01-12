@@ -48,10 +48,10 @@ void ajoute_mot_nouveau(dictionnaire *dico,
 	def->num_doc    = malloc(sizeof(int)); // ASSUME CAP = 1
 	def->num_doc[0] = id_doc;
 	def->occurences    = malloc(sizeof(float)); // ASSUME CAP = 1
-	if (nb_w_doc < -1e-7
+	/*if (nb_w_doc < -1e-7
 	 && nb_w_doc >  1e-7) // == 0
 		def->occurences[0] = word->occurences/nb_w_doc;
-	else
+	else*/
 		def->occurences[0] = word->occurences;
 }
 
