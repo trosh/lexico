@@ -17,9 +17,9 @@ void init_matrix(matrix *m) {
 	int i, j;
 	for (i=0; i<m->taille; i++)
 		for (j=0; j<m->taille; j++)
-			m->mat[i][j] = 0.9;
+			m->mat[i][j] = 0.9999999;
 	for (j=0; j<m->taille; j++)
-		m->mat[j][j] = 0.1;
+		m->mat[j][j] = 0.00000001;
 }
 
 float setDist(float *s1, float *s2, int s_size, matrix *dist_mat) {
@@ -35,7 +35,7 @@ float setDist(float *s1, float *s2, int s_size, matrix *dist_mat) {
 		for (e2=0; e2<s_size; e2++) {
 			d = dist_mat->mat[e1][e2]; // w_id ou d_id
 			s = s1[e1] * s2[e2];
-			if (d < d_min && s> 1e-8) {
+			if (d < d_min) {// && s> 1e-8) {
 				d_min = d;
 				score_min = s;
 			}
@@ -60,7 +60,6 @@ matrix dist_polia(set *s, matrix *dist_mat) {
 	t = s->nb_lignes;
 	malloc_matrix(&Result, t);
 	for (i=0; i<t; i++) {
-		puts("putch");
 		for (j=i; j<t; j++) {
 			Result.mat[j][i] =
 			Result.mat[i][j] =

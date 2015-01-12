@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
 	puts("bleh0");
 	//disp_matrix(&matrix_words);
 	//disp_matrix(&matrix_docs);
-	for (i=0; i<3; i++) {
+	for (i=0; i<20; i++) {
 		free(matrix_docs.contenu);
 		free(matrix_docs.mat);
 		matrix_docs  = dist_polia(&docs,&matrix_words); // Nd*Nd
