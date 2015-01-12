@@ -17,9 +17,9 @@ void init_matrix(matrix *m) {
 	int i, j;
 	for (i=0; i<m->taille; i++)
 		for (j=0; j<m->taille; j++)
-			m->mat[i][j] = 1.;
+			m->mat[i][j] = 0.9;
 	for (j=0; j<m->taille; j++)
-		m->mat[j][j] = 0.;
+		m->mat[j][j] = 0.1;
 }
 
 float setDist(float *s1, float *s2, int s_size, matrix *dist_mat) {
@@ -36,13 +36,13 @@ float setDist(float *s1, float *s2, int s_size, matrix *dist_mat) {
 		for (e2=0; e2<s_size; e2++) {
 			//printf("%d\n",e2);
 			d = dist_mat->mat[e1][e2]; // w_id ou d_id
-			if (d < d_min) {
+			if (d < d_min && (s1[e1] * s2[e2])> 1e-8) {
 				d_min = d;
 				score_min = s1[e1] * s2[e2];
 			}
 		}
 		//printf("d_min=%lg\n",d_min);
-		if(score_min > 1e-16)
+		if (score_min > 1e-8)
 			d_avg += d_min / score_min;
 	}
 	d_avg /= s_size;
@@ -63,9 +63,10 @@ matrix dist_polia(set *s, matrix *dist_mat) {
 //	printf("%d\n",t);
 	for (i=0; i<t; i++) {
 		//printf("%d--",i);
-		for (j=0; j<t; j++) {
-			//printf("%d",j);
-			Result.mat[i][j] = setDistSym(s->c[i], s->c[j], s->nb_colonnes, dist_mat);
+		for (j=i; j<t; j++) {
+			Result.mat[j][i] =
+			Result.mat[i][j] =
+			setDistSym(s->c[i], s->c[j], s->nb_colonnes, dist_mat);
 		}
 		//printf("\n");
 	}
@@ -79,9 +80,9 @@ void disp_matrix(matrix *m) {
 	char num[10];
 	for (i=0; i<m->taille; i++) {
 		for (j=0; j<m->taille; j++) {
-			//sprintf(num, "%.0f", 232+m->mat[i][j]*23);
-			//printf("\033[48;5;%sm ", num);
-			printf("%g ", m->mat[i][j]);
+			sprintf(num, "%.0f", 232+m->mat[i][j]*23);
+			printf("\033[48;5;%sm ", num);
+			//printf("%g ", m->mat[i][j]);
 		}
 		puts("\033[0m");
 	}
