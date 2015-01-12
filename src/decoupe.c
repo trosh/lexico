@@ -53,21 +53,26 @@ int main(int argc, char *argv[]) {
 	malloc_matrix(&matrix_words, dico.taille);
 	malloc_matrix(&matrix_docs, dico.docs_taille);
 	init_matrix(&matrix_words);
-	disp_matrix(&matrix_words);
 	//init_matrix(&matrix_docs);
 //SETS
 	docs = build_docs(&dico);
 	words = build_words(&dico);
 	freedico(&dico);
-	putchar('\n');
-	disp_set(&docs);
+	printf("bleh0\n",matrix_docs.mat,matrix_docs.contenu,matrix_docs.taille);
+	//disp_matrix(&matrix_words);
+	disp_matrix(&matrix_docs);
 	for (i=0; i<2; i++) {
-		puts("polia words -> docs");
-		matrix_docs  = dist_polia(&docs, &matrix_words); // Nd*Nd
-		disp_matrix(&matrix_docs);
-		puts("polia docs -> words");
-		matrix_words = dist_polia(&words, &matrix_docs); // Nw*Nw
+		free(matrix_docs.contenu);
+		free(matrix_docs.mat);
+		matrix_docs  = dist_polia(&docs,&matrix_words); // Nd*Nd
+		printf("bleh1\n");
+		free(matrix_words.contenu);
+		free(matrix_words.mat);
+		matrix_words = dist_polia(&words,&matrix_docs); // Nw*Nw
+		printf("bleh2\n");
 	}
+	printf("bleh\n");
+	printf("SCORE final %lg\n",matrix_docs.mat[0][0]);
 	disp_matrix(&matrix_docs);
 	disp_matrix(&matrix_words);
 // TOUT BE FREE
