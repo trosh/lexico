@@ -50,7 +50,7 @@ float setDist(float *s1, float *s2, int s_size, matrix *dist_mat) {
 
 float setDistSym(float *s1, float *s2,
 		int s_size, matrix *dist_mat) {
-	return setDist(s1, s2, s_size, dist_mat)
+	return setDist(s1, s2, s_size, dist_mat) // parallelisable
 	     + setDist(s2, s1, s_size, dist_mat);
 }
 

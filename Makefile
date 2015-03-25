@@ -5,7 +5,7 @@ CFLAGS := -Iinclude -O3
 TARGETS := decoupe splitwiki noac char
 OBJECTS := lexico.o dico.o sets.o matrix.o
 
-.PHONY: all clean purge test 1 haiku
+.PHONY: all clean purge test 1 haiku cr
 
 all: $(OBJECTS) $(TARGETS)
 
@@ -65,3 +65,14 @@ ab: $(TARGETS)
 	./splitwiki wiki/1.txt
 	./noac files/Ab*
 	./decoupe noacfiles/*
+
+ac: $(TARGETS)
+	$(RM) {noac,}files/!(.*)
+	./splitwiki wiki/1.txt
+	./noac files/Ac*
+	./decoupe noacfiles/*
+
+cr:
+	pdflatex cr/cr.tex
+	#groff -D utf-8 -e -ms cr/cr.ms | ps2pdf - > cr/cr.pdf
+	evince cr/cr.pdf 2> /dev/null &
