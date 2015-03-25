@@ -32,7 +32,7 @@ float setDist(float *s1, float *s2, int s_size, matrix *dist_mat) {
 		d_min = FLT_MAX;
 		score_min = 0.;
 		// Calcul du min
-		for (e2=0; e2<s_size; e2++) {
+		for (e2=e1; e2<s_size; e2++) {
 			d = dist_mat->mat[e1][e2]; // w_id ou d_id
 			s = s1[e1] * s2[e2];
 			if (d < d_min && s> 1e-8) {
