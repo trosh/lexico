@@ -48,8 +48,19 @@ float setDist(float *s1, float *s2, int s_size, matrix *dist_mat) {
 
 float setDistSym(float *s1, float *s2,
 		int s_size, matrix *dist_mat) {
-	return setDist(s1, s2, s_size, dist_mat) // parallelisable
-	     + setDist(s2, s1, s_size, dist_mat);
+	float sd1, sd2;
+#pragma omp sections
+	{
+#pragma omp section
+		{
+			sd1 = setDist(s1, s2, s_size, dist_mat);
+		}
+#pragma omp section
+		{
+			sd2 = setDist(s2, s1, s_size, dist_mat);
+		}
+	}
+	return sd1 + sd2;
 }
 
 matrix dist_polia(set *s, matrix *dist_mat) {
@@ -57,13 +68,12 @@ matrix dist_polia(set *s, matrix *dist_mat) {
 	int i, j, t;
 	t = s->nb_lignes;
 	malloc_matrix(&Result, t);
-	for (i=0; i<t; i++) {
+	for (i=0; i<t; i++)
 		for (j=i; j<t; j++) {
 			Result.mat[j][i] =
 			Result.mat[i][j] =
 			setDistSym(s->c[i], s->c[j], s->nb_colonnes, dist_mat);
 		}
-	}
 	return Result;
 }
 
