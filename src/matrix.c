@@ -4,8 +4,6 @@ void malloc_matrix(matrix *m, int taille) {
 	int i;
 	m->taille = taille;
 	m->mat = malloc(taille*sizeof(float*));
-	// WOWOW PAS DE CALLOC INUTILE
-	//m->contenu = calloc(taille*taille, sizeof(float));
 	m->contenu = malloc(taille*taille*sizeof(float));
 	// sorte de index 2d -> index 1d? j'aime bien
 	for (i=0; i<taille; i++)
