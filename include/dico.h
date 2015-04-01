@@ -26,7 +26,7 @@ typedef struct {
 	int taille;      // NOMBRE DE MOTS DANS LE DICO
 	int capacite;    // CAPACITE ALLOUEE POUR NOTRE TABLEAU DE DEFINITION
 	char **docs;     // LISTE DES DOCS (NUM_DOC -> NOM_DOC)
-	int docs_taille;
+	int docs_taille;  // NOMBRE DE DOCS DANS LE DICO?
 	int docs_capacite;
 } dictionnaire;
 

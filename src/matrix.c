@@ -15,34 +15,44 @@ void init_matrix(matrix *m) {
 	int i, j;
 	for (i=0; i<m->taille; i++)
 		for (j=0; j<m->taille; j++)
-			m->mat[i][j] = 0.7;
+			m->mat[i][j] = 1.;
 	for (j=0; j<m->taille; j++)
-		m->mat[j][j] = 0.3;
+		m->mat[j][j] = 0.;
 }
 
 float setDist(float *s1, float *s2, int s_size, matrix *dist_mat) {
-	int e1, e2;
+	int e1, e2,nb_elem=0;
 	float d_min, d_avg, score_min, d, s;
 	d_avg = 0.0;
 	// CALCUL DE LA MOYENNE
 	// (POUR CHAQUE ELEMENT E1 DE S1) :
 	for (e1=0; e1<s_size; e1++) {
-		d_min = FLT_MAX;
-		score_min = 0.;
-		// Calcul du min
-		for (e2=e1; e2<s_size; e2++) {
-			d = dist_mat->mat[e1][e2]; // w_id ou d_id
-			s = s1[e1] * s2[e2];
-			if (d < d_min && s> 1e-8) {
-				d_min = d;
-				score_min = s;
+			if(s1[e1] != 0){ //si le score est nul alors il n'existe pas dans le doc
+				nb_elem++;
+
+				
+				d_min = FLT_MAX;
+				score_min = 0.;
+				// Calcul du min
+				for (e2=e1; e2<s_size; e2++) {
+					if(s2[e2] !=0){ //si le score est nul alors il n'existe pas dans le doc
+						d = dist_mat->mat[e1][e2]; // w_id ou d_id
+						s = s1[e1] * s2[e2];
+						if (d < d_min && s> 1e-8) {
+							d_min = d;
+							score_min = s;
+						}
+					}
+				}
+				//printf("d_min=%lg\n",d_min);
+				if (score_min > 1e-8)
+					d_avg += d_min / score_min;
 			}
-		}
-		//printf("d_min=%lg\n",d_min);
-		if (score_min > 1e-8)
-			d_avg += d_min / score_min;
 	}
-	d_avg /= s_size;
+	//d_avg /= s_size;  //il faut diviser par le nombre de mot dans le docs, pas le nombre total de mots.
+	
+	//printf("%d\n",nb_elem);
+	d_avg /= nb_elem;
 	return d_avg;
 }
 

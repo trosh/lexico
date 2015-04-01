@@ -3,6 +3,6 @@
 Voici un article exemple à analyser - il contient des accents
 et des cedilles mais noac devrait se charger de ça.
 
-[[Exemple accentué même dans le titre]]
+[[Exemple ]]
 
-Encore plus de contenu accentué à analyser! Super.
+Encore plus

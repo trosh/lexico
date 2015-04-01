@@ -3,10 +3,10 @@
 set build_docs(dictionnaire *dico) {
 	int i, j, k, nb_docs, nb_mots;
 	set docs;
-	docs.nb_lignes = nb_docs = dico->docs_taille;
-	docs.nb_colonnes = nb_mots = dico->taille;
+	docs.nb_lignes = nb_docs = dico->docs_taille; //ND
+	docs.nb_colonnes = nb_mots = dico->taille; //NW
 	docs.c = malloc(nb_docs*sizeof(float*));
-	docs.contenu = calloc(nb_docs*nb_mots,sizeof(float));
+	docs.contenu = calloc(nb_docs*nb_mots,sizeof(float)); //mise a zero des scores
 	for (i=0; i<nb_docs; i++) {
 		docs.c[i] = docs.contenu + i*nb_mots;
 		for (j=0; j<nb_mots; j++)
