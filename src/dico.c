@@ -29,7 +29,7 @@ void ajoute_mot_existe(dictionnaire *dico,
 
 void ajoute_mot_nouveau(dictionnaire *dico,
 		int id_doc, mot* word, int nb_w_doc) {
-	int i, id_def;
+	int id_def;
 	definition* def;
 	if (dico->taille == dico->capacite) {
 		dico->def
@@ -53,7 +53,7 @@ void ajoute_mot_nouveau(dictionnaire *dico,
 
 void ajoute_dico(dictionnaire *dico, listemots *mots) {
 	char *nom_doc, *word, flag;
-	int i, j, id_doc, id_def, checksum;
+	int i, j, id_doc, checksum;
 	if (dico->docs_taille == dico->docs_capacite)
 		dico->docs = realloc(dico->docs,
 			(dico->docs_capacite *= 4)*sizeof(char*));
@@ -87,7 +87,7 @@ void affiche_dico(dictionnaire* dico) {
 		l = strlen(dico->def[i].c);
 		printf("\033[31m");
 		if (l<20)
-			printf("% 20s", dico->def[i].c);
+			printf("%20s", dico->def[i].c);
 		else
 			for (k=0; k<20; k++)
 				putchar(dico->def[i].c[k]);

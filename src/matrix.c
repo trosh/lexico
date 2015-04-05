@@ -21,36 +21,33 @@ void init_matrix(matrix *m) {
 }
 
 float setDist(float *s1, float *s2, int s_size, matrix *dist_mat) {
-	int e1, e2,nb_elem=0;
+	int e1, e2, nb_elem=0;
 	float d_min, d_avg, score_min, d, s;
 	d_avg = 0.0;
 	// CALCUL DE LA MOYENNE
 	// (POUR CHAQUE ELEMENT E1 DE S1) :
+#pragma omp parallel for schedule(static) private(e1,e2,d_min,score_min,d,s) reduction(+:d_avg,nb_elem)
 	for (e1=0; e1<s_size; e1++) {
-			if(s1[e1] != 0){ //si le score est nul alors il n'existe pas dans le doc
-				nb_elem++;
-
-				
-				d_min = FLT_MAX;
-				score_min = 0.;
-				// Calcul du min
-				for (e2=e1; e2<s_size; e2++) {
-					if(s2[e2] !=0){ //si le score est nul alors il n'existe pas dans le doc
-						d = dist_mat->mat[e1][e2]; // w_id ou d_id
-						s = s1[e1] * s2[e2];
-						if (d < d_min && s> 1e-8) {
-							d_min = d;
-							score_min = s;
-						}
+		if (s1[e1] != 0) { //si le score est nul alors il n'existe pas dans le doc
+			nb_elem++;
+			d_min = FLT_MAX;
+			score_min = 0.;
+			// Calcul du min
+			for (e2=e1; e2<s_size; e2++)
+				if (s2[e2] != 0) { //si le score est nul alors il n'existe pas dans le doc
+					d = dist_mat->mat[e1][e2]; // w_id ou d_id
+					s = s1[e1] * s2[e2];
+					if (d < d_min && s > 1e-8) {
+						d_min = d;
+						score_min = s;
 					}
 				}
-				//printf("d_min=%lg\n",d_min);
-				if (score_min > 1e-8)
-					d_avg += d_min / score_min;
-			}
+			//printf("d_min=%lg\n",d_min);
+			if (score_min > 1e-8) // != 0 totalement arbitraire
+				d_avg += d_min / score_min;
+		}
 	}
-	//d_avg /= s_size;  //il faut diviser par le nombre de mot dans le docs, pas le nombre total de mots.
-	
+	//d_avg /= s_size; //il faut diviser par le nombre de mot dans le docs, pas le nombre total de mots.
 	//printf("%d\n",nb_elem);
 	d_avg /= nb_elem;
 	return d_avg;
@@ -58,19 +55,8 @@ float setDist(float *s1, float *s2, int s_size, matrix *dist_mat) {
 
 float setDistSym(float *s1, float *s2,
 		int s_size, matrix *dist_mat) {
-	float sd1, sd2;
-#pragma omp sections
-	{
-#pragma omp section
-		{
-			sd1 = setDist(s1, s2, s_size, dist_mat);
-		}
-#pragma omp section
-		{
-			sd2 = setDist(s2, s1, s_size, dist_mat);
-		}
-	}
-	return sd1 + sd2;
+	return setDist(s1, s2, s_size, dist_mat);
+	     + setDist(s2, s1, s_size, dist_mat);
 }
 
 matrix dist_polia(set *s, matrix *dist_mat) {

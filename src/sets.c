@@ -48,7 +48,6 @@ void disp_set(set *docs) {
 }
 
 void freeset(set *s) {
-	int i;
 	free(s->contenu);
 	free(s->c);
 }
