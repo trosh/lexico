@@ -1,11 +1,11 @@
 SHELL=/bin/bash -O extglob -c # need extglob pour purge + {a,b} ...
-CC := mpicc
+CC := gcc
 RM := rm -f
 CFLAGS := -Iinclude -O3 -Wall -fopenmp
-TARGETS := decoupe splitwiki char
+TARGETS := decoupe splitwiki noac char
 OBJECTS := lexico.o dico.o sets.o matrix.o
 
-.PHONY: all clean purge test 1 haiku cr log
+.PHONY: all clean purge test 1 haiku cr
 
 all: $(OBJECTS) $(TARGETS)
 
@@ -29,50 +29,50 @@ decoupe: src/decoupe.c \
 splitwiki: src/splitwiki.c
 	$(CC) -o $@ $<
 
+noac: src/noac.c
+	$(CC) -o $@ $< -lunac
+
 char: src/char.c
 	$(CC) -o $@ $<
 
 clean:
-	$(RM) $(OBJECTS) *.log *.err
+	$(RM) $(OBJECTS)
 
 purge:
-	$(RM) $(OBJECTS) $(TARGETS) *.log *.err
+	$(RM) $(OBJECTS) $(TARGETS)
 	$(RM) {,noac}files/!(.*) # rm tout sauf dotfiles
 
 test: $(TARGETS)
 	$(RM) {noac,}files/!(.*)
 	./splitwiki wiki/ex.txt
-	bash noac.sh files/* # glob evite les dotfiles
-	llsubmit ll.sh
+	./noac files/* # glob evite les dotfiles
+	./decoupe -d noacfiles/*
 
 1: $(TARGETS)
 	$(RM) {noac,}files/!(.*)
 	./splitwiki wiki/1.txt
-	bash noac.sh files/*
-	llsubmit ll.sh
+	./noac files/*
+	./decoupe noacfiles/*
 
 haiku: $(TARGETS)
 	$(RM) {noac,}files/!(.*)
 	./splitwiki wiki/haiku.txt
-	bash noac.sh files/*
-	llsubmit ll.sh
+	./noac files/*
+	./decoupe -d noacfiles/*
 
 ab: $(TARGETS)
 	$(RM) {noac,}files/!(.*)
 	./splitwiki wiki/1.txt
-	bash noac.sh files/Ab*
-	llsubmit ll.sh
+	./noac files/Ab*
+	./decoupe noacfiles/*
 
 ac: $(TARGETS)
 	$(RM) {noac,}files/!(.*)
 	./splitwiki wiki/1.txt
-	bash noac.sh files/Ac*
-	llsubmit ll.sh
+	./noac files/Ac*
+	./decoupe noacfiles/*
 
 cr:
 	pdflatex cr/cr.tex
 	#groff -D utf-8 -e -ms cr/cr.ms | ps2pdf - > cr/cr.pdf
 	evince cr/cr.pdf 2> /dev/null &
-
-log:
-	cat lex.log | tail -n 50 | more

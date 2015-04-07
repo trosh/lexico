@@ -4,15 +4,23 @@
 #include <dico.h>
 #include <sets.h>
 #include <matrix.h>
+#include <mpi.h>
 
 int main(int argc, char *argv[]) {
+	/* BEGIN DECL */
 	FILE *f;
 	char* nom_doc;
 	listemots *listes_de_mots;
 	dictionnaire dico;
 	set docs, words;
-	int i, j, disp;
+	int i, j, disp, csize, crank;
 	matrix matrix_words,matrix_docs;
+	double t;
+	/* END DECL */
+	MPI_Init(&argc, &argv);
+	MPI_Comm_size(MPI_COMM_WORLD, &csize);
+	MPI_Comm_rank(MPI_COMM_WORLD, &crank);
+	if (!crank) t = MPI_Wtime();
 	if (argc < 2) {
 		puts("usage: decoupe FICHIER [ FICHIER ... ]");
 		return 1;
@@ -76,5 +84,8 @@ int main(int argc, char *argv[]) {
 // TOUT BE FREE
 	freeset(&docs);
 	freeset(&words);
+	if (!crank)
+		printf("TIME ELAPSED: %lgs\n", MPI_Wtime()-t);
+	MPI_Finalize();
 	return 0;
 }

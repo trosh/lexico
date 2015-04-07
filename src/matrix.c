@@ -75,15 +75,22 @@ matrix dist_polia(set *s, matrix *dist_mat) {
 
 void disp_matrix(matrix *m) {
 	int i, j;
+#ifdef MAT_DISP_COLOR
 	char num[10];
 	for (i=0; i<m->taille; i++) {
 		for (j=0; j<m->taille; j++) {
 			sprintf(num, "%.0f", 232+m->mat[i][j]/10);
 			printf("\033[48;5;%sm ", num);
-			//printf("%g ", m->mat[i][j]);
 		}
 		puts("\033[0m");
 	}
+#else
+	for (i=0; i<m->taille; i++) {
+		for (j=0; j<m->taille; j++)
+			printf("%g ", m->mat[i][j]);
+		putchar('\n');
+	}
+#endif
 }
 
 void free_matrix(matrix *m) {
