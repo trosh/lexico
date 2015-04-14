@@ -26,7 +26,7 @@ float setDist(float *s1, float *s2, int s_size, matrix *dist_mat) {
 	d_avg = 0.0;
 	// CALCUL DE LA MOYENNE
 	// (POUR CHAQUE ELEMENT E1 DE S1) :
-#pragma omp parallel for schedule(static) private(e1,e2,d_min,score_min,d,s) reduction(+:d_avg,nb_elem)
+//#pragma omp parallel for schedule(static) private(e1,e2,d_min,score_min,d,s) reduction(+:d_avg,nb_elem)
 	for (e1=0; e1<s_size; e1++) {
 		if (s1[e1] != 0) { //si le score est nul alors il n'existe pas dans le doc
 			nb_elem++;
@@ -59,38 +59,40 @@ float setDistSym(float *s1, float *s2,
 	     + setDist(s2, s1, s_size, dist_mat);
 }
 
-matrix dist_polia(set *s, matrix *dist_mat) {
+matrix dist_polia(set *s, matrix *dist_mat, int *indice) {
 	matrix Result;
 	int i, j, t;
 	t = s->nb_lignes;
 	malloc_matrix(&Result, t);
-	for (i=0; i<t; i++)
+	
+	
+	
+	for (i=indice[0]; i<indice[1]; i++)
 		for (j=i; j<t; j++) {
 			Result.mat[j][i] =
 			Result.mat[i][j] =
 			setDistSym(s->c[i], s->c[j], s->nb_colonnes, dist_mat);
 		}
+	for (j=i; j<indice[4]; j++)
+	{
+			Result.mat[j][i] =
+			Result.mat[i][j] =
+			setDistSym(s->c[i], s->c[j], s->nb_colonnes, dist_mat);
+	}
 	return Result;
 }
 
 void disp_matrix(matrix *m) {
 	int i, j;
-#ifdef MAT_DISP_COLOR
 	char num[10];
 	for (i=0; i<m->taille; i++) {
 		for (j=0; j<m->taille; j++) {
 			sprintf(num, "%.0f", 232+m->mat[i][j]/10);
 			printf("\033[48;5;%sm ", num);
+			//printf("%g ", m->mat[i][j]);
 		}
 		puts("\033[0m");
 	}
-#else
-	for (i=0; i<m->taille; i++) {
-		for (j=0; j<m->taille; j++)
-			printf("%g ", m->mat[i][j]);
-		putchar('\n');
-	}
-#endif
 }
 
 void free_matrix(matrix *m) {

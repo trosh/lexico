@@ -37,7 +37,6 @@ set build_words(dictionnaire *dico) {
 
 void disp_set(set *docs) {
 	int i, j;
-#ifdef SET_DISP_COLOR
 	char num[10];
 	for (i=0; i<docs->nb_lignes; i++) {
 		for (j=0; j<docs->nb_colonnes && j<140; j++) {
@@ -46,13 +45,6 @@ void disp_set(set *docs) {
 		}
 		puts("\033[0m");
 	}
-#else
-	for (i=0; i<docs->nb_lignes; i++) {
-		for (j=0; j<docs->nb_colonnes && j<140; j++)
-			printf("%lg ", docs->c[i][j]);
-		putchar('\n');
-	}
-#endif
 }
 
 void freeset(set *s) {
