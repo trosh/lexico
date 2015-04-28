@@ -1,11 +1,13 @@
 SHELL=/bin/bash -O extglob -c # need extglob pour purge + {a,b} ...
 CC := mpicc
 RM := rm -f
-CFLAGS := -Iinclude -O3 -Wall -fopenmp
+MPIEXEC := mpiexec
+NP := 4
+CFLAGS := -Iinclude -O3 -Wall -fopenmp -g
 TARGETS := decoupe splitwiki char
 OBJECTS := lexico.o dico.o sets.o matrix.o
 
-.PHONY: all clean purge test 1 haiku cr log
+.PHONY: all clean purge test 1 haiku cr log err
 
 all: $(OBJECTS) $(TARGETS)
 
@@ -69,10 +71,19 @@ ac: $(TARGETS)
 	bash noac.sh files/Ac*
 	llsubmit ll.sh
 
+acexec: $(TARGETS)
+	$(RM) {noac,}files/!(.*)
+	./splitwiki wiki/1.txt
+	bash noac.sh files/Ac*
+	mpiexec -np $(NP) ./decoupe noacfiles/*
+
 cr:
 	pdflatex cr/cr.tex
 	#groff -D utf-8 -e -ms cr/cr.ms | ps2pdf - > cr/cr.pdf
 	evince cr/cr.pdf 2> /dev/null &
 
 log:
-	cat lex.log | tail -n 50 | more
+	less -R lex.log
+
+err:
+	less -R lex.err

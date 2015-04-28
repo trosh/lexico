@@ -5,7 +5,7 @@
 #include <sets.h>
 #include <matrix.h>
 #include <mpi.h>
-
+#include <unistd.h>
 
 int main(int argc, char *argv[]) {
 	FILE * f;
@@ -102,22 +102,21 @@ int main(int argc, char *argv[]) {
 		printf("CALCUL DE LA REPARTITION DE TRAVAIL\n");	
 		//CALCUL DE LA REPARTITION DE TRAVAIL
 		//doc
-		rank_i=i=k=0;
-		nb_combinaisons=ND*(ND+1)/2;
-		nb_calcul=nb_combinaisons/size;
+		rank_i = i = k = 0;
+		nb_combinaisons = ND*(ND+1)/2;
+		nb_calcul = nb_combinaisons / size;
 		
 		//indice rang 0
 		int indice_temp[4]; //temp pour rang 0
-		indice_temp[0]=i_debut=0;
-		indice_temp[1]=j_debut=0;
-		indice_temp[2]=i_fin=0;
-		indice_temp[3]=j_fin=0;
-		
-		while (k<nb_calcul) {
+		indice_temp[0] = i_debut = 0;
+		indice_temp[1] = j_debut = 0;
+		indice_temp[2] = i_fin   = 0;
+		indice_temp[3] = j_fin   = 0;
+		while (k < nb_calcul) {
 			j_fin++;
-			if (j_fin==ND) {
+			if (j_fin == ND) {
 				i_fin++;
-				j_fin=i;
+				j_fin = i;
 			}
 			k++;
 		}
@@ -130,6 +129,7 @@ int main(int argc, char *argv[]) {
 		       rank,
 		       indice_temp[0], indice_temp[1],
 		       indice_temp[2], indice_temp[3]);
+		rank_i++;
 		
 		i_debut=i_fin;
 		j_debut=j_fin + 1;
@@ -143,8 +143,8 @@ int main(int argc, char *argv[]) {
 				printf("RANK %d\n", rank_i);
 				indice_doc[0] = i_debut;
 				indice_doc[1] = i_fin;
-				indice_doc[2] = j_debut;
-				indice_doc[3] = j_fin;
+				indice_doc[2] = rank_i == size ? ND-1 : j_debut;
+				indice_doc[3] = rank_i == size ? ND-1 : j_fin;
 				MPI_Send(indice_doc, 4, MPI_INT, rank_i, 0, MPI_COMM_WORLD);
 				rank_i++;
 				
@@ -153,13 +153,6 @@ int main(int argc, char *argv[]) {
 				if (j_debut == ND) {
 					i_debut++;
 					j_debut=i_debut;
-				}
-				if (rank_i == size) {
-					indice_doc[0] = i_debut;
-					indice_doc[1] = i_fin;
-					indice_doc[2] = ND-1;
-					indice_doc[3] = ND-1;
-					MPI_Send(indice_doc, 4, MPI_INT, rank_i, 0, MPI_COMM_WORLD);
 				}
 			} else {
 				j_fin++;
