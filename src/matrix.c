@@ -64,18 +64,33 @@ matrix dist_polia(set *s, matrix *dist_mat, int *indice) {
 	int i, j, t;
 	t = s->nb_lignes;
 	malloc_matrix(&Result, t);
-	
-	for (i=indice[0]; i<indice[1]; i++)
+	i = indice[0];
+//PROCESS SPANS MORE THAN 1 LINE
+	if (indice[0] != indice[1]) {
+		for (j=indice[2]; j<t; j++) {
+				Result.mat[j][i] =
+				Result.mat[i][j] =
+				setDistSym(s->c[i], s->c[j], s->nb_colonnes, dist_mat);
+			}
+		for (i=indice[0]+1; i<indice[1]; i++)
 		for (j=i; j<t; j++) {
 			Result.mat[j][i] =
 			Result.mat[i][j] =
 			setDistSym(s->c[i], s->c[j], s->nb_colonnes, dist_mat);
 		}
-	for (j=i; j<indice[3]; j++) {
-		Result.mat[j][i] =
-		Result.mat[i][j] =
-		setDistSym(s->c[i], s->c[j], s->nb_colonnes, dist_mat);
+		for (j=i; j<=indice[3]; j++) {
+			Result.mat[j][i] =
+			Result.mat[i][j] =
+			setDistSym(s->c[i], s->c[j], s->nb_colonnes, dist_mat);
+		}
 	}
+//PROCESS SPANS 1 LINE
+	else
+		for (j=indice[2]; j<=indice[3]; j++) {
+			Result.mat[j][i] =
+			Result.mat[i][j] =
+			setDistSym(s->c[i], s->c[j], s->nb_colonnes, dist_mat);
+		}
 	return Result;
 }
 
