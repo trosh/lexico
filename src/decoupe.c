@@ -100,54 +100,64 @@ int main(int argc, char *argv[]) {
 		}
 		
 		printf("CALCUL DE LA REPARTITION DE TRAVAIL\n");	
-		//CALCUL DE LA REPARTITION DE TRAVAIL
-		//doc
+//CALCUL DE LA REPARTITION DE TRAVAIL
+	//doc
 		rank_i = i = k = 0;
 		nb_combinaisons = ND*(ND+1)/2;
 		nb_calcul = nb_combinaisons / size;
-		
+		printf("nb_calcul = %d\n",nb_calcul);
 		//indice rang 0
 		int indice_temp[4]; //temp pour rang 0
 		indice_temp[0] = i_debut = 0;
 		indice_temp[1] = j_debut = 0;
 		indice_temp[2] = i_fin   = 0;
 		indice_temp[3] = j_fin   = 0;
-		while (k < nb_calcul) {
+		while (k < nb_calcul-1) {
+			//printf("%d- %d,%d,%d,%d\n",k,i_debut,j_debut,i_fin,j_fin);
 			j_fin++;
 			if (j_fin == ND) {
+				//printf("\n");
 				i_fin++;
-				j_fin = i;
+				j_fin = i_fin;
 			}
+			
 			k++;
 		}
 		indice_temp[2] = i_fin;
 		indice_temp[3] = j_fin;
 		
-		printf("Proc rang %d:\n"
+		printf("\n\nDOC Proc rang %d:\n"
 		       "debut = %d,%d\n"
-		       "fin = %d,%d\n",
+		       "fin = %d,%d\n"
+		       "k=%d\n\n",
 		       rank,
 		       indice_temp[0], indice_temp[1],
-		       indice_temp[2], indice_temp[3]);
+		       indice_temp[2], indice_temp[3],
+		       k);
 		rank_i++;
-		
+		k++;
 		i_debut=i_fin;
 		j_debut=j_fin + 1;
 		if (j_debut == ND) {
 			i_debut++;
 			j_debut=i_debut;
 		}
+		i_fin=i_debut;
+		j_fin=j_debut;
 		
-		while (k<rank_i*nb_calcul) {
-			if (k+1 == (rank_i+1)*nb_calcul) {
+		
+		while (k<nb_combinaisons && rank_i!=size) {
+			//printf("%d- %d,%d,%d,%d\n",k,i_debut,j_debut,i_fin,j_fin);
+			//printf("k=%d\ncondition = %d\n",k, (rank_i+1)*nb_calcul);
+			if (k+1 == (rank_i+1)*nb_calcul || rank_i==size-1) {
 				printf("RANK %d\n", rank_i);
 				indice_doc[0] = i_debut;
-				indice_doc[1] = i_fin;
-				indice_doc[2] = rank_i == size ? ND-1 : j_debut;
-				indice_doc[3] = rank_i == size ? ND-1 : j_fin;
+				indice_doc[1] = rank_i == size-1 ? ND-1 : i_fin;
+				indice_doc[2] = j_debut;
+				indice_doc[3] = rank_i == size-1 ? ND-1 : j_fin;
 				MPI_Send(indice_doc, 4, MPI_INT, rank_i, 0, MPI_COMM_WORLD);
 				rank_i++;
-				
+	
 				i_debut = i_fin;
 				j_debut = j_fin + 1;
 				if (j_debut == ND) {
@@ -157,23 +167,105 @@ int main(int argc, char *argv[]) {
 			} else {
 				j_fin++;
 				if (j_fin == ND) {
+					//printf("\n");
 					i_fin++;
-					j_fin=i;
+					j_fin=i_fin;
 				}
-				k++;
+				
 			}
+			
+			k++;
 		}
 		indice_doc[0] = indice_temp[0];
 		indice_doc[1] = indice_temp[1];
 		indice_doc[2] = indice_temp[2];
 		indice_doc[3] = indice_temp[3];
+	//word
+		rank_i = i = k = 0;
+		nb_combinaisons = NW*(NW+1)/2;
+		nb_calcul = nb_combinaisons / size;
+		printf("nb_calcul = %d\n",nb_calcul);
+		//indice rang 0
+		indice_temp[0] = i_debut = 0;
+		indice_temp[1] = j_debut = 0;
+		indice_temp[2] = i_fin   = 0;
+		indice_temp[3] = j_fin   = 0;
+		while (k < nb_calcul-1) {
+			//printf("%d- %d,%d,%d,%d\n",k,i_debut,j_debut,i_fin,j_fin);
+			j_fin++;
+			if (j_fin == NW) {
+				//printf("\n");
+				i_fin++;
+				j_fin = i_fin;
+			}
+			
+			k++;
+		}
+		indice_temp[2] = i_fin;
+		indice_temp[3] = j_fin;
+		
+		printf("\n\nWORD Proc rang %d:\n"
+		       "debut = %d,%d\n"
+		       "fin = %d,%d\n"
+		       "k=%d\n\n",
+		       rank,
+		       indice_temp[0], indice_temp[1],
+		       indice_temp[2], indice_temp[3],
+		       k);
+		rank_i++;
+		k++;
+		i_debut=i_fin;
+		j_debut=j_fin + 1;
+		if (j_debut == NW) {
+			i_debut++;
+			j_debut=i_debut;
+		}
+		i_fin=i_debut;
+		j_fin=j_debut;
+		
+		int f=k;
+		while (k<nb_combinaisons) {
+			if (k<(f+10))
+			printf("%d- %d,%d,%d,%d\n",k,i_debut,j_debut,i_fin,j_fin);
+			//printf("k=%d\ncondition = %d\n",k, (rank_i+1)*nb_calcul);
+			if (k+1 == (rank_i+1)*nb_calcul) {
+				//printf("RANK %d\n", rank_i);
+				indice_word[0] = i_debut;
+				indice_word[1] = rank_i == size-1 ? NW-1 : i_fin;
+				indice_word[2] = j_debut;
+				indice_word[3] = rank_i == size-1 ? NW-1 : j_fin;
+				MPI_Send(indice_word, 4, MPI_INT, rank_i, 0, MPI_COMM_WORLD);
+				rank_i++;
+	
+				i_debut = i_fin;
+				j_debut = j_fin + 1;
+				if (j_debut == NW) {
+					i_debut++;
+					j_debut=i_debut;
+				}
+			} else {
+				j_fin++;
+				if (j_fin == NW) {
+					//printf("\n");
+					i_fin++;
+					j_fin=i_fin;
+				}
+				
+			}
+			
+			k++;
+		}
+		indice_word[0] = indice_temp[0];
+		indice_word[1] = indice_temp[1];
+		indice_word[2] = indice_temp[2];
+		indice_word[3] = indice_temp[3];
 	} else {
 	//RECEPTION DOCS & WORDS
 		//reception tailles
 		MPI_Recv(&tailles, 2, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 		printf("recep taille de %d\n",rank);
-		docs.nb_lignes = NW =tailles[1]; //ND
-		docs.nb_colonnes = ND =tailles[0]; //NW
+		docs.nb_lignes = NW =tailles[0]; //NW
+		docs.nb_colonnes = ND =tailles[1]; //ND
 		printf("rank %d: ND=%d, NW=%d\n",rank,ND,NW);
 		//allocs docs
 		docs.c = malloc(docs.nb_lignes*sizeof(float*));
@@ -187,6 +279,7 @@ int main(int argc, char *argv[]) {
 		//alloc words
 		words.c = malloc(docs.nb_colonnes*sizeof(float*));
 		words.contenu = malloc(docs.nb_lignes*docs.nb_colonnes*sizeof(float));
+		printf("RANK %d - maloc words done !\n",rank);
 		//reception words
 		MPI_Recv(words.contenu, tailles[0]*tailles[1], MPI_FLOAT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 		printf("recep words de %d\n",rank);
@@ -194,8 +287,12 @@ int main(int argc, char *argv[]) {
 			words.c[i] = words.contenu + i*docs.nb_lignes;
 		
 	//RECEPTIONS INDICES
+	//indice doc
 		MPI_Recv(indice_doc, 4, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-		printf("Proc rang %d:\ndebut = %d,%d\nfin = %d,%d\n",rank,indice_doc[0],indice_doc[1],indice_doc[2],indice_doc[3]);
+		printf("DOC Proc rang %d:\ndebut = %d,%d\nfin = %d,%d\n",rank,indice_doc[0],indice_doc[2],indice_doc[1],indice_doc[3]);
+	//indic word
+		MPI_Recv(indice_word, 4, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+		printf("WORD Proc rang %d:\ndebut = %d,%d\nfin = %d,%d\n",rank,indice_word[0],indice_word[2],indice_word[1],indice_word[3]);
 	}
 	if (rank == 0) {
 	//ALGO CALCUL

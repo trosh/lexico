@@ -59,6 +59,12 @@ haiku: $(TARGETS)
 	bash noac.sh files/*
 	llsubmit ll.sh
 
+haikuexec: $(TARGETS)
+	$(RM) {noac,}files/!(.*)
+	./splitwiki wiki/haiku.txt
+	bash noac.sh files/*
+	mpiexec -np $(NP) ./decoupe noacfiles/*
+
 ab: $(TARGETS)
 	$(RM) {noac,}files/!(.*)
 	./splitwiki wiki/1.txt
