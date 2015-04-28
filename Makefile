@@ -5,7 +5,7 @@ MPIEXEC := mpiexec
 NP := 4
 CFLAGS := -Iinclude -O3 -Wall -fopenmp -g
 TARGETS := decoupe splitwiki char
-DBGTARGETS := dbgdecoupe splitwiki char
+DATTARGETS := datdecoupe splitwiki char
 OBJECTS := lexico.o dico.o sets.o matrix.o
 
 .PHONY: all clean purge test 1 haiku cr log err
@@ -16,26 +16,22 @@ lexico.o: src/lexico.c include/lexico.h
 	$(CC) $(CFLAGS) -c $<
 
 dico.o: src/dico.c include/lexico.h include/dico.h
-	$(CC) $(CFLAGS) -DNDEBUG -c $<
-
-sets.o: src/sets.c include/dico.h include/sets.h
-	$(CC) $(CFLAGS) -DNDEBUG -c $<
-
-matrix.o: src/matrix.c include/sets.h include/dico.h include/matrix.h
-	$(CC) $(CFLAGS) -DNDEBUG -c $<
-
-dbgmatrix.o: src/matrix.c include/sets.h include/dico.h include/matrix.h
 	$(CC) $(CFLAGS) -c $<
 
-decoupe: src/decoupe.c \
-         include/lexico.h include/dico.h include/sets.h include/matrix.h \
-         lexico.o dico.o sets.o matrix.o
-	$(CC) $(CFLAGS) -DNDEBUG -o $@ lexico.o dico.o sets.o matrix.o $<
+sets.o: src/sets.c include/dico.h include/sets.h
+	$(CC) $(CFLAGS) -c -o $@ $<
 
-dbgdecoupe: src/decoupe.c \
-            include/lexico.h include/dico.h include/sets.h include/matrix.h \
-            lexico.o dico.o sets.o dbgmatrix.o
+matrix.o: src/matrix.c include/sets.h include/dico.h include/matrix.h
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+datmatrix.o: src/matrix.c include/sets.h include/dico.h include/matrix.h
+	$(CC) $(CFLAGS) -DDAT -c -o $@ $<
+
+decoupe: src/decoupe.c lexico.o dico.o sets.o matrix.o
 	$(CC) $(CFLAGS) -o $@ lexico.o dico.o sets.o matrix.o $<
+
+datdecoupe: src/decoupe.c lexico.o dico.o sets.o datmatrix.o
+	$(CC) $(CFLAGS) -DDAT -o $@ lexico.o dico.o sets.o datmatrix.o $<
 
 splitwiki: src/splitwiki.c
 	$(CC) -o $@ $<
@@ -92,17 +88,17 @@ acexec: $(TARGETS)
 	bash noac.sh files/Ac* > noac.log
 	mpiexec -np $(NP) ./decoupe noacfiles/*
 
-acexecompscale: $(DBGTARGETS)
+acexecompscale: $(DATTARGETS)
 	$(RM) {noac,}files/!(.*)
 	$(RM) dat/!(.*)
 	./splitwiki wiki/1.txt > splitwiki.log
 	bash noac.sh files/Ac* > noac.log
-	OMP_NUM_THREADS=1  mpiexec -np 1 ./dbgdecoupe noacfiles/*
-	OMP_NUM_THREADS=2  mpiexec -np 1 ./dbgdecoupe noacfiles/*
-	OMP_NUM_THREADS=4  mpiexec -np 1 ./dbgdecoupe noacfiles/*
-	OMP_NUM_THREADS=8  mpiexec -np 1 ./dbgdecoupe noacfiles/*
-	OMP_NUM_THREADS=16 mpiexec -np 1 ./dbgdecoupe noacfiles/*
-	OMP_NUM_THREADS=32 mpiexec -np 1 ./dbgdecoupe noacfiles/*
+	OMP_NUM_THREADS=1  mpiexec -np 1 ./datdecoupe noacfiles/*
+	OMP_NUM_THREADS=2  mpiexec -np 1 ./datdecoupe noacfiles/*
+	OMP_NUM_THREADS=4  mpiexec -np 1 ./datdecoupe noacfiles/*
+	OMP_NUM_THREADS=8  mpiexec -np 1 ./datdecoupe noacfiles/*
+	OMP_NUM_THREADS=16 mpiexec -np 1 ./datdecoupe noacfiles/*
+	OMP_NUM_THREADS=32 mpiexec -np 1 ./datdecoupe noacfiles/*
 
 cr:
 	pdflatex cr/cr.tex
