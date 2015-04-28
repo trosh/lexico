@@ -82,6 +82,18 @@ ac: $(TARGETS)
 	bash noac.sh files/Ac* > noac.log
 	llsubmit ll.sh
 
+acompscale: $(DATTARGETS)
+	$(RM) {noac,}files/!(.*)
+	$(RM) dat/!(.*)
+	./splitwiki wiki/1.txt > splitwiki.log
+	bash noac.sh files/Ac* > noac.log
+	llsubmit llomp1.sh
+	llsubmit llomp2.sh
+	llsubmit llomp4.sh
+	llsubmit llomp8.sh
+	llsubmit llomp16.sh
+	llsubmit llomp32.sh
+
 acexec: $(TARGETS)
 	$(RM) {noac,}files/!(.*)
 	./splitwiki wiki/1.txt > splitwiki.log
