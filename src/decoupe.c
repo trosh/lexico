@@ -280,6 +280,8 @@ int main(int argc, char *argv[]) {
 		//alloc words
 		words.c = malloc(docs.nb_colonnes*sizeof(float*));
 		words.contenu = malloc(NW*ND*sizeof(float));
+		words.nb_lignes =ND;
+		words.nb_colonnes =NW;
 		printf("RANK %d - maloc words done !\n",rank);
 		//reception words
 		//MPI_Recv(words.contenu, tailles[0]*tailles[1], MPI_FLOAT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
@@ -306,6 +308,7 @@ int main(int argc, char *argv[]) {
 	//BROADCAST SETS WORDS ET DOCS
 		MPI_Bcast(words.contenu, NW*ND, MPI_FLOAT,0,MPI_COMM_WORLD);
 		MPI_Bcast(docs.contenu, NW*ND, MPI_FLOAT,0,MPI_COMM_WORLD);
+	
 		malloc_matrix(&matrix_words, NW);
 		malloc_matrix(&matrix_docs, ND);
 		init_matrix(&matrix_words);
@@ -316,7 +319,7 @@ int main(int argc, char *argv[]) {
 	//if (rank == 0) {
 	//ALGO CALCUL
 		for (i=0; i<4; i++) {
-			sleep(5);
+			sleep(1);
 			//matrix_docs  = dist_polia(&docs,&matrix_words,indice_doc,rank); // Nd*Nd
 
 			//disp_matrix(&matrix_docs);
@@ -324,8 +327,8 @@ int main(int argc, char *argv[]) {
 			//free(matrix_words.mat);
 			puts("MATRIX_DOCS est caluclé");
 				 
-			sleep(5);
-			printf("rank %d accede a sets words%f \n",rank,words.c[0][0]);
+			sleep(1);
+			printf("rank %d accede a sets words%f \n",rank,matrix_docs.mat[ND/2-1][ND/2-1]);
 			matrix_words = dist_polia(&words,&matrix_docs,indice_word,rank); // Nw*Nw
 
 			//disp_matrix(&matrix_words);

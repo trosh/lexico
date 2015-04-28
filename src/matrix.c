@@ -92,8 +92,8 @@ matrix dist_polia(set *s, matrix *dist_mat, int *indice,int rank) {
 //PROCESS SPANS MORE THAN 1 LINE
 	if (indice[0] != indice[1]) {
 		for (j=indice[2]; j<t; j++) {
-				if(rank ==1)
-				//printf("debut \n");
+				
+				
 				Result.mat[j][i] =
 				Result.mat[i][j] =
 				setDistSym(s->c[i], s->c[j], s->nb_colonnes, dist_mat);
@@ -101,16 +101,14 @@ matrix dist_polia(set *s, matrix *dist_mat, int *indice,int rank) {
 			
 		for (i=indice[0]+1; i<indice[1]; i++)
 		for (j=i; j<t; j++) {
-			if(rank ==1)
-			//printf("coeur fini\n");
+			
 			Result.mat[j][i] =
 			Result.mat[i][j] =
 			setDistSym(s->c[i], s->c[j], s->nb_colonnes, dist_mat);
 		}
 	
 		for (j=i; j<=indice[3]; j++) {
-			if(rank ==1)
-			//printf("%d,%d\n",i,j);
+		
 			Result.mat[j][i] =
 			Result.mat[i][j] =
 			setDistSym(s->c[i], s->c[j], s->nb_colonnes, dist_mat);
