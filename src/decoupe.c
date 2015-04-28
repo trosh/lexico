@@ -67,9 +67,9 @@ int main(int argc, char *argv[]) {
 		if (disp) affiche_dico(&dico);
 		printf("il y a %d docs et %d mots\n", dico.docs_taille, dico.taille);
 		//MATRIX
-		malloc_matrix(&matrix_words, dico.taille);
-		malloc_matrix(&matrix_docs, dico.docs_taille);
-		init_matrix(&matrix_words);
+		//malloc_matrix(&matrix_words, dico.taille);
+		//malloc_matrix(&matrix_docs, dico.docs_taille);
+		//init_matrix(&matrix_words);
 		//init_matrix(&matrix_docs);
 		//SETS
 		docs = build_docs(&dico);
@@ -290,6 +290,7 @@ int main(int argc, char *argv[]) {
 		
 		malloc_matrix(&matrix_words, NW);
 		malloc_matrix(&matrix_docs, ND);
+		init_matrix(&matrix_words);
 	//RECEPTIONS INDICES
 	//indice doc
 		MPI_Recv(indice_doc, 4, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
@@ -299,34 +300,37 @@ int main(int argc, char *argv[]) {
 		printf("WORD Proc rang %d:\ndebut = %d,%d\nfin = %d,%d\n",rank,indice_word[0],indice_word[2],indice_word[1],indice_word[3]);
 	}
 	
-	//BROADCAST MATRIX WORDS ET DOCS
+	//BROADCAST SETS WORDS ET DOCS
 		MPI_Bcast(words.contenu, NW*ND, MPI_FLOAT,0,MPI_COMM_WORLD);
 		MPI_Bcast(docs.contenu, NW*ND, MPI_FLOAT,0,MPI_COMM_WORLD);
 		
 	if (rank == 0) {
 		t1=MPI_Wtime();
 	}
-	if (rank == 0) {
+	//if (rank == 0) {
 	//ALGO CALCUL
 		for (i=0; i<4; i++) {
-			matrix_docs  = dist_polia(&docs,&matrix_words,indice_doc); // Nd*Nd
+			sleep(5);
+			matrix_docs  = dist_polia(&docs,&matrix_words,indice_doc,rank); // Nd*Nd
 
 			//disp_matrix(&matrix_docs);
 			free(matrix_words.contenu);
 			free(matrix_words.mat);
-			puts("words");	 
-			
-			matrix_words = dist_polia(&words,&matrix_docs,indice_word); // Nw*Nw
+			puts("MATRIX_DOCS est caluclé");
+				 
+			sleep(5);
+			matrix_words = dist_polia(&words,&matrix_docs,indice_word,rank); // Nw*Nw
 
 			//disp_matrix(&matrix_words);
 			free(matrix_docs.contenu);
 			free(matrix_docs.mat);
-			puts("docs");
+			puts("MATRIX_WORDS est caluclé");
+			sleep(5);
 		}
-		matrix_docs  = dist_polia(&docs,&matrix_words,indice_doc);
+		matrix_docs  = dist_polia(&docs,&matrix_words,indice_doc,rank);
 		printf("SCORE final %lg\n",matrix_docs.mat[0][0]);
 		//disp_matrix(&matrix_words);
-	}
+	//}
 	if (rank == 0) {
 		t2=MPI_Wtime();
 	}

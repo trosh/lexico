@@ -80,30 +80,40 @@ float setDistSym(float *s1, float *s2,
 	     + setDist(s2, s1, s_size, dist_mat);
 }
 
-matrix dist_polia(set *s, matrix *dist_mat, int *indice) {
+matrix dist_polia(set *s, matrix *dist_mat, int *indice,int rank) {
 	matrix Result;
-	int i, j, t;
+	int i, j,t ;
 	t = s->nb_lignes;
 	malloc_matrix(&Result, t);
 	i = indice[0];
+	printf(" %d est dans dist_polia\n",rank);
 //PROCESS SPANS MORE THAN 1 LINE
 	if (indice[0] != indice[1]) {
 		for (j=indice[2]; j<t; j++) {
+				if(rank ==1)
+				//printf("debut \n");
 				Result.mat[j][i] =
 				Result.mat[i][j] =
 				setDistSym(s->c[i], s->c[j], s->nb_colonnes, dist_mat);
 			}
+			
 		for (i=indice[0]+1; i<indice[1]; i++)
 		for (j=i; j<t; j++) {
+			if(rank ==1)
+			//printf("coeur fini\n");
 			Result.mat[j][i] =
 			Result.mat[i][j] =
 			setDistSym(s->c[i], s->c[j], s->nb_colonnes, dist_mat);
 		}
+	
 		for (j=i; j<=indice[3]; j++) {
+			if(rank ==1)
+			//printf("%d,%d\n",i,j);
 			Result.mat[j][i] =
 			Result.mat[i][j] =
 			setDistSym(s->c[i], s->c[j], s->nb_colonnes, dist_mat);
 		}
+		
 	}
 //PROCESS SPANS 1 LINE
 	else
