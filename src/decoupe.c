@@ -8,18 +8,19 @@
 
 
 int main(int argc, char *argv[]) {
-	FILE *f;
-	char* nom_doc;
-	listemots *listes_de_mots;
+	FILE * f;
+	char * nom_doc;
+	listemots * listes_de_mots;
 	dictionnaire dico;
 	set docs, words;
-	int i, j,k, disp,rank,size,ND,NW,nb_combinaisons,nb_calcul,rank_i;
-	int i_debut,i_fin,j_debut,j_fin;
+	int i, j, k;
+	int disp, rank, size, ND, NW, nb_combinaisons, nb_calcul, rank_i;
+	int i_debut, i_fin, j_debut, j_fin;
 	int tailles[2]; // tailles[0]=NW et tailles[1]ND
 	int indice_doc[4], indice_word[4];
 	matrix matrix_words,matrix_docs;
 	
-//INIT
+	//INIT
 	MPI_Init(&argc,&argv);
 	MPI_Comm_rank(MPI_COMM_WORLD,&rank);
 	MPI_Comm_size(MPI_COMM_WORLD,&size);
@@ -63,18 +64,18 @@ int main(int argc, char *argv[]) {
 		frequence_dico(&dico);
 		if (disp) affiche_dico(&dico);
 		printf("il y a %d docs et %d mots\n", dico.docs_taille, dico.taille);
-	//MATRIX
+		//MATRIX
 		malloc_matrix(&matrix_words, dico.taille);
 		malloc_matrix(&matrix_docs, dico.docs_taille);
 		init_matrix(&matrix_words);
 		//init_matrix(&matrix_docs);
-	//SETS
+		//SETS
 		docs = build_docs(&dico);
 		//disp_set(&docs);
 		words = build_words(&dico);
 		
-	printf("ENVOI DOCS & WORDS\n");
-	//ENVOI DOCS & WORDS
+		printf("ENVOI DOCS & WORDS\n");
+		//ENVOI DOCS & WORDS
 		int tailles[2]; // tableau contenant NW et ND
 		tailles[0] = NW = dico.taille; //NW
 		tailles[1]= ND =dico.docs_taille; //ND
@@ -98,8 +99,8 @@ int main(int argc, char *argv[]) {
 			MPI_Send(words.contenu, NW*ND, MPI_FLOAT, i, 0, MPI_COMM_WORLD);
 		}
 		
-	printf("CALCUL DE LA REPARTITION DE TRAVAIL\n");	
-	//CALCUL DE LA REPARTITION DE TRAVAIL
+		printf("CALCUL DE LA REPARTITION DE TRAVAIL\n");	
+		//CALCUL DE LA REPARTITION DE TRAVAIL
 		//doc
 		rank_i=i=k=0;
 		nb_combinaisons=ND*(ND+1)/2;
@@ -112,77 +113,68 @@ int main(int argc, char *argv[]) {
 		indice_temp[2]=i_fin=0;
 		indice_temp[3]=j_fin=0;
 		
-		while( k<nb_calcul )
-		{
-				j_fin++;
-				if(j_fin==ND)
-				{
-					i_fin++;
-					j_fin=i;
-				}
-				k++;
+		while (k<nb_calcul) {
+			j_fin++;
+			if (j_fin==ND) {
+				i_fin++;
+				j_fin=i;
+			}
+			k++;
 		}
-		indice_temp[2]=i_fin;
-		indice_temp[3]=j_fin;
+		indice_temp[2] = i_fin;
+		indice_temp[3] = j_fin;
 		
-		printf("Proc rang %d:\ndebut = %d,%d\nfin = %d,%d\n",rank,indice_temp[0],indice_temp[1],indice_temp[2],indice_temp[3]);
+		printf("Proc rang %d:\n"
+		       "debut = %d,%d\n"
+		       "fin = %d,%d\n",
+		       rank,
+		       indice_temp[0], indice_temp[1],
+		       indice_temp[2], indice_temp[3]);
 		
 		i_debut=i_fin;
 		j_debut=j_fin + 1;
-		if(j_debut==ND)
-		{
+		if (j_debut == ND) {
 			i_debut++;
 			j_debut=i_debut;
 		}
 		
-		while( k<rank_i*nb_calcul )
-		{
-			if(k+1 == (rank_i+1)*nb_calcul)
-			{
-				printf("RANK %d\n",rank_i);
-				indice_doc[0]=i_debut;
-				indice_doc[1]=i_fin;
-				indice_doc[2]=j_debut;
-				indice_doc[3]=j_fin;
+		while (k<rank_i*nb_calcul) {
+			if (k+1 == (rank_i+1)*nb_calcul) {
+				printf("RANK %d\n", rank_i);
+				indice_doc[0] = i_debut;
+				indice_doc[1] = i_fin;
+				indice_doc[2] = j_debut;
+				indice_doc[3] = j_fin;
 				MPI_Send(indice_doc, 4, MPI_INT, rank_i, 0, MPI_COMM_WORLD);
 				rank_i++;
 				
-				i_debut=i_fin;
-				j_debut=j_fin + 1;
-				if(j_debut==ND)
-				{
+				i_debut = i_fin;
+				j_debut = j_fin + 1;
+				if (j_debut == ND) {
 					i_debut++;
 					j_debut=i_debut;
 				}
-				
-				if(rank_i == size)
-				{
-					indice_doc[0]=i_debut;
-					indice_doc[1]=i_fin;
-					indice_doc[2]=ND-1;
-					indice_doc[3]=ND-1;
+				if (rank_i == size) {
+					indice_doc[0] = i_debut;
+					indice_doc[1] = i_fin;
+					indice_doc[2] = ND-1;
+					indice_doc[3] = ND-1;
 					MPI_Send(indice_doc, 4, MPI_INT, rank_i, 0, MPI_COMM_WORLD);
 				}
-			}
-			else
-			{
+			} else {
 				j_fin++;
-				if(j_fin==ND)
-				{
+				if (j_fin == ND) {
 					i_fin++;
 					j_fin=i;
 				}
 				k++;
 			}
 		}
-		indice_doc[0]=indice_temp[0];
-		indice_doc[1]=indice_temp[1];
-		indice_doc[2]=indice_temp[2];
-		indice_doc[3]=indice_temp[3];
-		
-	}
-	else
-	{
+		indice_doc[0] = indice_temp[0];
+		indice_doc[1] = indice_temp[1];
+		indice_doc[2] = indice_temp[2];
+		indice_doc[3] = indice_temp[3];
+	} else {
 	//RECEPTION DOCS & WORDS
 		//reception tailles
 		MPI_Recv(&tailles, 2, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
@@ -197,9 +189,7 @@ int main(int argc, char *argv[]) {
 		MPI_Recv(docs.contenu, tailles[0]*tailles[1], MPI_FLOAT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 		printf("recep doc de %d\n",rank);
 		for (i=0; i<docs.nb_lignes; i++)
-		{
 			docs.c[i] = docs.contenu + i*docs.nb_colonnes;
-		}
 		
 		//alloc words
 		words.c = malloc(docs.nb_colonnes*sizeof(float*));
@@ -208,48 +198,39 @@ int main(int argc, char *argv[]) {
 		MPI_Recv(words.contenu, tailles[0]*tailles[1], MPI_FLOAT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 		printf("recep words de %d\n",rank);
 		for (i=0; i<docs.nb_colonnes; i++)
-		{
 			words.c[i] = words.contenu + i*docs.nb_lignes;
-		}
 		
 	//RECEPTIONS INDICES
 		MPI_Recv(indice_doc, 4, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 		printf("Proc rang %d:\ndebut = %d,%d\nfin = %d,%d\n",rank,indice_doc[0],indice_doc[1],indice_doc[2],indice_doc[3]);
-		
 	}
-	
+	if (rank == 0) {
+	//ALGO CALCUL
+		for (i=0; i<4; i++) {
+			matrix_docs  = dist_polia(&docs,&matrix_words,indice_doc); // Nd*Nd
 
+			//disp_matrix(&matrix_docs);
+			free(matrix_words.contenu);
+			free(matrix_words.mat);
+			puts("words");	 
+		
+			matrix_words = dist_polia(&words,&matrix_docs,indice_word); // Nw*Nw
 
-if(rank == 0)
-{
-//ALGO CALCUL
-	for (i=0; i<4; i++) {
-		matrix_docs  = dist_polia(&docs,&matrix_words,indice_doc); // Nd*Nd
-		
-		//disp_matrix(&matrix_docs);
-		free(matrix_words.contenu);
-		free(matrix_words.mat);
-		puts("words");
-		
-		 
-		
-		matrix_words = dist_polia(&words,&matrix_docs,indice_word); // Nw*Nw
-		
+			//disp_matrix(&matrix_words);
+			free(matrix_docs.contenu);
+			free(matrix_docs.mat);
+			puts("docs");
+		}
+		matrix_docs  = dist_polia(&docs,&matrix_words,indice_doc);
+		printf("SCORE final %lg\n",matrix_docs.mat[0][0]);
 		//disp_matrix(&matrix_words);
-		free(matrix_docs.contenu);
-		free(matrix_docs.mat);
-		puts("docs");
 	}
-	matrix_docs  = dist_polia(&docs,&matrix_words,indice_doc);
-	printf("SCORE final %lg\n",matrix_docs.mat[0][0]);
-	//disp_matrix(&matrix_words);
-}
 
-// TOUT BE FREE
+	// TOUT BE FREE
 	freeset(&docs);
 	freeset(&words);
 	
-//FINALIZE
+	//FINALIZE
 	MPI_Finalize();
 	
 	return 0;
