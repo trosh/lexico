@@ -125,7 +125,7 @@ int main(int argc, char *argv[]) {
 			
 			k++;
 		}
-		indice_temp[2] = i_fin;
+		indice_temp[1] = i_fin;
 		indice_temp[3] = j_fin;
 		
 		printf("\n\nDOC Proc rang %d:\n"
@@ -133,8 +133,8 @@ int main(int argc, char *argv[]) {
 		       "fin = %d,%d\n"
 		       "k=%d\n\n",
 		       rank,
-		       indice_temp[0], indice_temp[1],
-		       indice_temp[2], indice_temp[3],
+		       indice_temp[0], indice_temp[2],
+		       indice_temp[1], indice_temp[3],
 		       k);
 		rank_i++;
 		k++;
@@ -203,7 +203,7 @@ int main(int argc, char *argv[]) {
 			
 			k++;
 		}
-		indice_temp[2] = i_fin;
+		indice_temp[1] = i_fin;
 		indice_temp[3] = j_fin;
 		
 		printf("\n\nWORD Proc rang %d:\n"
@@ -211,8 +211,8 @@ int main(int argc, char *argv[]) {
 		       "fin = %d,%d\n"
 		       "k=%d\n\n",
 		       rank,
-		       indice_temp[0], indice_temp[1],
-		       indice_temp[2], indice_temp[3],
+		       indice_temp[0], indice_temp[2],
+		       indice_temp[1], indice_temp[3],
 		       k);
 		rank_i++;
 		k++;
@@ -225,10 +225,9 @@ int main(int argc, char *argv[]) {
 		i_fin=i_debut;
 		j_fin=j_debut;
 		
-		int f=k;
+		
 		while (k<nb_combinaisons) {
-			if (k<(f+10))
-			printf("%d- %d,%d,%d,%d\n",k,i_debut,j_debut,i_fin,j_fin);
+			
 			//printf("k=%d\ncondition = %d\n",k, (rank_i+1)*nb_calcul);
 			if (k+1 == (rank_i+1)*nb_calcul) {
 				//printf("RANK %d\n", rank_i);
@@ -288,21 +287,28 @@ int main(int argc, char *argv[]) {
 		for (i=0; i<docs.nb_colonnes; i++)
 			words.c[i] = words.contenu + i*docs.nb_lignes;
 		
-		malloc_matrix(&matrix_words, NW);
-		malloc_matrix(&matrix_docs, ND);
-		init_matrix(&matrix_words);
+		
 	//RECEPTIONS INDICES
 	//indice doc
 		MPI_Recv(indice_doc, 4, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-		printf("DOC Proc rang %d:\ndebut = %d,%d\nfin = %d,%d\n",rank,indice_doc[0],indice_doc[2],indice_doc[1],indice_doc[3]);
+		//printf("DOC Proc rang %d:\ndebut = %d,%d\nfin = %d,%d\n",rank,indice_doc[0],indice_doc[2],indice_doc[1],indice_doc[3]);
 	//indic word
 		MPI_Recv(indice_word, 4, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-		printf("WORD Proc rang %d:\ndebut = %d,%d\nfin = %d,%d\n",rank,indice_word[0],indice_word[2],indice_word[1],indice_word[3]);
+		//printf("WORD Proc rang %d:\ndebut = %d,%d\nfin = %d,%d\n",rank,indice_word[0],indice_word[2],indice_word[1],indice_word[3]);
 	}
 	
+	MPI_Barrier(MPI_COMM_WORLD);
+	printf("DOC Proc rang %d:debut = %d,%d fin = %d,%d\n",rank,indice_doc[0],indice_doc[2],indice_doc[1],indice_doc[3]);
+	MPI_Barrier(MPI_COMM_WORLD);
+	printf("\n");
+	MPI_Barrier(MPI_COMM_WORLD);
+	printf("WORD Proc rang %d: debut = %d,%d fin = %d,%d\n",rank,indice_word[0],indice_word[2],indice_word[1],indice_word[3]);
 	//BROADCAST SETS WORDS ET DOCS
 		MPI_Bcast(words.contenu, NW*ND, MPI_FLOAT,0,MPI_COMM_WORLD);
 		MPI_Bcast(docs.contenu, NW*ND, MPI_FLOAT,0,MPI_COMM_WORLD);
+		malloc_matrix(&matrix_words, NW);
+		malloc_matrix(&matrix_docs, ND);
+		init_matrix(&matrix_words);
 		
 	if (rank == 0) {
 		t1=MPI_Wtime();
@@ -311,21 +317,22 @@ int main(int argc, char *argv[]) {
 	//ALGO CALCUL
 		for (i=0; i<4; i++) {
 			sleep(5);
-			matrix_docs  = dist_polia(&docs,&matrix_words,indice_doc,rank); // Nd*Nd
+			//matrix_docs  = dist_polia(&docs,&matrix_words,indice_doc,rank); // Nd*Nd
 
 			//disp_matrix(&matrix_docs);
-			free(matrix_words.contenu);
-			free(matrix_words.mat);
+			//free(matrix_words.contenu);
+			//free(matrix_words.mat);
 			puts("MATRIX_DOCS est caluclé");
 				 
 			sleep(5);
+			printf("rank %d accede a sets words%f \n",rank,words.c[0][0]);
 			matrix_words = dist_polia(&words,&matrix_docs,indice_word,rank); // Nw*Nw
 
 			//disp_matrix(&matrix_words);
-			free(matrix_docs.contenu);
-			free(matrix_docs.mat);
+			//free(matrix_docs.contenu);
+			//free(matrix_docs.mat);
 			puts("MATRIX_WORDS est caluclé");
-			sleep(5);
+			
 		}
 		matrix_docs  = dist_polia(&docs,&matrix_words,indice_doc,rank);
 		printf("SCORE final %lg\n",matrix_docs.mat[0][0]);
