@@ -2,6 +2,7 @@
 !/files/.empty
 
 /wiki/*
+!/wiki/1.txt
 !/wiki/ex.txt
 !/wiki/haiku.txt
 
