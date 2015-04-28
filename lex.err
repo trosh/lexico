@@ -1,4 +1,0 @@
-Installation in progress
-(load) intel version 15.0.0
-Using intel compiler to configure openmpi wrappers...
-(load) openmpi version 1.6.3_intel15.0.0
