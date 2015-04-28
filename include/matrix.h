@@ -3,13 +3,10 @@
 #include "dico.h"
 #include "sets.h"
 #include <float.h>
+#include <mpi.h>
+#include <omp.h>
 
-
-//#define FLT_MAX 3.40282347E+38F
-
-/*
- * MATRICE CARRE A VALEUR FLOAT
- */
+/* MATRICE CARRE A VALEUR FLOAT */
 typedef struct {
 	int taille;
 	float **mat;

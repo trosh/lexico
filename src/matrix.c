@@ -5,19 +5,28 @@ void malloc_matrix(matrix *m, int taille) {
 	m->taille = taille;
 	m->mat = malloc(taille*sizeof(float*));
 	m->contenu = malloc(taille*taille*sizeof(float));
-	// sorte de index 2d -> index 1d? j'aime bien
 	for (i=0; i<taille; i++)
 		m->mat[i] = m->contenu + taille*i;
 }
 
 // FILL MAT WITH 1. ; EXCEPT DIAG = 0.
 void init_matrix(matrix *m) {
-	int i, j;
+	int i, j, rank;
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	double t = MPI_Wtime();
+#pragma omp parallel for collapse(2) schedule(static)
 	for (i=0; i<m->taille; i++)
 		for (j=0; j<m->taille; j++)
 			m->mat[i][j] = 1.;
+	/* CANNOT NOWAIT */
+#pragma omp parallel for schedule(static)
 	for (j=0; j<m->taille; j++)
 		m->mat[j][j] = 0.;
+	fprintf(stderr,
+	        "rank: %d | "
+	        "num_threads: %d | "
+	        "init_matrix: %lgs\n",
+	        rank, omp_get_max_threads(), MPI_Wtime()-t);
 }
 
 float setDist(float *s1, float *s2, int s_size, matrix *dist_mat) {
