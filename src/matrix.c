@@ -11,9 +11,20 @@ void malloc_matrix(matrix *m, int taille) {
 
 // FILL MAT WITH 1. ; EXCEPT DIAG = 0.
 void init_matrix(matrix *m) {
-	int i, j, rank;
+	int i, j;
+#ifndef NDEBUG
+	FILE * datfile;
+	int rank, rept;
+	puts("\033[37;41mMEASURING init_matrix (ndef NDEBUG)\033[0m");
+	datfile = fopen("dat/init_matrix", "a");
+	if (datfile == NULL) {
+		fputs("cannot open dat/init_matrix\n", stderr);
+		MPI_Abort(MPI_COMM_WORLD, 1);
+	}
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	double t = MPI_Wtime();
+	for (rept=0; rept<10; rept++) {
+#endif
 #pragma omp parallel for collapse(2) schedule(static)
 	for (i=0; i<m->taille; i++)
 		for (j=0; j<m->taille; j++)
@@ -22,11 +33,12 @@ void init_matrix(matrix *m) {
 #pragma omp parallel for schedule(static)
 	for (j=0; j<m->taille; j++)
 		m->mat[j][j] = 0.;
-	fprintf(stderr,
-	        "rank: %d | "
-	        "num_threads: %d | "
-	        "init_matrix: %lgs\n",
-	        rank, omp_get_max_threads(), MPI_Wtime()-t);
+#ifndef NDEBUG
+	}
+	t = (MPI_Wtime()-t)/rept;
+	fprintf(datfile, "%d\t%lg\n", omp_get_max_threads(), t);
+	fclose(datfile);
+#endif
 }
 
 float setDist(float *s1, float *s2, int s_size, matrix *dist_mat) {

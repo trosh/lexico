@@ -12,6 +12,9 @@
 /dico/*
 !/dico/.empty
 
+/dat/*
+!/dat/.empty
+
 splitwiki
 decoupe
 noac
