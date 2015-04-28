@@ -8,7 +8,7 @@
 #include <unistd.h>
 
 int main(int argc, char *argv[]) {
-	FILE * f;
+	FILE * f,*scalabilite;
 	char * nom_doc;
 	listemots * listes_de_mots;
 	dictionnaire dico;
@@ -19,6 +19,7 @@ int main(int argc, char *argv[]) {
 	int tailles[2]; // tailles[0]=NW et tailles[1]ND
 	int indice_doc[4], indice_word[4];
 	matrix matrix_words,matrix_docs;
+	double t0,t1,t2,t3;
 	
 	//INIT
 	MPI_Init(&argc,&argv);
@@ -27,6 +28,7 @@ int main(int argc, char *argv[]) {
 	
 	if(rank == 0)
 	{
+		t0=MPI_Wtime();
 		
 		if (argc < 2) {
 			puts("usage: decoupe FICHIER [ FICHIER ... ]");
@@ -87,17 +89,17 @@ int main(int argc, char *argv[]) {
 			MPI_Send(&tailles, 2, MPI_INT, i, 0, MPI_COMM_WORLD);
 		}
 		//envoi de docs
-		for(i=1; i<size; i++)
+		/*for(i=1; i<size; i++)
 		{
 			printf("envoi docs à %d\n",i);
 			MPI_Send(docs.contenu, NW*ND, MPI_FLOAT, i, 0, MPI_COMM_WORLD);
-		}
+		}*/
 		//envoi de words
-		for(i=1; i<size; i++)
+		/*for(i=1; i<size; i++)
 		{
 			printf("envoi words à %d\n",i);
 			MPI_Send(words.contenu, NW*ND, MPI_FLOAT, i, 0, MPI_COMM_WORLD);
-		}
+		}*/
 		
 		printf("CALCUL DE LA REPARTITION DE TRAVAIL\n");	
 //CALCUL DE LA REPARTITION DE TRAVAIL
@@ -271,21 +273,23 @@ int main(int argc, char *argv[]) {
 		docs.c = malloc(docs.nb_lignes*sizeof(float*));
 		docs.contenu = malloc(NW*ND*sizeof(float));
 		//reception docs
-		MPI_Recv(docs.contenu, tailles[0]*tailles[1], MPI_FLOAT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-		printf("recep doc de %d\n",rank);
+		//MPI_Recv(docs.contenu, tailles[0]*tailles[1], MPI_FLOAT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+		//printf("recep doc de %d\n",rank);
 		for (i=0; i<docs.nb_lignes; i++)
 			docs.c[i] = docs.contenu + i*docs.nb_colonnes;
 		
 		//alloc words
 		words.c = malloc(docs.nb_colonnes*sizeof(float*));
-		words.contenu = malloc(docs.nb_lignes*docs.nb_colonnes*sizeof(float));
+		words.contenu = malloc(NW*ND*sizeof(float));
 		printf("RANK %d - maloc words done !\n",rank);
 		//reception words
-		MPI_Recv(words.contenu, tailles[0]*tailles[1], MPI_FLOAT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
-		printf("recep words de %d\n",rank);
+		//MPI_Recv(words.contenu, tailles[0]*tailles[1], MPI_FLOAT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+		//printf("recep words de %d\n",rank);
 		for (i=0; i<docs.nb_colonnes; i++)
 			words.c[i] = words.contenu + i*docs.nb_lignes;
 		
+		malloc_matrix(&matrix_words, NW);
+		malloc_matrix(&matrix_docs, ND);
 	//RECEPTIONS INDICES
 	//indice doc
 		MPI_Recv(indice_doc, 4, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
@@ -293,6 +297,14 @@ int main(int argc, char *argv[]) {
 	//indic word
 		MPI_Recv(indice_word, 4, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
 		printf("WORD Proc rang %d:\ndebut = %d,%d\nfin = %d,%d\n",rank,indice_word[0],indice_word[2],indice_word[1],indice_word[3]);
+	}
+	
+	//BROADCAST MATRIX WORDS ET DOCS
+		MPI_Bcast(words.contenu, NW*ND, MPI_FLOAT,0,MPI_COMM_WORLD);
+		MPI_Bcast(docs.contenu, NW*ND, MPI_FLOAT,0,MPI_COMM_WORLD);
+		
+	if (rank == 0) {
+		t1=MPI_Wtime();
 	}
 	if (rank == 0) {
 	//ALGO CALCUL
@@ -303,7 +315,7 @@ int main(int argc, char *argv[]) {
 			free(matrix_words.contenu);
 			free(matrix_words.mat);
 			puts("words");	 
-		
+			
 			matrix_words = dist_polia(&words,&matrix_docs,indice_word); // Nw*Nw
 
 			//disp_matrix(&matrix_words);
@@ -315,7 +327,13 @@ int main(int argc, char *argv[]) {
 		printf("SCORE final %lg\n",matrix_docs.mat[0][0]);
 		//disp_matrix(&matrix_words);
 	}
+	if (rank == 0) {
+		t2=MPI_Wtime();
+	}
 
+	if (rank == 0) {
+		t3=MPI_Wtime();
+	}
 	// TOUT BE FREE
 	freeset(&docs);
 	freeset(&words);
