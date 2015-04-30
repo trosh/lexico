@@ -1,5 +1,5 @@
-#!/bin/bash
-
 for i in "$@"
-	do iconv -f utf8 -t ascii//TRANSLIT "$i" > "noac$i"
+	do export OUTFILE=noac$(echo $i | iconv -f utf8 -t ascii//TRANSLIT)
+	echo $OUTFILE
+	iconv -f utf8 -t ascii//TRANSLIT "$i" > "$OUTFILE"
 done

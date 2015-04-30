@@ -5,7 +5,6 @@ void malloc_matrix(matrix *m, int taille) {
 	m->taille = taille;
 	m->mat = malloc(taille*sizeof(float*));
 	m->contenu = malloc(taille*taille*sizeof(float));
-	// sorte de index 2d -> index 1d? j'aime bien
 	for (i=0; i<taille; i++)
 		m->mat[i] = m->contenu + taille*i;
 }
@@ -13,17 +12,53 @@ void malloc_matrix(matrix *m, int taille) {
 // FILL MAT WITH 1. ; EXCEPT DIAG = 0.
 void init_matrix(matrix *m) {
 	int i, j;
+#ifdef DAT
+#warning COMPILING FOR DATFILES
+	FILE * datfile;
+	int rept;
+	puts("\033[37;41mMEASURING init_matrix (def DAT)\033[0m");
+	datfile = fopen("dat/init_matrix", "a");
+	if (datfile == NULL) {
+		fputs("cannot open dat/init_matrix\n", stderr);
+		MPI_Abort(MPI_COMM_WORLD, 1);
+	}
+	double t = MPI_Wtime();
+	for (rept=0; rept<100; rept++) {
+#endif
+#pragma omp parallel for collapse(2) schedule(static)
 	for (i=0; i<m->taille; i++)
 		for (j=0; j<m->taille; j++)
 			m->mat[i][j] = 1.;
+	/* CANNOT NOWAIT */
+#pragma omp parallel for schedule(static)
 	for (j=0; j<m->taille; j++)
 		m->mat[j][j] = 0.;
+#ifdef DAT
+	}
+	t = (MPI_Wtime()-t)/rept;
+	fprintf(datfile, "%d\t%lg\n", omp_get_max_threads(), t);
+	fclose(datfile);
+#endif
 }
 
 float setDist(float *s1, float *s2, int s_size, matrix *dist_mat) {
-	int e1, e2, nb_elem=0;
+	int e1, e2, nb_elem=0, rank;
 	float d_min, d_avg, score_min, d, s;
+#ifdef DAT
+#warning COMPILING FOR DATFILES
+	FILE * datfile;
+	int rept;
+	puts("\033[37;41mMEASURING setDist (def DAT)\033[0m");
+	datfile = fopen("dat/setDist", "a");
+	if (datfile == NULL) {
+		fputs("cannot open dat/setDist\n", stderr);
+		MPI_Abort(MPI_COMM_WORLD, 1);
+	}
+	double t = MPI_Wtime();
+	for (rept=0; rept<50; rept++) {
+#endif
 	d_avg = 0.0;
+	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 	// CALCUL DE LA MOYENNE
 	// (POUR CHAQUE ELEMENT E1 DE S1) :
 #pragma omp parallel for schedule(static) private(e1,e2,d_min,score_min,d,s) reduction(+:d_avg,nb_elem)
@@ -47,6 +82,12 @@ float setDist(float *s1, float *s2, int s_size, matrix *dist_mat) {
 				d_avg += d_min / score_min;
 		}
 	}
+#ifdef DAT
+	}
+	t = (MPI_Wtime()-t)/rept;
+	fprintf(datfile, "%d\t%lg\n", omp_get_max_threads(), t);
+	fclose(datfile);
+#endif
 	//d_avg /= s_size; //il faut diviser par le nombre de mot dans le docs, pas le nombre total de mots.
 	//printf("%d\n",nb_elem);
 	d_avg /= nb_elem;
@@ -59,13 +100,38 @@ float setDistSym(float *s1, float *s2,
 	     + setDist(s2, s1, s_size, dist_mat);
 }
 
-matrix dist_polia(set *s, matrix *dist_mat) {
+matrix dist_polia(set *s, matrix *dist_mat, int *indice,int rank) {
 	matrix Result;
-	int i, j, t;
+	int i, j,t ;
 	t = s->nb_lignes;
 	malloc_matrix(&Result, t);
-	for (i=0; i<t; i++)
-		for (j=i; j<t; j++) {
+	i = indice[0];
+	//printf("s->nb_colonnes = %d\n", s->nb_colonnes);
+	//PROCESS SPANS MORE THAN 1 LINE
+	if (indice[0] != indice[1]) {
+		for (j=indice[2]; j<t; j++) {
+			Result.mat[j][i] =
+			Result.mat[i][j] =
+			setDistSym(s->c[i], s->c[j], s->nb_colonnes, dist_mat);
+		}
+			
+		for (i=indice[0]+1; i<indice[1]; i++)
+			for (j=i; j<t; j++) {
+				Result.mat[j][i] =
+				Result.mat[i][j] =
+				setDistSym(s->c[i], s->c[j], s->nb_colonnes, dist_mat);
+			}
+	
+		for (j=i; j<=indice[3]; j++) {
+			Result.mat[j][i] =
+			Result.mat[i][j] =
+			setDistSym(s->c[i], s->c[j], s->nb_colonnes, dist_mat);
+		}
+		
+	}
+//PROCESS SPANS 1 LINE
+	else
+		for (j=indice[2]; j<=indice[3]; j++) {
 			Result.mat[j][i] =
 			Result.mat[i][j] =
 			setDistSym(s->c[i], s->c[j], s->nb_colonnes, dist_mat);

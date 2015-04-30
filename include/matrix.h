@@ -3,12 +3,10 @@
 #include "dico.h"
 #include "sets.h"
 #include <float.h>
+#include <mpi.h>
+#include <omp.h>
 
-//#define FLT_MAX 3.40282347E+38F
-
-/*
- * MATRICE CARRE A VALEUR FLOAT
- */
+/* MATRICE CARRE A VALEUR FLOAT */
 typedef struct {
 	int taille;
 	float **mat;
@@ -20,7 +18,7 @@ void malloc_matrix(matrix* mat, int taille);
 void init_matrix(matrix* m);
 float setDistSym(float* s1, float* s2,int s_size, matrix *dist_mat);
 float setDist(float* s1, float* s2, int s_size, matrix *dist_mat);
-matrix dist_polia(set *s, matrix *dist_mat);
+matrix dist_polia(set *s, matrix *dist_mat, int *indice,int r);
 void disp_matrix(matrix*);
 void free_matrix(matrix*);
 

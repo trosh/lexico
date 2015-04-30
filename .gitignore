@@ -2,6 +2,7 @@
 !/files/.empty
 
 /wiki/*
+!/wiki/1.txt
 !/wiki/ex.txt
 !/wiki/haiku.txt
 
@@ -11,8 +12,12 @@
 /dico/*
 !/dico/.empty
 
+/dat/*
+!/dat/.empty
+
 splitwiki
 decoupe
+datdecoupe
 noac
 char
 
@@ -21,3 +26,5 @@ char
 *.exe
 *.stackdump
 *.swp
+*.err
+*.log
