@@ -29,12 +29,11 @@ De même on veut pouvoir montrer comment des documents
 sont liés ensemble.
 
 On réduit le problème en sous-problèmes \----
-tout d'abord on prépare les documents
-(découpage du fichier wiki en documents individuels,
-conversion en ASCII 1 octet = 1 charactère),
+tout d'abord on prépare les documents,
 puis on crée une liste des mots avec occurences
-d'un document, qu'on intègre à un dictionnaire
-existant, puis
+d'un document, qu'on intègre à un dictionnaire existant.
+Enfin on génère des matrices de distances à partir
+desquelles on peut trouver des clusters de mots.
 
 \paragraph{Conditions}
 
@@ -47,3 +46,14 @@ faire ressortir les mots importants par leur usage
 mais jamais par des listes prédéfinies.
 Si besoin, et dans le meilleur des cas, on peut construire
 des listes à partir des analyses, comme par apprentissage.
+
+Notre problème doit tenir dans la mémoire,
+car ce n'est pas dans le spectre du projet de gérer des accès
+au fichiers en parallèle ou des grandes bases de données.
+
+\subsection{Découpage des fichiers}
+
+On appelle découpage d'un fichier la création d'une
+liste des occurences de tous les mots qui y sont présents.
+L'appel correspondant à ceci est la fonction {\tt decoupe\_fichier}
+dans {\tt src/lexico.c}.
