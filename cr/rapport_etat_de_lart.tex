@@ -212,26 +212,26 @@ contenant le terme.
 Chaque terme a un numéro identifiant.
 L'exemple ci-dessous représente une matrice de mot-document:
 
-\begin{verbatim}
-Document 1  Document 2  Document 3
-    1           2           3
-    4           5           6
-    7           8           9
-\end{verbatim}
+\begin{center}
+\begin{tabular}{ccc}
+Document 1 & Document 2 & Document 3 \\
+1          & 2          & 3 \\
+4          & 5          & 6 \\
+7          & 8          & 9
+\end{tabular}
+\end{center}
 
 Identifiants des mots:
 
-\begin{verbatim}
-calcul        = 1
-programmer    = 2
-code          = 3
-dévellopement = 4
-test          = 5
-bug           = 6
-scalabilité   = 7
-matrice       = 8
-vecteur       = 9
-\end{verbatim}
+\begin{center}
+\begin{tabular}{ll|ll}
+calcul        & = 1 & bug         & = 6 \\
+programmer    & = 2 & scalabilité & = 7 \\
+code          & = 3 & matrice     & = 8 \\
+développement & = 4 & vecteur     & = 9 \\
+test          & = 5
+\end{tabular}
+\end{center}
 
 Une fois la matrice de mot-document créée,
 il convient de calculer l'occurrence des termes
