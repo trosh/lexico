@@ -1,2 +1,38 @@
 \section{Parallélisation}
 
+Notre code est intrinsèquement divisé en deux étape, la première étant l'initialisation du
+dictionnaire, la seconde est le calcul matricielle qui permet de converger vers un résultat.
+
+Au delà du fait que l'initialisation est la partie qui prend le moins de temps à l'exécution,
+phénomène d'autant plus remarquable si la taille des documents et leur nombre augmente, nous
+avons conclu qu'il était compliqué de répartir cette initialisation sur plusieurs nœuds MPI sans
+engendrer une graphe de communication très chargé. En effet les identifiants associés à un
+document ou à un mot sont créés si ce mot/documents est relevé pour la première fois dans
+l'initialisation. Par exemple on aura alors le cas où deux nœuds découvrent à des instants
+différents dans leur processus de création de dictionnaire un document. Ce dit-document aura donc
+un identifiant i sur le premier nœud et un identifiant j dans le second or nous devons avoir un
+identifiant unique pour un élément du dictionnaire.
+
+Nous nous sommes donc concentré sur la parallélisation du calcul matricielle. Une fois le
+dictionnaire et son indexation inversée établis nous savons que les matrices de fréquence qui les
+représentent ne serons plus modifiés au cours de l'algorithme. Ainsi nous avons décidé de
+distribuer à chacun des sites ces deux matrices (Docs et Words). Notre algorithme consiste à
+chaque étape à comparer les documents/mots deux à deux. Afin que la charge de travail entre
+processus MPI soit équilibrée chaque processus devra effectuer
+
+\[ \frac{N_d \times (N_d+1)}{P \times 2}\mbox{, et} \]
+\[ Nw*(Nw+1)/(P*2) \]
+comparaisons à chaque étape (avec $N_d$ = nombre total de documents et $N_w$ = nombre
+total de mots).
+
+Une étape est de la forme suivant :
+
+\begin{verbatim}
+Matrix_Docs  = dist_polia (Docs, Matrix_Words)
+Matrix_Words = dist_polia (Words, Matrix_Docs)
+\end{verbatim}
+
+Les processus savent donc sur qu'elle plage de donnée ils effectuent leurs calculs. Une
+étape consiste à recalculer les matrices de distances Matrix\_Docs et Matrix\_Words. Ainsi entre
+deux appels de la fonction dist\_polia() chaque processus doit recevoir les nouvelles distances que
+les processus restant viennent de calculer.
