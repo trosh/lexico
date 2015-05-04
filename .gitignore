@@ -15,6 +15,10 @@
 /dat/*
 !/dat/.empty
 
+/cr/*.aux
+/cr/*.pdf
+/cr/*.toc
+
 splitwiki
 decoupe
 datdecoupe

@@ -1,0 +1,217 @@
+RAPPORT DU PROJET(environ 30 pages à faire)
+
+Le principal objectif du projet est de mettre en valeur des champs
+lexicaux dans un ensemble de corpus de texte.
+En effet, le travail à effectuer consiste à extraire des
+catégories de mots, à savoir des champs lexicaux à travers de nombreux documents.
+Les documents auquels on se réfère sont exclusivement des articles de Wikipédia.
+
+Les démarches envisagées sont, pour l'essentielles, basées sur 
+l'utilisation de matrices ayant différents paramètres. 
+Les paramètres sont entre autres des mots, des distances et 
+aussi des occurences. D'autres méthodes sont appliquées, 
+notamment sur le calcul de distances et de matching par rapport 
+à des dictionnaires de mots. 
+
+Le sujet de ce projet traite de l'analyse statistique 
+et des méthodes de clustering.
+
+Chapitre 1: L'extraction d'information dans les documents
+
+1. L'extraction d'information
+
+Le coeur du projet se repose sur la récupération d'information,
+information retrieval littéralement en anglais.
+Une des principales applications de cette méthode
+que l'on peut citer est, par exemple, la recherche de résumés
+d'articles scientifiques dans les bases de données. 
+Ainsi, dans le cadre de la recherche médicale il peut être 
+question de trouver l'ensemble des résumés d'articles dans une 
+base de données qui traite d'un sydrome particulier. 
+Pour obtenir ces articles, la solution consistera à faire une requête 
+à partir de mots clés qui sont pertinents au terme syndrome. 
+Ensuite, le système de récupération devra, d'une part,comparer 
+la requête aux différents documents dans la base de données et, d'autre part, 
+présenter à l'utilisateur les documents qui sont à la fois pertinents
+et rangés dans un ordre suivant le volume d'information contenu dans l'article.
+
+Ci-dessous, nous proposons d'illustrer deux exemples concrèts sur 
+la récupération d'information
+
+Exemple 1: Requête pour la recherche dans une catégorie de résumés d'articles médicaux
+
+ les  symptômes  d'une  grippe
+
+Ainsi, tous  les articles qui  comportent les symptômes de la grippe 
+seront répertoriés  par le système.
+
+Exemple 2: Requête sur la recherche d'articles universtaires
+
+Les revues sont un autre exemple d'applications de récupération d'information.
+
+Ainsi, si nous lançons la requête suivante nous avons:
+
+Mots clés							Results
+
+Computer science engineering					Nothing found
+Computing science engineering					IEEE: Computing in SCience and Engineering
+
+Le  système de  récupération d'information est censé à être insensible sur la moindre 
+petite erreure ou le moindre petit  changement de lettre dans la requête.
+Dans l'exemple 2, nous pouvons remarquer que la revue IEEEE répond à la seconde requête.
+De cet exemple, nous pouvons conclure que dans beaucoup de cas la comparaison de mots 
+peut générer des résultats inattendus. 
+
+Par ailleurs, un domaine bien connu dans la récupération 
+d'information concerne les moteurs de recherche Web. Dans ce genre de système, les requêtes sont 
+très courtes, et de nombreux documents trouvés peuvent être des informations qui sortent 
+du cadre du sujet attendu par l'utilisateur. Ainsi, le classemment du resultat
+de la recherche est un critère d'efficacité du moteur de recherche. 
+
+
+2.Prétraitement des documents et des requêtes
+
+Dans cette partie, il s'agit d'étudier le prétraitement qui est mise en oeuvre
+au préalable. Au niveau de la récupération d'information, les mots  
+clés qui résument l'information à propos du thème d'un document sont 
+appelés termes. De ce fait, une étape essentielle dans la mise en valeur de champs 
+lexicaux est de créer une liste de tous les termes dans un recueil de documents,
+ainsi appelé index. Pour chaque terme, une  liste  de  tous  les  documents contenant 
+ce terme particulier est  stockée.
+
+2.1 Indexation inversée
+
+La principale structure donnée au sein d'un système 
+de recupération d'information s'agit de l'indexation 
+inversée. De façon usuelle, un index inversée établit 
+une relation entre les termes et leurs occurences dans un 
+document donné. Nous pouvons, ainsi, illustrer un exemple 
+d'index inversée:
+
+Dictionaire		Listes d'occurences
+
+programme               2301, 1268,..., 74896,47123,741
+matrice                 4789,4987,1236,7869,...,4682,6321,1978
+parallèle               4781,1247,963,4707,...,4136,1247,7841
+
+Exemple 2.1 Un exemple d'index inversée qui représente les termes
+avec leurs occurences.
+
+Dans l'exemple précédent, le Dictionnaire fournit une courte
+liste des termes présents dans les documents, et aussi une 
+liste correspondante aux placements de ces termes. Nous pouvons
+constater que l'index inversée présentée ne donne pas les 
+identifiants des documents contenant des termes. On appelle ce type 
+d'index un index de schéma-indépendant compte-tenu aucune hypothèse
+n'est faite à propos du choix de stockage des documents.
+
+Un index inversée peut être défini à partir de 4 méthodes:
+
+. premier(t): retourne la première position à laquelle le terme t 
+apparait dans l'ensemble du document;
+.dernier(t):  retourne la dernière position à laquelle le terme t
+apparait dans l'ensemble du document;
+.prochain(t,actuelle): retourne la première position occurence du terme t 
+après la position actuelle
+.precedent(t,actuelle): 
+
+
+Ce procédé est appelé un index inverted littéralementt un index inversé.
+
+Avant d'effectuer  un  index, deux  étapes de prétraitements doivent être faits, 
+à savoir l'élimination de tous les mots non pertinents et l'affichage du radical.
+
+L'élimination de mots a  pour principe de supprimer les mots qui sont susceptibles 
+d'être présents quelque soit le  document. Par conséquent, l'occurence d'un tel mot 
+est plus ou moins identique dans la plupart des documents. Un  exemple de listes de mots
+qui peuvent être éliminés:
+les articles définis et indéfinis
+les mots de liaison (car,avant,aussi,etc...)
+etc..
+
+L'affichage du radical est la procédure qui vise à réduire chaque mot qui est 
+conjugué ou qui a son propre suffixe. Un exemple d'affihage du radical  d'un mot 
+peut être donné ci-dessous:
+
+programmation
+programmable		-> program
+programmer
+programme
+
+Dans le cadre de notre projet, on n'a pas eu  à effectuer un affichage du radical.
+
+3. Le model espace vertoriel
+
+Le model espace vectoriel développe commme principale idée de créer une  matrice 
+de mot-document (matrix_words) dans laquelle chacun des documents est représenté par 
+une colonne vecteur. La colonne a des  valeurs non-nulles dans les positions qui font 
+référence aux termes qui peuvent être présents dans les documents. Ainsi, concrètement 
+chaque ligne détient un terme et les entrées sont nulles pour les positions correspondant 
+aux documents contenant le terme.Chaque terme a un numéro identifiant. L'exemple ci-dessous 
+représente une matrice de mot-document:
+
+		colonne 1=Document 1	colonne 2=Document 2	colonne 3=Document 3
+			1			2			3
+			4			5			6
+			7			8			9
+
+Identifiants des mots:
+
+calcul=1
+programmer=2
+code=3
+dévellopement=4
+test=5
+bug=6
+scalabilité=7
+matrice=8
+vecteur=9
+			         			
+Une fois la matrice de mot-document est créée, 
+il convient de calculer l'occurrence des termes 
+dans les documents.
+
+La matrice de mot-document que l'on a construit est pleine.
+
+3.1 Requête de matching et modélisation de performancehttp:
+
+La  requête de matching consiste de trouver les documents qui sont 
+pertinents à une requête q particulière. De manière générale, ce
+type de requête est réalisé à  partir  de la mesure distance
+cosine. Par conséquent,  un docuement D(j) est considéré pertinent
+si l'angle entre la requête q et D(j) est assez minime. Ainsi, il vient
+D(j)  est extrait si l'on a
+
+	cos[teta[q,D(j)]] = [(transposé(q))*D(j)]/[(norme 2(q))*(norm 2(D(j))]  > tol
+
+tol est une valeur de tolerance prédéfinie. Si la tolérance est réduite, les documents ont 
+davantage retounés, ce qui signifie qu'ils  sont pertients à la requête.
+Cependant, le risque est qu'avec une tolérance réduite, des  documents non pertinents 
+peuvent être aussi retournés.
+
+Dans l'extraction d'information, il est possible de mesurer la performance de la modélisation:
+
+	Precision: P = D(r)/D(t) 
+
+D(r) représente le nombre de documents pertinents extraits et D(t) représente le nombre total
+de documents extraits. 
+
+4. Indexation sémantique latente
+
+Définition
+
+L'analyse sémantique latente est une technique sur le traitement des langues 
+naturelles et qui se repose sur la sémantique vectorielle. 
+
+L'indexation sémantique latente est un procédé qui effectue une relation 
+entre un goupe de documents et les termes contenus dans ces documents.
+
+Matrice des occurences
+
+Dans le cadre de l'indexation sémantique latente,  on est amené à construire une 
+matrice des occurences. Cette matrice contient l'occurence des termes dans les documents. 
+Il s'agit d'une matrice creuse.
+
+Tous les "termes", venant de l'ensemble du corpus de texte, de la matrice sont des mots qui sont tronqués voir réduit à leur radical.
+
+

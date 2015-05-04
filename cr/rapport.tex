@@ -1,0 +1,58 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{alltt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\usepackage{newcent}
+\selectfont
+\theoremstyle{definition}
+\newtheorem{exmp}{Exemple}[section]
+\renewcommand*\contentsname{Sommaire}
+\usepackage{color}
+\usepackage{scrextend}
+\usepackage{multicol}
+\setlength{\emergencystretch}{2pt}
+
+\title{ {\bf Rapport du Projet }\\
+        (environ 30 pages à faire) }
+\author{ Yann  Kergutuil \quad
+         Rolih Meynard   \quad
+         John  Gliksberg \quad \\
+         M1 MIHPS @ UVSQ }
+\date{}
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+
+\pagebreak
+
+Le principal objectif du projet est de mettre en valeur
+des champs lexicaux dans un ensemble de corpus de texte.
+En effet, le travail à effectuer consiste à extraire des
+catégories de mots, à savoir des champs lexicaux à travers
+de nombreux documents.
+Les documents auquels on se réfère sont exclusivement des
+articles de Wikipédia.
+
+Les démarches envisagées sont, pour l'essentiel, basées sur
+l'utilisation de matrices ayant différents paramètres.
+Les paramètres sont entre autres des mots, des distances et
+aussi des occurences. D'autres méthodes sont appliquées,
+notamment sur le calcul de distances et de matching par rapport
+à des dictionnaires de mots.
+
+Le sujet de ce projet traite de l'analyse statistique
+et des méthodes de clustering.
+
+\input{cr/rapport_etat_de_lart}
+
+\pagebreak
+\input{cr/rapport_conception_sequentielle}
+
+
+\end{document}

@@ -1,0 +1,49 @@
+\section{Conception séquentielle}
+
+\subsection{Vue d'ensemble}
+
+\paragraph{Problème donné}
+
+On part, dans notre projet, d'un gros fichier
+``type wikipedia'' qui représente un corpus de documents.
+\begin{addmargin}{.5cm}
+\begin{verbatim}
+[[Document 1]]
+Texte, texte
+[[File:filename.ext|arg]]
+Texte, texte
+
+[[Document 2]]
+Plus de texte
+\end{verbatim}
+\end{addmargin}
+
+\paragraph{But}
+
+On veut déterminer les champs lexicaux de ce corpus de document.
+
+Par ceci on veut dire déterminer des groupes de mots
+qui ont une utilisation (à défaut d'un sens, qu'on ne
+peut pas déterminer automatiquement) similaire.
+De même on veut pouvoir montrer comment des documents
+sont liés ensemble.
+
+On réduit le problème en sous-problèmes \----
+tout d'abord on prépare les documents
+(découpage du fichier wiki en documents individuels,
+conversion en ASCII 1 octet = 1 charactère),
+puis on crée une liste des mots avec occurences
+d'un document, qu'on intègre à un dictionnaire
+existant, puis
+
+\paragraph{Conditions}
+
+On veut faire aussi peu de suppositions sur les
+documents et les mots que possible.
+
+En effet on s'autorise certaines règles basiques pour
+reconnaître un mot et des méthodes statistiques pour
+faire ressortir les mots importants par leur usage
+mais jamais par des listes prédéfinies.
+Si besoin, et dans le meilleur des cas, on peut construire
+des listes à partir des analyses, comme par apprentissage.

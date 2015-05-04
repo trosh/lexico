@@ -113,9 +113,9 @@ acexecompscale: $(DATTARGETS)
 	OMP_NUM_THREADS=32 mpiexec -np 1 ./datdecoupe noacfiles/*
 
 cr:
-	pdflatex cr/cr.tex
+	pdflatex -output-directory cr cr/rapport.tex
 	#groff -D utf-8 -e -ms cr/cr.ms | ps2pdf - > cr/cr.pdf
-	evince cr/cr.pdf 2> /dev/null &
+	#evince cr/cr.pdf 2> /dev/null &
 
 log:
 	less -R lex.log
