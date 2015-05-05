@@ -2,14 +2,14 @@
 
 Notre code est intrinsèquement divisé en deux étape,
 la première étant l'initialisation du dictionnaire,
-la seconde est le calcul matricielle qui permet de
+la seconde est le calcul matriciel qui permet de
 converger vers un résultat.
 
-Au delà du fait que l'initialisation est la partie
-qui prend le moins de temps à l'exécution,
+L'initialisation est la partie qui prend le moins
+de temps à l'exécution,
 phénomène d'autant plus remarquable si la taille des
-documents et leur nombre augmente,
-nous avons conclu qu'il était compliqué de répartir
+documents et leur nombre augmente.
+Nous avons de plus remarqué qu'il était compliqué de répartir
 cette initialisation sur plusieurs noeuds MPI sans
 engendrer une graphe de communication très chargé.
 En effet les identifiants associés à un document
@@ -24,10 +24,10 @@ or nous devons avoir un identifiant unique pour
 un élément du dictionnaire.
 
 Nous nous sommes donc concentrés sur la parallélisation
-du calcul matricielle.
+du calcul matriciel.
 Une fois le dictionnaire et son indexation inversée
 établis nous savons que les matrices de fréquence qui les
-représentent ne serons plus modifiés au cours de l'algorithme.
+représentent ne seront plus modifiées au cours de l'algorithme.
 Ainsi nous avons décidé de distribuer à chacun des sites
 ces deux matrices ({\it Docs} et {\it Words}).
 Notre algorithme consiste à chaque étape à comparer
@@ -42,11 +42,18 @@ comparaisons à chaque étape
 (avec $N_d$ le nombre total de documents
 et $N_w$ le nombre total de mots).
 
+\begin{figure}[h]
+\begin{center}
+\includegraphics[height=1.5in]{cr/1}
+\caption{Opérations inter-documents}
+\end{center}
+\end{figure}
+
 Une étape est de la forme suivant :
 
 \begin{verbatim}
-Matrix_Docs  = dist_polia (Docs, Matrix_Words)
-Matrix_Words = dist_polia (Words, Matrix_Docs)
+Matrix_Docs  = dist_polia(Docs, Matrix_Words)
+Matrix_Words = dist_polia(Words, Matrix_Docs)
 \end{verbatim}
 
 Les processus savent donc sur quelle plage de donnée
