@@ -48,9 +48,6 @@ comparaisons à chaque étape
 \end{center}
 \end{figure}
 
-On remarque que dans notre exemple ci-dessus, si nous souhaitons le répartir sur quatres processus MPI de façon naïf, la charge 
-de travail ne sera pas  équilibré (rapport de 4 entre le processus 1 et le dernier). Il convient de répartir plus intéligement comment dans l'exemple suivant où 
-il y a 10 documents, cela représente 55 combinaisons possible de comparaison. Ainsi nos 5 processus devront traiter 11
 Une étape est de la forme suivant :
 
 \begin{verbatim}
