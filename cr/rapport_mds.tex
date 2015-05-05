@@ -61,3 +61,39 @@ le protocole scp pour récupérer ce fichier sur notre machine.
 %http://www.cea.fr/recherche­fondamentale/maison­de­la­simulation
 
 %http://www­centre­saclay.cea.fr/fr/Inauguration­de­la­Maison­de­la­simulation
+
+{\bf Test de scalabilité}
+
+Nous avons testé un code de simulation
+(avec résolution par Lattice-Boltzman)
+que nous avons optimisé dans une autre matière.
+Nous avons ainsi pu faire un exemple de scale-up
+fort et faible en prenant parti d'un nombre de coeurs
+bien plus conséquent qu'on le peut d'habitude,
+avec 256 processus physiquement distribués.
+
+Avec la scalabilité forte, on voit qu'avec
+notre découpage et notre schéma de communications
+on a un temps d'exécution optimal pour $np = 16$
+avec un speed-up d'environ 10
+(Jusqu'à 16 on a les temps d'exécution qui semblent
+proches de l'inversement linéaire).
+
+Avec la scalabilité faible il semble que nos
+communications subissent très mal le scale-up de la taille
+totale du problème avec des temps très très lointains du
+constant.
+
+\begin{figure}
+\begin{center}
+\includegraphics[height=4in]{cr/scalabilite_forte}
+\caption{Scalabilité forte de Lattice Boltzman}
+\end{center}
+\end{figure}
+
+\begin{figure}
+\begin{center}
+\includegraphics[height=4in]{cr/scalabilite_faible}
+\caption{Scalabilité faible de Lattice Boltzman}
+\end{center}
+\end{figure}

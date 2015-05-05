@@ -1,296 +1,374 @@
-\section{État de l'art}
+\section{Etat de l'art}
 
-\subsection{L'extraction d'information}
+\subsection{Parallélisation de la recherche de similarité entre
+séquences protéiques sur GPU}
 
-Le coeur du projet repose sur la récupération d'information
-({\it information retrieval}).
-Une des principales applications de cette méthode
-que l'on peut citer est la recherche de résumés
-d'articles scientifiques dans les bases de données.
-Ainsi, dans le cadre de la recherche médicale il peut être
-question de trouver l'ensemble des résumés d'articles dans une
-base de données qui traite d'un sydrôme particulier.
-Pour obtenir ces articles, la solution consistera à faire une requête
-à partir de mots clés qui sont pertinents au syndrôme.
-Ensuite, le système de récupération devra, d'une part,
-comparer la requête aux différents documents dans la base de données
-et, d'autre part, présenter à l'utilisateur les documents qui sont
-à la fois pertinents et rangés dans un ordre suivant
-le volume d'information contenu dans l'article.
+Une approche pour améliorer la recherche de similarités
+entre protéiques a été mise en place.
+Celle-ci est un exemple de ce qui a déjà été développé
+en terme de parallélisation dans le domaine de
+comparaison de mots.
+La méthode proposée, notamment par les chercheurs
+Van Hoa Nguyen et Dominique Lavenier,
+se base sur une indexation complète des données en mémoire.
+Cette démarche est un moyen pour exhiber un parallélisme
+extrême sur des traitements simples.
+Chacun de ces traitements sont indépendants et s'adaptent
+au calcul sur GPU, Graphical Processing Units.
 
-Deux exemples concrets pour illustrer la récupération d'information :
+Les programmes en question sont:
 
-\paragraph{Exemple 1.1}
-Requête pour la recherche dans une catégorie de résumés
-d'articles médicaux: {\it les symptômes d'une grippe}
+\begin{itemize}
+\item iBlASTP
+\item iBLASTN
+\end{itemize}
 
-Ainsi, tous les articles dont le contenu est lié aux symptômes
-%de la grippe seront répertoriés par le système.
+Ces derniers ont été exécutés sur une carte
+NVIDIA GeForce 8800 GTX.
+Le travail effectué par ces deux codes sont, d'une part,
+la recherche de similarités entre deux blocs protéiques
+ou entre un bloc protéique et un génome complet.
+Les valeurs d'accélération obtenues s'échelonnent
+de 5 à 10 par rapport aux deux codes de référence
+dans le domaine, à savoir:
 
-\paragraph{Exemple 1.2}
-Requête sur la recherche d'articles universitaires
+\begin{itemize}
+\item BLASTP
+\item TBLASTN
+\end{itemize}
 
-Les revues sont un autre exemple d'applications
-de récupération d'information.
+\subsubsection{Généralités}
 
-Ainsi, si nous lançons la requête suivante nous avons:
+Dans le domaine de la bioinformatique, la recherche de
+similarités entre séquences génomiques est un point
+essentiel. L'objectif de cette recherche est de repérer
+des régions similaires dans des séquences d'ADN ou des
+séquences protéiques. Par exemple, la requête d'un bloc
+ayant un gène dont la nature est inconnue nécessite
+d'effectuer ce type de recherche de similarités.
+De façon générale, les résultats obtenus sont
+fondamentalement des segments similaires présentant
+une caractéristique identique élevé. Ainsi,
+l'information attendu doit présenter deux banques
+de séquence où sont précisément indiqués les couples
+de nucléotides (pour l'ADN) ou les couples d'acides
+aminés (pour les protéines).
 
-\begin{table}[!htb]
-\begin{center}
-\begin{tabular}{l p{6cm}}
-\bf Mots clés & \bf Resultats \\
-Computer science engineering  & \it Nothing found \\
-Computing science engineering
-& IEEE: Computing in Science and Engineering
-\end{tabular}
-\caption{Recherche d'articles universitaires}
-\end{center}
-\end{table}
+Le développement des biotechnologies génère des
+données génomiques de plus en plus volumineuses.
+Nous pouvons citer, par exemple, le bloc d'aden GenBank
+qui possède plus de 180 milliards de nucléotides et sa
+taille est multipliée par un facteur entre 1.4 et 1.5
+annuellement. Par conséquent, on constate le traitement
+de ces grandes quantités de données requiert davantages
+de temps, malgré l'amélioration des puissances des
+ordinateurs. En effet, d'après les calculs effectués
+la quantité de données en termes de nombre de
+nucléotides augmente plus rapidement que la puissance
+des machines exprimée en MIPS.
+Ainsi, la requête d'alignement entre séquence génomique
+est avant tout une requête par le contenu sur des
+données en vrac. Pour réaliser cette recherche, il est
+nécessaire de parcourir régulièrement l'ensemble
+des blocs, et ce de la première séquence jusqu'à la
+dernière séquence. De nombreux algorithmes pour faire
+ressortir des alignements ont été proposés. Parmis ces
+différents algrithmes, nous pouvons citer le pionnier
+Smith-Waterman qui en a réalisé un en 1981.
+L'algorithme de Smith-Waterman utilise des méthodes
+de programmation dynamique et ont une complexité
+quadratique. Les autres algorithmes élaborés,
+principalement à partirde 1990, notamment le
+programme BLAST, reposent sur une méthode heuristique
+qui permet de localiser de petites banques identiques
+potentiellement pertinentes. Ces algorithmes, beaucoup
+plus efficace par rapport aux premiers, ont
+principalement été élaborés pour obtenir une requête
+performante dans les blocs génomiques. En revanche,
+leur utilisation dans le cadre d'une comparaison
+poussée n'est pas vraiment appropriée, car elle donne
+des temps d'exécution non optimisés.
+Cependant, pour parvenir à acclérer la recherche
+de ces blocs de séquence, plusieurs possibilités nous sont
+données, à savoir
 
-Le système de récupération d'information est censé être
-insensible à la moindre erreur ou le moindre changement
-de lettre dans la requête.
-Dans l'exemple 1.2, nous pouvons remarquer que la revue IEEE
-répond à la seconde requête.
-De cet exemple, nous pouvons inférer que dans beaucoup de cas
-la comparaison de mots peut générer des résultats inattendus.
+\begin{itemize}
+\item l'indexation des données en mémoire principale;
+\item la parallélisation à gros grain sur des
+machines de type cluster;
+\item la parallélisation à grain fin sur des
+structures spécialisées à base de VLSI/FPGA;
+\item la parallélisation sur des GPUs
+\end{itemize}
 
-Par ailleurs, un domaine bien connu dans la récupération
-d'information concerne les moteurs de recherche Web.
-Dans ce genre de systèmes, les requêtes sont très courtes,
-et de nombreux documents trouvés peuvent être des informations
-qui sortent du cadre du sujet attendu par l'utilisateur.
-Ainsi, le classemment du resultat de la recherche est un
-critère d'efficacité du moteur de recherche.
+\subsubsection{Algorithme de recherche de similarités}
 
-\subsection{Prétraitement des documents et des requêtes}
+Le coeur de l'idée se base sur une observation: la
+plupart des alignements significatifs ont une région
+de forte ressemblance se caractérisant par une suite
+de W caractères similaires entre les banques des deux
+séquences qui représentent cet alignement.
+Les zones dans lesquelles ces mots apparaissent sont alors
+repérées. Dès lors qu'un mot est trouvé sur deux
+portions de séquences distinctes, il est utilisé
+comme point d'ancrage pour déterminer un alignement
+plus important en essayant d'élargir, de part et
+d'autre, le nombre d'appariement (match) entre symboles
+similaires. Si l'élargissement amène à une forte
+similarité (déterminée en nombre de match/mismatch),
+sera efectué alors une dernière étape dont le
+principe est d'étendre encore plus l'alignement en
+tenant compte de l'inclusion ou de l'omission de
+symboles (gap).
 
-Dans cette partie, il s'agit d'étudier le prétraitement qui
-est mis en oeuvre au préalable.
-Au niveau de la récupération d'information,
-les mots clés qui résument l'information à propos du thème
-d'un document sont appelés termes.
-De ce fait, une étape essentielle dans la mise en valeur
-de champs lexicaux est de créer une liste de tous les termes
-dans un recueil de documents, ainsi appelé index.
-Pour chaque terme, une liste de tous les documents contenant
-ce terme particulier est stockée.
+L'exemple ci-dessous illustre comment l'alignement
+entre deux séquences protéiques est construit.
+Ainsi, le mot de 3 caractères ARV, qui apparaisse
+dans les deux séquences, est utilisé comme point
+d'ancrage. I s'agit alors de l'étape 1. A partir
+de ce point d'ancrage, les développeurs ont élargit
+de part et d'autres tant que le ration macth/mismatch
+est intéressant.
+Ceci correspond à l'étape 2.
+Enfin, l'équipe d'informatique a élargit de
+nouveau l'alignement en tenant en compte les erreurs
+de gap. Cette phase est l'étape 3.
 
-\subsubsection{Indexation inversée}
+{\bf Etape 1}
 
-La principale structure donnée au sein d'un système
-de recupération d'information s'agit de l'indexation
-inversée. De façon usuelle, un index inversée établit
-une relation entre les termes et leurs occurences dans un
-document donné. Nous pouvons ainsi illustrer un exemple
-d'index inversée:
+\begin{verbatim}
+K V I T A R V T G S A Q W C D N
+        | | |
+K L I S A R V K G S Q F C T N P
+\end{verbatim}
 
-\paragraph{Exemple 2.1}
-Un exemple d'index inversée qui représente les termes
-avec leurs occurences.
+{\bf Étape 2}
 
-\begin{table}[h]
-\begin{center}
-\begin{tabular}{l l}
-\bf Terme & \bf Liste d'occurences \\
-programme & 2301, 1268, ..., 74896, 47123, 741 \\
-matrice   & 4789, 4987, 1236, 7869, ..., 4682, 6321, 1978 \\
-parallèle & 4781, 1247, 963, 4707, ..., 4136, 1247, 7841
-\end{tabular}
-\caption{Dictionnaire}
-\end{center}
-\end{table}
+\begin{verbatim}
+K V I T A R V T G S A Q W C D N
+|   |   | | |   | |
+K L I S A R V K G S Q F C T N P
+\end{verbatim}
 
-Dans l'exemple précédent, le dictionnaire fournit une courte
-liste des termes présents dans les documents, et aussi une
-liste correspondante aux placements de ces termes. Nous pouvons
-constater que l'index inversé présenté ne donne pas les
-identifiants des documents contenant des termes.
-{\color{red} On appelle ce type d'index un index de
-schéma-indépendant compte-tenu qu'aucune hypothèse
-n'est faite à propos du choix de stockage des documents}.
+{\bf Etape 3}
 
-Un index inversé peut être défini à partir de 4 méthodes:
+\begin{verbatim}
+K V I T A R V T G S A Q W C D N
+|       | | |   | |       |   |
+K L I S A R V K G S - Q F C T N P
+\end{verbatim}
 
-\begin{addmargin}{.5cm}
+Donc la recherche de similarité est une démarche qui
+s'effectue en 3 étapes:
 
-\begin{tabular}{l p{11cm}}
-\tt .premier(t) & retourne la première position à
-                  laquelle le terme t apparait dans
-                  l'ensemble du document
-\end{tabular}
+\begin{itemize}
+\item la recherche d'un point d'ancrage (étape 1)
+\item l'extension sans gap (étape 2)
+\item l'extension avec gap (étape 3)
+\end{itemize}
 
-\begin{tabular}{l p{11cm}}
-\tt .dernier(t) & retourne la dernière position à
-                  laquelle le terme t apparait dans
-                  l'ensemble du document
-\end{tabular}
+Le programme BLAST implémente cette heuristique.
 
-\begin{tabular}{l p{8.2cm}}
-\tt .prochain(t, actuelle) & retourne la première position
-                             occurence du terme t après la
-                             position actuelle
-\end{tabular}
+\subsubsection{L'algorithme de BLASTP}
 
-\begin{tabular}{l p{8.1cm}}
-\tt .precedent(t, actuelle) &
-\end{tabular}
+L'algorithme de BLASTP prend en entrée un bloc protéique
+et une ou plusieurs banques de requête. L'algorithme
+s'effectue en 5 étapes:
 
-\end{addmargin}
+{\bf Algorithme de BLASTP}
 
-Ce procédé est appelé un {\it inverted index},
-littéralement index inversé.
+\begin{verbatim}
+1: indexation de la requête sur la base  - étape 1
+       de mots de W caractères
+2: pour tous les mots M de la banque
+3:   si M appartient à la requête        - étape 2
+4:     extension sans gap                - étape 3
+5:   Si score >= S1
+6:      extension avec gap               - étape 4
+7:   Si score >= S2
+8:      afficher l'alignement            - étape 5
+\end{verbatim}
 
-Avant d'effectuer un index, deux étapes de prétraitements
-doivent être réalisées, à savoir l'élimination de tous
-les mots non pertinents et l'affichage du radical.
+{\bf Etape 1:} indexation.
+'équipe effectue un découpage de chaque
+requête en mots chevauchant de taille W. Ces mots sont
+alors stockés au sein d'une table de hachage
 
-L'élimination de mots a pour principe de supprimer les mots
-qui n'apportent pas d'information sur ce document.
-On peut s'attendre à les trouver dans la majorité des documents
-\---- en particulier, on peut s'attendre à ce qu'ils ne soient
-pas plus fréquents dans le document considéré que dans le corpus
-global de documents.
+{\bf Etape 2:} requête de point d'ancrage. La banque de
+séquence est lue séquentiellement, et ce du début
+jusqu'à la fin. Cette lecture prend en compte chaque
+mot chevauchant de W caractères.
+Pour chaque mot, l'équipe de développement
+recherche s'il apparait dans la table de hachage.
+Une fois qu'un mot existe, cela signifie que l'on est
+en présence d'un point d'ancrage.
 
-On peut rechercher ces types de mots en analysant en effet
-leur fréquence, ou exclure, sans analyse, des mots qu'on prévoit
-comme négligeables (par exemple les articles définis et indéfinis,
-les mots de liaison ({\it car}, {\it avant}, {\it aussi}, etc...)).
-Dans notre cahier des charges on doit avoir aussi peu d'à priori
-que possible sur le texte à analyser donc on se contente d'exclure
-les mots trop courts ({\it i.e.} moins de trois caractères)
-et on pourrait/devrait analyser les matrices de fréquences pour
-déterminer les mots sans information.
+{\bf Etape 3:} extension sans gap. A partir du point d'ancrage
+les programmeurs ont cherché à élargir de part et d'autres afin
+d'entrainer une extension sans gap. De façon précise,
+BLASTP élabore un élargissement sans gap seulement dans
+le cas où deux points d'ancrage sont proches l'un de
+l'autre. De manière conventionnelle, la distance séparant
+les deux points d'ancrage doit être inférieure à 40 acides
+aminés. Un alignement sans gap qui inclue ces 2 points
+d'ancrage est alors calculé. Si le score coorespondant
+à cet alignement est supérieure à une valeur seuil S1.
 
-L'affichage du radical est la procédure qui vise à réduire
-chaque mot qui est conjugué ou qui a son propre suffixe.
-Par exemple,
+{\bf Etape 4:} extension avec gap. au cours de cette phase,
+les déveoppeurs ont cherché de nouveau à élargir l'alignement en tenant
+compte des erreurs de gap. Cette procédure est effectuée
+par des méthodes de programmation dynamique et se repose
+sur les réslultats fournis lors de l'étape précédente.
+Ainsi, à partir des extrémités de l'alignement sans gap, les chercheurs
+ont vérifié la possibilité d'inclure ou d'éliminer certains
+caractères. Si le score de ce nouvel alignement est
+supérieure à un seuil S2, alors l'étape 5 peut être
+effectuée.
 
-\begin{center}
-\begin{tabular}{l}
-{\bf program}mation \\
-{\bf program}mable  \\
-{\bf program}mer    \\
-{\bf program}me     \\
-\end{tabular}
-\end{center}
+{\bf Etape 5:} visualistion des résultats. Durant cette dernière
+étape, BLASTP fournie progressivement une visualisation
+des alignements. Cettevisualisation élabore une méthode
+de traceback sur la configuration de données pour bien
+évaluer les emplacements des appariements entre
+synmboles.
 
-Dans le cadre de notre projet, on n'a pas effectué
-de détermination du radical car on traite des types
-de mots variés dans de nombreuses langues,
-ainsi les règles de construction sont trop complexes.
-De plus, comme c'est souvent le cas, cela pousserait
-dans de nombreux cas à réunir comme de la même famille
-des mots très différents. Par exemple,
+La rapidité de BLASTP en fait son principal avantage
+par rapport aux techniques de programmation dynamique.
+Cette rapidité fournie par BLASTP  est significative
+particulièrement lorsque la taille W du point d'ancrage
+est importante. En effet, plus W augmente, moins on
+aura à trouver un mot de cette taille et donc moins les
+étapes 3,4 et 5 seront exécutés. Ainsi, pour la
+comparaison de protéines la taille est
+conventionellement de 3 caractères.
 
-\begin{center}
-\begin{multicols}{3}
-to present \\
-he presents \\
-a presentation \\
-elle se présente \\
-\columnbreak
-the present \\
-presents \\
-offre un présent \\
-\columnbreak
-il est présent \\
-live the present \\
-à présent
-\end{multicols}
-\end{center}
+Néanmoins, lorsque BLASTP est amener à traiter
+d'important groupe de requête, l'algorithme doit
+parcourir à chaque reprise la banque pour chaque
+séquence requête.
 
-\subsection{Le modèle espace vertoriel}
+\subsubsection{L'algorithme iBLASTP}
 
-Le modèle espace vectoriel développe commme principale idée
-de créer une matrice de mot-document ({\tt matrix\_words})
-dans laquelle chacun des documents est représenté par
-un vecteur colonne {\color{red} (c'est pas matrix\_docs ça?)}.
-Le vecteur a des valeurs non-nulles dans les positions qui font
-référence aux termes qui peuvent être présents dans les documents.
-Ainsi, concrètement chaque ligne détient un terme et les entrées
-sont nulles pour les positions correspondant aux documents
-contenant le terme.
-Chaque terme a un numéro identifiant.
-L'exemple ci-dessous représente une matrice de mot-document:
+La banque et les requêtes sont tous les deux indexés
+par l'algorithme de iBLASTP. La doublle indexation à ce
+que il n'y est plus lieu de parcourir la banque.
+En effet, à partir d'une structure de donnée
+approprié, l'ensemble des mots identiques peuvent être
+pointés à droite et à gauche des deux banques.
 
-\begin{center}
-\begin{tabular}{ccc}
-Document 1 & Document 2 & Document 3 \\
-1          & 2          & 3 \\
-4          & 5          & 6 \\
-7          & 8          & 9
-\end{tabular}
-\end{center}
+Par exemple, si un mot M est présent $n1$ fois dans la
+banque n1 et $n2$ fois dans la banque n2, cela implique
+qu'il y a $n1 \times n2$ points d'ancrage.
+Donc, il y a dans ce cas $n1 \times n2$ calculs
+d'alignements sans gap à calculer.
+L'algorithme de iBLASTP s'effectue aussi en 5 étapes:
 
-Identifiants des mots:
+{\bf Algorithme de iBLASTP}
 
-\begin{center}
-\begin{tabular}{ll|ll}
-calcul        & = 1 & bug         & = 6 \\
-programmer    & = 2 & scalabilité & = 7 \\
-code          & = 3 & matrice     & = 8 \\
-développement & = 4 & vecteur     & = 9 \\
-test          & = 5
-\end{tabular}
-\end{center}
+\begin{verbatim}
+1: indexation des 2 banques sur la base                   - étape 1
+       de mots de W caractères
+2: pour chaque mot M différent
+3:  construire une liste de n1 sous-séquence banque 1     - étape 2
+4:   construire une liste de n2 sous-séquences banque 2
+5: pour chaque sous-séquence du bloc 1
+6:    pour chaque sous-séquence du bloc 2
+7:       extension sans gap                               - étape 3
+8:       Si score >= S1
+9:          début d'extension avec gap                    - étape 4-1
+10:        Si score >= S2
+11:           extension complète avec gap                 - étape 4-2
+12:        Si score >= S3
+13:              afficher l'alignement                    - étape 5
+\end{verbatim}
 
-Une fois la matrice de mot-document créée,
-il convient de calculer l'occurrence des termes
-dans les documents.
+Etape 1: indexation. Le principe de point d'ancrage est gardé.
+Cependant, contrairement à l'algorithme précédent,
+l'indexation est effectuée sur les deux banques.
+L'objectif de l'indexation est de stocker les
+positions des mots similaires dans une liste.
 
-La matrice de mot-document que l'on a construit est pleine.
+Etape 2: recherche de points d'ancrage. La recherche
+s'opère assez rapidement car il est question de
+consulter les listes établies précédemment.
+Une sous-séquence réfère à une instance du mot
+entouré de son voisinage immédiat.
 
-\subsubsection{Requête de matching et modélisation de performance}
+Etape 3: extension sans gap. Le calcul d'extension est
+réalisé entre toutes les sous-séquences,
+c'est-à-dire $n1 \times n2$ fois.
 
-La  requête de matching consiste de trouver les documents qui sont
-pertinents à une requête $q$ particulière.
-De manière générale, ce type de requête est réalisé à partir
-de la mesure distance cosinus.
-Par conséquent, un document $D(j)$ est considéré pertinent
-si l'angle entre la requête $q$ et $D(j)$ est assez minime.
-Ainsi $D(j)$ est extrait si l'on a
+Etape 4: cette phase est divisée en deux sous étapes.
+D'abord, l'espace de recherche de la programmation
+dynamique est réduit.
 
-\[
-	cos \left[ \theta(q, D(j)) \right]
-	= \frac{q^T \times D(j)}
-	       {\left|\left| q    \right|\right| _2 \times
-	        \left|\left| D(j) \right|\right| _2} > tol
-\]
+Etape 5: visualisation des résultats.
 
-$tol$ est un seuil de tolérance prédéfini.
-Si la tolérance est réduite,
-les documents ont davantage retournés,
-ce qui signifie qu'ils sont pertinents à la requête.
-Cependant, le risque est qu'avec une tolérance réduite,
-des documents non pertinents peuvent être aussi retournés.
+\subsection{Parallélisation sur GPU}
 
-Dans l'extraction d'information,
-il est possible de mesurer la performance de la modélisation:
+La parallélisation sur GPU de la recherche de similaraités
+de séquences a été réalisé sur une carte graphique NVIDIA
+GeForce 8800 GTX. Dans cette carte, on trouve un GPU ayant
+8 multiprocesseurs SIMD. Chacun d'eux possède 16
+processueurs. La programmation CUDA a été exploitée.
+La structure de la programmation prend enn compte une
+grille composée d'un ensemble de blocs qui exécutent
+en même temps maximum 256 threads.
 
-\[
-	\mbox{Précision :} \quad P = \frac{D(r)}{D(t)}
-\]
+\subsubsection{Implémentation de iBASTP sur GPU}
 
-$D(r)$ représente le nombre de documents pertinents extraits
-et $D(t)$ représente le nombre total de documents extraits.
+L'étape 3 de l'algorithme iBLASTP, extension sans gap,
+génère un nombre important de calculs d'élargissement
+sans gap $n1 \times n2$ pour un mot donné. Pour optimiser
+l'algorithme de iBLASTP, l'équipe de développement a
+eu l'idée de stoker les résultats produits par l'étape 3
+et de réaliser l'étape 4-1 quand un nombre suffisant
+d'extension san gap a été trouvé.
 
-\subsection{Indexation sémantique latente}
+{\bf Algorithme de iBLASTP-GPU}
 
-{\bf Définitions}
+\begin{verbatim}
+1 : indexation des 2 banques sur la base de mots de W caractères  – étape 1
+2 : pour chaque mot M différent
+3 :     construire une liste de n1 sous-séquences banque 1        – étape 2
+4 :     construire une liste de n2 sous-séquences banque 2
+5 :     effectuer n1 x n2 extensions sans gap sur GPU             – étape 3
+6 :     stocker les extensions avec un score >= S1 dans R
+7 :     si la liste R contient au moins K éléments
+8 :         effectuer K début d’extensions avec gap sur GPU     – étape 4-1
+9 :         si score >= S2
+10:             extension complète avec gap                     – étape 4-2
+11:         si score >= S3
+12:             afficher l’alignement                             – étape 5
+13:      Supprimer K éléments de R
+\end{verbatim}
 
-L'analyse sémantique latente est une technique sur le traitement
-des langues naturelles et qui se repose sur la sémantique vectorielle.
+D'après l'équipe qui a mené les tests, les résultats de
+l'étape 3 sont mémorisés dans la liste R. Les étapes
+suivantes d'exécutent uniquement lorsque la liste R
+a un nombre sufisant de résultats pour exploiter
+correctement le GPU.
 
-L'indexation sémantique latente est un procédé qui effectue une relation
-entre un goupe de documents et les termes contenus dans ces documents.
+\subsubsection{Parallélisation de l'extension sans gap}
 
-{\bf Matrice des occurences}
+Dans l'algorithme, il y a $n1 \times n2$ extensions sans gap qui
+doit être réalisé. Pour dimininuer les coûts d'échange
+entre l'hôte et la carte graphique, l'équipe de chercheurs
+a construit deux blocs de sous-séqunce: le bloc1[N,n1],
+avec N la longueur des sous-séquences et le bloc2[n2,N].
+Par la suite, les deux blocs sont envoyés à la carte
+graphique pour réaliser le calcul des extensions sans gap.
+Ainsi, un bloc C[n1,n2] va stocker les scores résultants.
+D'après l'équipe qui a mené les tests, la valeur de chaque
+cellule [i,j] du bloc C est le score d'extension sans gap
+entre la sous-séquence j du bloc 1 (référant à la ligne i)
+et la sous-séquence i du bloc 2 (corrspondant à la
+colonne j).
 
-Dans le cadre de l'indexation sémantique latente,
-on est amené à construire une matrice des occurences.
-Cette matrice contient l'occurence des termes dans les documents.
-Il s'agit d'une matrice creuse.
+\subsubsection{Parallélisation de l'extension avec gap}
 
-Tous les ``termes'', venant de l'ensemble du corpus de texte,
-de la matrice sont des mots qui sont tronqués à leur radical.
+Chaque K alignements avec gap va impliquer la
+parallélisation de 2048 tâches sur le GPU. Pour éviter
+tout conflit mémoire, l'équipe de développement a fait en
+sorte qu'en début de calcul, chaque thread charge sa paire
+de sous-séquence dans sa mémoire locale.

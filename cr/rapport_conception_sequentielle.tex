@@ -4,7 +4,7 @@
 
 \paragraph{Problème donné}
 
-On part, dans notre projet, d'un gros fichier
+On part dans notre projet d'un fichier
 ``type wikipedia'' qui représente un corpus de documents.
 \begin{addmargin}{.5cm}
 \begin{verbatim}
@@ -12,7 +12,6 @@ On part, dans notre projet, d'un gros fichier
 Texte, texte
 [[File:filename.ext|arg]]
 Texte, texte
-
 [[Document 2]]
 Plus de texte
 \end{verbatim}
@@ -57,3 +56,60 @@ On appelle découpage d'un fichier la création d'une
 liste des occurences de tous les mots qui y sont présents.
 L'appel correspondant à ceci est la fonction {\tt decoupe\_fichier}
 dans {\tt src/lexico.c}.
+
+On fait ce découpage en une passe unique par document
+où on remplit une zone de travail qu'on vide dans le tableau
+d'occurence ou dans un nouveau mot selon les caractères lus
+et une recherche dans le tableau.
+
+On peut comme un exemple montrer la fonction
+{\tt est\_une\_lettre\_valable} qui vérifie les caractères
+un par un:
+
+\begin{verbatim}
+inline int est_une_lettre_valable(char c) {
+    return ((c >= 'A' && c <= 'Z')   // EST UNE LETTRE MAJUSCULE
+         || (c >= 'a' && c <= 'z')   // EST UNE LETTRE MINUSCULE
+         ||  c == '-' || c == '\''); // EST UN HYPHEN / QUOTE
+}
+\end{verbatim}
+
+\subsection{Préparation des fichiers}
+
+On crée un autre programme, {\tt splitwiki}, qui transforme le
+fichier d'entrée type wikipedia en de nombreux fichiers,
+ce qui nous garantit 1 document = 1 fichier.
+On se base sur plusieurs règles syntaxiques simples
+donc l'exécution est très rapide.
+
+On utilise le programme iconv pour translitérer du
+texte utf8 en ASCII pour garantir autant que possible
+et en particulier au niveau des mots 1 octet = 1 caractère.
+
+Ces deux étapes qui doivent préceder le découpage
+résultent de la simplicité avec laquelle on a fait
+le découpage.
+
+\subsection{Ajout au dictionnaire}
+
+À chaque fois qu'un fichier est découpé en sa liste de mots
+on ajoute celle-ci au dictionnaire global, qui est un tableau
+de tableau dynamiquement alloués et réalloués.
+Ceci correspond à des parcours de complexité souvent $n^2$
+où l'on doit comparer des chaînes de caractères ensemble.
+On réduit un peu le nombre de comparaisons en précalculant
+des checksums.
+
+On va ensuite préparer les matrices de mots/documents stockées
+pleines 1D.
+
+\subsection{Boucle itérative de calcul des distances}
+
+En se basant l'une sur l'autre, on compare chaque mot avec
+chaque autre mot et chaque document avec chaque autre
+document pour calculer un score de distances entre les
+mots/documents. On devrait avoir un score borné qui
+représente une notion tangible mais là le calcul nous
+a été donné sans explication et qui ne convergait pas
+dans sa version originelle. On n'a pas réussi à aller plus
+loin que ceci.
