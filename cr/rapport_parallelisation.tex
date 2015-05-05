@@ -48,16 +48,43 @@ comparaisons à chaque étape
 \end{center}
 \end{figure}
 
+Pour être plus précis: \newline
+
+le processus 1 compare le document 1 avec les documents 1,2,3 et 4\newline
+le processus 2 compare le document 2 avec les documents 2,3 et 4\newline
+le processus 3 compare le document 2 avec les documents 3 et 4\newline
+le processus 4 compare le document 2 avec les documents 4.
+
+\newpage 
+Nous obtenons donc le graphe suivant: 
+ 
+\begin{figure}[h]
+\begin{center}
+\includegraphics[height=1.5in]{cr/2}
+\caption{Charge déséquilibré}
+\end{center}
+\end{figure}
+
 On remarque que dans notre exemple ci-dessus, si nous souhaitons le répartir sur quatres processus MPI de façon naïf, la charge 
-de travail ne sera pas  équilibré (rapport de 4 entre le processus 1 et le dernier). Il convient de répartir plus intéligement comment dans l'exemple suivant où 
-il y a 10 documents, cela représente 55 combinaisons possible de comparaison. Ainsi nos 5 processus devront traiter 11
-Une étape est de la forme suivant :
+de travail ne sera pas  équilibré (rapport de 4 entre le processus 1 et le dernier). Il convient de répartir plus intéligement commes dans l'exemple suivant où 
+il y a 10 documents, cela représente 55 combinaisons possible de comparaison. Ainsi nos 5 processus devront traiter exactement 11 combinaisons.
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[height=1.5in]{cr/4}
+\caption{Charge équilibré}
+\end{center}
+\end{figure}
+
+
+Une étape est constitué des deux appels de fonctions suivant :
 
 \begin{verbatim}
 Matrix_Docs  = dist_polia(Docs, Matrix_Words)
 Matrix_Words = dist_polia(Words, Matrix_Docs)
 \end{verbatim}
 
+Ici la fonction calcul une nouvealle matrice de distance à partir du matrice de fréquence et la matrice de distance complémentaire.
 Les processus savent donc sur quelle plage de donnée
 ils effectuent leurs calculs.
 Une étape consiste à recalculer les matrices de distances

@@ -323,11 +323,13 @@ int main(int argc, char *argv[]) {
 			//disp_matrix(&matrix_docs);
 			//free(matrix_words.contenu);
 			//free(matrix_words.mat);
+			//communication(&matrix_docs,rank size,indice_doc[0]*NW + indice_doc[2]);
 			//printf("RANK %d DIST_POLIA ON DOCS\n", rank);
 			matrix_words = dist_polia(&words,&matrix_docs, indice_word, rank); // Nw*Nw
 			//disp_matrix(&matrix_words);
 			//free(matrix_docs.contenu);
 			//free(matrix_docs.mat);
+			//communication(&matrix_words,rank size,indice_doc[0]*ND + indice_doc[2]);
 			MPI_Barrier(MPI_COMM_WORLD);
 		}
 		matrix_docs = dist_polia(&docs,&matrix_words,indice_doc,rank);

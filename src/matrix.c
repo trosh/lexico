@@ -156,3 +156,27 @@ void free_matrix(matrix *m) {
 	free(m->contenu);
 	free(m->mat);
 }
+
+void communication(matrix* mat, int rank, int size,int my_start) {
+	int i,adresse_start[size];
+	MPI_Request requete[size*2];
+	
+	for(i=0; i<size; i++) {
+		if(i != rank) {
+			MPI_Irecv(&adresse_start[i],1, MPI_INT, i,0, MPI_COMM_WORLD, &requete[2*i]);
+			MPI_Isend(&my_start,1, MPI_INT, i,0, MPI_COMM_WORLD, &requete[2*i+1]);
+		}
+	}
+	for(i=0; i<size; i++) {
+		if(i != rank) {
+			MPI_Waitall(2,&requete[2*i],MPI_STATUS_IGNORE);
+			MPI_Irecv(&mat->contenu[adresse_start[i]],1, MPI_FLOAT, i,0, MPI_COMM_WORLD, &requete[2*i]);
+			MPI_Isend(&mat->contenu[my_start],1, MPI_FLOAT, i,0, MPI_COMM_WORLD, &requete[2*i+1]);
+		}
+	}
+	for(i=0; i<size; i++) {
+		if(i != rank) {
+			MPI_Waitall(2,&requete[2*i],MPI_STATUS_IGNORE);
+		}
+	}
+}
