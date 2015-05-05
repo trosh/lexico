@@ -18,7 +18,7 @@ pour la première fois dans l'initialisation.
 Par exemple on aura alors le cas où deux noeuds
 découvrent à des instants différents dans leur processus
 de création de dictionnaire un document.
-Ce document aura donc un identifiant i sur
+Ce dit-document aura donc un identifiant i sur
 le premier noeud et un identifiant j dans le second
 or nous devons avoir un identifiant unique pour
 un élément du dictionnaire.
@@ -39,9 +39,7 @@ Afin que la charge de travail entre processus MPI soit
  + \frac{N_w \times (N_w+1)}{P \times 2} \]
 
 comparaisons à chaque étape
-(avec $N_d$ le nombre total de documents,
-$N_w$ le nombre total de mots et
-$P$ le nombre de processus).
+(avec $N_d$ le nombre total de documents, $N_w$ le nombre total de mots et $P$ le nombre de processus).
 
 \begin{figure}[h]
 \begin{center}
@@ -49,15 +47,6 @@ $P$ le nombre de processus).
 \caption{Opérations inter-documents}
 \end{center}
 \end{figure}
-
-On remarque que dans notre exemple ci-dessus,
-si nous souhaitons le répartir sur quatres processus MPI
-de façon naïf, la charge de travail ne sera pas
-équilibrée (rapport de 4 entre le processus 1 et le dernier).
-Il convient de répartir plus intelligement comment
-dans l'exemple suivant où il y a 10 documents,
-cela représente 55 combinaisons possible de comparaisons.
-Ainsi nos 5 processus devront traiter 11
 
 Une étape est de la forme suivant :
 
