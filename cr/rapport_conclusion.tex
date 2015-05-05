@@ -1,0 +1,30 @@
+\section{Conclusion}
+
+La première conclusion qui peut venir à l'esprit est que
+l'on n'a pas réussi à construire de champ lexical \----
+on n'a même pas eu d'information sur comment analyser
+les matrices de distance construites.
+
+Ça a pourtant été une très bonne occasion de
+mettre en place un cahier des charges très peu complet
+avec une liberté de conception, et de transformer un
+problème d'analyse de fichier en un problème d'analyse numérique
+qu'on peut ramener à des situations précédemment résolues.
+
+On a été déçu d'avoir été guidé uniquement à implémenter
+une méthode de construction de distances sans explication,
+sans conception et sans indication quant à la manière
+d'analyser les résultats, alors que c'était le coeur
+de l'implémentation. Il est bien plus difficile de réorganiser
+une implémentation pour des performances / du parallélisme
+lorsqu'on doit deviner quelle méthode elle représente.
+
+C'était aussi l'occasion de découvrir un vrai espace
+de travail dans lequel prendre sa place pour tenter de
+réaliser de bonnes performances
+(nous remercions l'organisation du Master de nous avoir donné
+accès à ce lieu).
+Nous avions peu de tests à effectuer en vraie grandeur donc
+nous avons étudié la scalabilité d'un programme de simulation
+optimisé en TP. C'est dommage car c'était une de nos rares occasions
+de lancer un job qui pouvait vraiment passer à l'échelle.

@@ -18,7 +18,7 @@ pour la première fois dans l'initialisation.
 Par exemple on aura alors le cas où deux noeuds
 découvrent à des instants différents dans leur processus
 de création de dictionnaire un document.
-Ce dit-document aura donc un identifiant i sur
+Ce document aura donc un identifiant i sur
 le premier noeud et un identifiant j dans le second
 or nous devons avoir un identifiant unique pour
 un élément du dictionnaire.
@@ -39,8 +39,9 @@ Afin que la charge de travail entre processus MPI soit
  + \frac{N_w \times (N_w+1)}{P \times 2} \]
 
 comparaisons à chaque étape
-(avec $N_d$ le nombre total de documents
-et $N_w$ le nombre total de mots).
+(avec $N_d$ le nombre total de documents,
+$N_w$ le nombre total de mots et
+$P$ le nombre de processus).
 
 Une étape est de la forme suivant :
 
